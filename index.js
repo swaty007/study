@@ -17,6 +17,7 @@ const {Parser}  = require('./Javascript/Nodejs/parser');
 // });
 
 var parse = new Parser();
-var test = parse.getHtml();
-console.log(test);
+var promise = parse.getHtml().then(res => {
+    console.log(res, "RESULT");
+});
 

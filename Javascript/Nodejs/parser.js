@@ -19,14 +19,14 @@ class Parser {
     init() {
         console.log(resolve,'resolve')
         // `tress` последовательно вызывает наш обработчик для каждой ссылки в очереди
-        this.promise = new Promise(function(resolve, reject) {
+        this.promise = new Promise((resolve, reject) => {
             // Эта функция будет вызвана автоматически
 
             // В ней можно делать любые асинхронные операции,
             // А когда они завершатся — нужно вызвать одно из:
             // resolve(результат) при успешном выполнении
             // reject(ошибка) при ошибке
-        });
+
         this.q = tress((url, callback) => {
 
             //тут мы обрабатываем страницу с адресом url
@@ -63,15 +63,18 @@ class Parser {
                 }
                 callback(); //вызываем callback в конце
             });
+
         }, this.threads);
         // эта функция выполнится, когда в очереди закончатся ссылки
+            this.q.drain = () => {
+                fs.writeFileSync('./data.json', JSON.stringify(this.results, null, 4));
+                resolve(this.results);
+            }
+        });
     }
     getHtml () {
         this.q.push(this.URL);
-        this.q.drain = () => {
-            fs.writeFileSync('./data.json', JSON.stringify(this.results, null, 4));
-            console.log('end');
-        }
+        return this.promise;
     }
 };
 

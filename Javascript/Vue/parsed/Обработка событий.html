@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en" id="wrapper">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Обработка событий</title>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="./style.css" rel="stylesheet" type="text/css">
+
+    <!-- версия для разработки, отображает полезные предупреждения в консоли -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <!-- production-версия, оптимизированная для размера и скорости -->
+    <!--    <script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+
+</head>
+<body id="main">
+<p>Спаршено с: <a href="https://ru.vuejs.org/v2/guide/events.html">https://ru.vuejs.org/v2/guide/events.html</a></p>
+
+    
+      
+        
+
+      
+    
+    
+      <h1>&#x41E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x43A;&#x430; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439;</h1>
+    
+    
+      <h2 id="&#x41F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x43A;&#x430;-&#x43D;&#x430;-&#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x44F;"><a href="#&#x41F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x43A;&#x430;-&#x43D;&#x430;-&#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x44F;" class="headerlink" title="&#x41F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x43A;&#x430; &#x43D;&#x430; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x44F;"></a>&#x41F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x43A;&#x430; &#x43D;&#x430; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x44F;</h2><p>&#x414;&#x43B;&#x44F; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x43A;&#x438; &#x43D;&#x430; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x44F; DOM &#x438; &#x432;&#x44B;&#x43F;&#x43E;&#x43B;&#x43D;&#x435;&#x43D;&#x438;&#x44F; JavaScript-&#x43A;&#x43E;&#x434;&#x430; &#x43F;&#x43E; &#x438;&#x445; &#x43D;&#x430;&#x441;&#x442;&#x443;&#x43F;&#x43B;&#x435;&#x43D;&#x438;&#x438; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x443;&#x439;&#x442;&#x435; &#x434;&#x438;&#x440;&#x435;&#x43A;&#x442;&#x438;&#x432;&#x443; <code>v-on</code>.</p>
+<p>&#x41D;&#x430;&#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;:</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;example-1&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">v-on:click</span>=<span class="hljs-string">&quot;counter += 1&quot;</span>&gt;</span>+1<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>&#x41A;&#x43D;&#x43E;&#x43F;&#x43A;&#x430; &#x432;&#x44B;&#x448;&#x435; &#x431;&#x44B;&#x43B;&#x430; &#x43D;&#x430;&#x436;&#x430;&#x442;&#x430; {{ counter }} &#x440;&#x430;&#x437;<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<pre><code class="hljs js"><span class="hljs-keyword">var</span> example1 = <span class="hljs-keyword">new</span> Vue({
+  <span class="hljs-attr">el</span>: <span class="hljs-string">&apos;#example-1&apos;</span>,
+  <span class="hljs-attr">data</span>: {
+    <span class="hljs-attr">counter</span>: <span class="hljs-number">0</span>
+  }
+})</code></pre>
+<p>&#x420;&#x435;&#x437;&#x443;&#x43B;&#x44C;&#x442;&#x430;&#x442;:</p>
+
+<div id="example-1" class="demo">
+  <button v-on:click="counter += 1">+1</button>
+  <p>&#x41A;&#x43D;&#x43E;&#x43F;&#x43A;&#x430; &#x432;&#x44B;&#x448;&#x435; &#x431;&#x44B;&#x43B;&#x430; &#x43D;&#x430;&#x436;&#x430;&#x442;&#x430; {{ counter }} &#x440;&#x430;&#x437;</p>
+</div>
+<script>
+var example1 = new Vue({
+  el: '#example-1',
+  data: {
+    counter: 0
+  }
+})
+</script>
+
+<h2 id="&#x41E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x438;-&#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439;"><a href="#&#x41E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x438;-&#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439;" class="headerlink" title="&#x41E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x438; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439;"></a>&#x41E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x438; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439;</h2><p>&#x41B;&#x43E;&#x433;&#x438;&#x43A;&#x430; &#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x430; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x44F; &#x43C;&#x43E;&#x436;&#x435;&#x442; &#x431;&#x44B;&#x442;&#x44C; &#x434;&#x43E;&#x432;&#x43E;&#x43B;&#x44C;&#x43D;&#x43E; &#x441;&#x43B;&#x43E;&#x436;&#x43D;&#x43E;&#x439;, &#x43F;&#x43E;&#x44D;&#x442;&#x43E;&#x43C;&#x443; &#x43E;&#x441;&#x442;&#x430;&#x432;&#x43B;&#x44F;&#x442;&#x44C; JavaScript-&#x43A;&#x43E;&#x434; &#x432; &#x437;&#x43D;&#x430;&#x447;&#x435;&#x43D;&#x438;&#x438; &#x430;&#x442;&#x440;&#x438;&#x431;&#x443;&#x442;&#x430; <code>v-on</code> &#x43D;&#x435; &#x432;&#x441;&#x435;&#x433;&#x434;&#x430; &#x432;&#x43E;&#x437;&#x43C;&#x43E;&#x436;&#x43D;&#x43E;. &#x412; &#x44D;&#x442;&#x43E;&#x43C; &#x441;&#x43B;&#x443;&#x447;&#x430;&#x435; <code>v-on</code> &#x43C;&#x43E;&#x436;&#x435;&#x442; &#x43F;&#x440;&#x438;&#x43D;&#x44F;&#x442;&#x44C; &#x438; &#x43D;&#x430;&#x437;&#x432;&#x430;&#x43D;&#x438;&#x435; &#x43C;&#x435;&#x442;&#x43E;&#x434;&#x430;, &#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x439; &#x43D;&#x435;&#x43E;&#x431;&#x445;&#x43E;&#x434;&#x438;&#x43C;&#x43E; &#x432;&#x44B;&#x437;&#x432;&#x430;&#x442;&#x44C;.</p>
+<p>&#x41D;&#x430;&#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;:</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;example-2&quot;</span>&gt;</span>
+  <span class="hljs-comment">&lt;!-- `greet` &#x2014; &#x44D;&#x442;&#x43E; &#x43D;&#x430;&#x437;&#x432;&#x430;&#x43D;&#x438;&#x435; &#x43C;&#x435;&#x442;&#x43E;&#x434;&#x430;, &#x43E;&#x43F;&#x440;&#x435;&#x434;&#x435;&#x43B;&#x451;&#x43D;&#x43D;&#x43E;&#x433;&#x43E; &#x43D;&#x438;&#x436;&#x435; --&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">v-on:click</span>=<span class="hljs-string">&quot;greet&quot;</span>&gt;</span>&#x41F;&#x43E;&#x43F;&#x440;&#x438;&#x432;&#x435;&#x442;&#x441;&#x442;&#x432;&#x43E;&#x432;&#x430;&#x442;&#x44C;<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<pre><code class="hljs js"><span class="hljs-keyword">var</span> example2 = <span class="hljs-keyword">new</span> Vue({
+  <span class="hljs-attr">el</span>: <span class="hljs-string">&apos;#example-2&apos;</span>,
+  <span class="hljs-attr">data</span>: {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&apos;Vue.js&apos;</span>
+  },
+  <span class="hljs-comment">// &#x43E;&#x43F;&#x440;&#x435;&#x434;&#x435;&#x43B;&#x44F;&#x439;&#x442;&#x435; &#x43C;&#x435;&#x442;&#x43E;&#x434;&#x44B; &#x432; &#x43E;&#x431;&#x44A;&#x435;&#x43A;&#x442;&#x435; `methods`</span>
+  methods: {
+    <span class="hljs-attr">greet</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">event</span>) </span>{
+      <span class="hljs-comment">// `this` &#x432;&#x43D;&#x443;&#x442;&#x440;&#x438; &#x43C;&#x435;&#x442;&#x43E;&#x434;&#x43E;&#x432; &#x443;&#x43A;&#x430;&#x437;&#x44B;&#x432;&#x430;&#x435;&#x442; &#x43D;&#x430; &#x44D;&#x43A;&#x437;&#x435;&#x43C;&#x43F;&#x43B;&#x44F;&#x440; Vue</span>
+      alert(<span class="hljs-string">&apos;&#x41F;&#x440;&#x438;&#x432;&#x435;&#x442;, &apos;</span> + <span class="hljs-keyword">this</span>.name + <span class="hljs-string">&apos;!&apos;</span>)
+      <span class="hljs-comment">// `event` &#x2014; &#x43D;&#x430;&#x442;&#x438;&#x432;&#x43D;&#x43E;&#x435; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x435; DOM</span>
+      <span class="hljs-keyword">if</span> (event) {
+        alert(event.target.tagName)
+      }
+    }
+  }
+})
+
+<span class="hljs-comment">// &#x432;&#x44B;&#x437;&#x44B;&#x432;&#x430;&#x442;&#x44C; &#x43C;&#x435;&#x442;&#x43E;&#x434;&#x44B; &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x438; &#x438;&#x43C;&#x43F;&#x435;&#x440;&#x430;&#x442;&#x438;&#x432;&#x43D;&#x43E;</span>
+example2.greet() <span class="hljs-comment">// =&gt; &apos;&#x41F;&#x440;&#x438;&#x432;&#x435;&#x442;, Vue.js!&apos;</span></code></pre>
+<p>&#x420;&#x435;&#x437;&#x443;&#x43B;&#x44C;&#x442;&#x430;&#x442;:</p>
+
+<div id="example-2" class="demo">
+  <button v-on:click="greet">&#x41F;&#x43E;&#x43F;&#x440;&#x438;&#x432;&#x435;&#x442;&#x441;&#x442;&#x432;&#x43E;&#x432;&#x430;&#x442;&#x44C;</button>
+</div>
+<script>
+var example2 = new Vue({
+  el: '#example-2',
+  data: {
+    name: 'Vue.js'
+  },
+  methods: {
+    greet: function (event) {
+      alert('Привет, ' + this.name + '!')
+      if (event) {
+        alert(event.target.tagName)
+      }
+    }
+  }
+})
+</script>
+
+<h2 id="&#x41C;&#x435;&#x442;&#x43E;&#x434;&#x44B;-&#x438;-inline-&#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x438;"><a href="#&#x41C;&#x435;&#x442;&#x43E;&#x434;&#x44B;-&#x438;-inline-&#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x438;" class="headerlink" title="&#x41C;&#x435;&#x442;&#x43E;&#x434;&#x44B; &#x438; inline-&#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x438;"></a>&#x41C;&#x435;&#x442;&#x43E;&#x434;&#x44B; &#x438; inline-&#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x438;</h2><p>&#x41A;&#x440;&#x43E;&#x43C;&#x435; &#x443;&#x43A;&#x430;&#x437;&#x430;&#x43D;&#x438;&#x44F; &#x438;&#x43C;&#x435;&#x43D;&#x438; &#x43C;&#x435;&#x442;&#x43E;&#x434;&#x430;, &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x438; JavaScript-&#x432;&#x44B;&#x440;&#x430;&#x436;&#x435;&#x43D;&#x438;&#x44F;:</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;example-3&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">v-on:click</span>=<span class="hljs-string">&quot;say(&apos;hi&apos;)&quot;</span>&gt;</span>&#x421;&#x43A;&#x430;&#x436;&#x438; hi<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">v-on:click</span>=<span class="hljs-string">&quot;say(&apos;what&apos;)&quot;</span>&gt;</span>&#x421;&#x43A;&#x430;&#x436;&#x438; what<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<pre><code class="hljs js"><span class="hljs-keyword">new</span> Vue({
+  <span class="hljs-attr">el</span>: <span class="hljs-string">&apos;#example-3&apos;</span>,
+  <span class="hljs-attr">methods</span>: {
+    <span class="hljs-attr">say</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">message</span>) </span>{
+      alert(message)
+    }
+  }
+})</code></pre>
+<p>&#x420;&#x435;&#x437;&#x443;&#x43B;&#x44C;&#x442;&#x430;&#x442;:</p>
+
+<div id="example-3" class="demo">
+  <button v-on:click="say(&apos;hi&apos;)">&#x421;&#x43A;&#x430;&#x436;&#x438; hi</button>
+  <button v-on:click="say(&apos;what&apos;)">&#x421;&#x43A;&#x430;&#x436;&#x438; what</button>
+</div>
+<script>
+new Vue({
+  el: '#example-3',
+  methods: {
+    say: function (message) {
+      alert(message)
+    }
+  }
+})
+</script>
+
+<p>&#x418;&#x43D;&#x43E;&#x433;&#x434;&#x430; &#x432; inline-&#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x430;&#x445; &#x43D;&#x435;&#x43E;&#x431;&#x445;&#x43E;&#x434;&#x438;&#x43C; &#x434;&#x43E;&#x441;&#x442;&#x443;&#x43F; &#x43A; &#x43E;&#x440;&#x438;&#x433;&#x438;&#x43D;&#x430;&#x43B;&#x44C;&#x43D;&#x43E;&#x43C;&#x443; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x44E; DOM. &#x415;&#x433;&#x43E; &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x43F;&#x435;&#x440;&#x435;&#x434;&#x430;&#x442;&#x44C; &#x432; &#x43C;&#x435;&#x442;&#x43E;&#x434;, &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x443;&#x44F; &#x441;&#x43F;&#x435;&#x446;&#x438;&#x430;&#x43B;&#x44C;&#x43D;&#x443;&#x44E; &#x43F;&#x435;&#x440;&#x435;&#x43C;&#x435;&#x43D;&#x43D;&#x443;&#x44E; <code>$event</code>:</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">v-on:click</span>=<span class="hljs-string">&quot;warn(&apos;&#x424;&#x43E;&#x440;&#x43C;&#x430; &#x43D;&#x435; &#x43C;&#x43E;&#x436;&#x435;&#x442; &#x431;&#x44B;&#x442;&#x44C; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x430;.&apos;, $event)&quot;</span>&gt;</span>
+  &#x41E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x438;&#x442;&#x44C;
+<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
+<pre><code class="hljs js"><span class="hljs-comment">// ...</span>
+methods: {
+  <span class="hljs-attr">warn</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">message, event</span>) </span>{
+    <span class="hljs-comment">// &#x442;&#x435;&#x43F;&#x435;&#x440;&#x44C; &#x443; &#x43D;&#x430;&#x441; &#x435;&#x441;&#x442;&#x44C; &#x434;&#x43E;&#x441;&#x442;&#x443;&#x43F; &#x43A; &#x43D;&#x430;&#x442;&#x438;&#x432;&#x43D;&#x43E;&#x43C;&#x443; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x44E;</span>
+    <span class="hljs-keyword">if</span> (event) event.preventDefault()
+    alert(message)
+  }
+}</code></pre>
+<h2 id="&#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B;-&#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439;"><a href="#&#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B;-&#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439;" class="headerlink" title="&#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439;"></a>&#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439;</h2><p>&#x41E;&#x447;&#x435;&#x43D;&#x44C; &#x447;&#x430;&#x441;&#x442;&#x43E; &#x432;&#x43E;&#x437;&#x43D;&#x438;&#x43A;&#x430;&#x435;&#x442; &#x43D;&#x435;&#x43E;&#x431;&#x445;&#x43E;&#x434;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x44C; &#x432;&#x44B;&#x437;&#x44B;&#x432;&#x430;&#x442;&#x44C; <code>event.preventDefault()</code> &#x438;&#x43B;&#x438; <code>event.stopPropagation()</code> &#x432; &#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x435; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x44F;. &#x41D;&#x435;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x44F; &#x43D;&#x430; &#x442;&#x43E;, &#x447;&#x442;&#x43E; &#x44D;&#x442;&#x43E; &#x43B;&#x435;&#x433;&#x43A;&#x43E; &#x441;&#x434;&#x435;&#x43B;&#x430;&#x442;&#x44C; &#x432;&#x43D;&#x443;&#x442;&#x440;&#x438; &#x43C;&#x435;&#x442;&#x43E;&#x434;&#x430;, &#x43B;&#x443;&#x447;&#x448;&#x435; &#x441;&#x43E;&#x445;&#x440;&#x430;&#x43D;&#x44F;&#x442;&#x44C; &#x447;&#x438;&#x441;&#x442;&#x43E;&#x442;&#x443; &#x43B;&#x43E;&#x433;&#x438;&#x43A;&#x438; &#x438; &#x430;&#x431;&#x441;&#x442;&#x440;&#x430;&#x433;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x442;&#x44C;&#x441;&#x44F; &#x43E;&#x442; &#x434;&#x435;&#x442;&#x430;&#x43B;&#x435;&#x439; &#x440;&#x435;&#x430;&#x43B;&#x438;&#x437;&#x430;&#x446;&#x438;&#x438; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439; DOM.</p>
+<p>&#x414;&#x43B;&#x44F; &#x440;&#x435;&#x448;&#x435;&#x43D;&#x438;&#x44F; &#x44D;&#x442;&#x43E;&#x439; &#x437;&#x430;&#x434;&#x430;&#x447;&#x438; Vue &#x43F;&#x440;&#x435;&#x434;&#x43E;&#x441;&#x442;&#x430;&#x432;&#x43B;&#x44F;&#x435;&#x442; <strong>&#x43C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439;</strong> &#x434;&#x43B;&#x44F; <code>v-on</code>, &#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x435; &#x443;&#x43A;&#x430;&#x437;&#x44B;&#x432;&#x430;&#x44E;&#x442;&#x441;&#x44F; &#x43A;&#x430;&#x43A; &#x43F;&#x43E;&#x441;&#x442;&#x444;&#x438;&#x43A;&#x441;&#x44B; &#x438; &#x43E;&#x442;&#x434;&#x435;&#x43B;&#x44F;&#x44E;&#x442;&#x441;&#x44F; &#x442;&#x43E;&#x447;&#x43A;&#x43E;&#x439;:</p>
+<ul>
+<li><code>.stop</code></li>
+<li><code>.prevent</code></li>
+<li><code>.capture</code></li>
+<li><code>.self</code></li>
+<li><code>.once</code></li>
+<li><code>.passive</code></li>
+</ul>
+<pre><code class="hljs html"><span class="hljs-comment">&lt;!-- &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x435; click &#x43D;&#x435; &#x431;&#x443;&#x434;&#x435;&#x442; &#x432;&#x441;&#x43F;&#x43B;&#x44B;&#x432;&#x430;&#x442;&#x44C; &#x434;&#x430;&#x43B;&#x44C;&#x448;&#x435; --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">v-on:click.stop</span>=<span class="hljs-string">&quot;doThis&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x435; submit &#x431;&#x43E;&#x43B;&#x44C;&#x448;&#x435; &#x43D;&#x435; &#x431;&#x443;&#x434;&#x435;&#x442; &#x43F;&#x435;&#x440;&#x435;&#x437;&#x430;&#x433;&#x440;&#x443;&#x436;&#x430;&#x442;&#x44C; &#x441;&#x442;&#x440;&#x430;&#x43D;&#x438;&#x446;&#x443; --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">v-on:submit.prevent</span>=<span class="hljs-string">&quot;onSubmit&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- &#x43C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B; &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x43E;&#x431;&#x44A;&#x435;&#x434;&#x438;&#x43D;&#x44F;&#x442;&#x44C; &#x432; &#x446;&#x435;&#x43F;&#x43E;&#x447;&#x43A;&#x438; --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">v-on:click.stop.prevent</span>=<span class="hljs-string">&quot;doThat&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- &#x438; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x431;&#x435;&#x437; &#x443;&#x43A;&#x430;&#x437;&#x430;&#x43D;&#x438;&#x44F; &#x43C;&#x435;&#x442;&#x43E;&#x434;&#x430;-&#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x430; --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">form</span> <span class="hljs-attr">v-on:submit.prevent</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x43E;&#x442;&#x441;&#x43B;&#x435;&#x436;&#x438;&#x432;&#x430;&#x442;&#x44C; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x44F; &#x432; &#x440;&#x435;&#x436;&#x438;&#x43C;&#x435; capture, &#x442;.&#x435;. &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x435;, &#x43D;&#x430;&#x446;&#x435;&#x43B;&#x435;&#x43D;&#x43D;&#x43E;&#x435; --&gt;</span>
+<span class="hljs-comment">&lt;!-- &#x43D;&#x430; &#x432;&#x43D;&#x443;&#x442;&#x440;&#x435;&#x43D;&#x43D;&#x438;&#x439; &#x44D;&#x43B;&#x435;&#x43C;&#x435;&#x43D;&#x442;, &#x43E;&#x431;&#x440;&#x430;&#x431;&#x430;&#x442;&#x44B;&#x432;&#x430;&#x435;&#x442;&#x441;&#x44F; &#x437;&#x434;&#x435;&#x441;&#x44C; &#x434;&#x43E; &#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x43A;&#x438; &#x44D;&#x442;&#x438;&#x43C; &#x44D;&#x43B;&#x435;&#x43C;&#x435;&#x43D;&#x442;&#x43E;&#x43C; --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">v-on:click.capture</span>=<span class="hljs-string">&quot;doThis&quot;</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- &#x432;&#x44B;&#x437;&#x43E;&#x432; &#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x430; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x432; &#x441;&#x43B;&#x443;&#x447;&#x430;&#x435; &#x43D;&#x430;&#x441;&#x442;&#x443;&#x43F;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x44F; &#x43D;&#x435;&#x43F;&#x43E;&#x441;&#x440;&#x435;&#x434;&#x441;&#x442;&#x432;&#x435;&#x43D;&#x43D;&#x43E; --&gt;</span>
+<span class="hljs-comment">&lt;!-- &#x43D;&#x430; &#x434;&#x430;&#x43D;&#x43D;&#x43E;&#x43C; &#x44D;&#x43B;&#x435;&#x43C;&#x435;&#x43D;&#x442;&#x435; (&#x442;&#x43E; &#x435;&#x441;&#x442;&#x44C; &#x43D;&#x435; &#x43D;&#x430; &#x434;&#x43E;&#x447;&#x435;&#x440;&#x43D;&#x435;&#x43C; &#x43A;&#x43E;&#x43C;&#x43F;&#x43E;&#x43D;&#x435;&#x43D;&#x442;&#x435;) --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">v-on:click.self</span>=<span class="hljs-string">&quot;doThat&quot;</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<p class="tip">&#x41F;&#x440;&#x438; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x438; &#x43C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x43E;&#x432; &#x43F;&#x43E;&#x440;&#x44F;&#x434;&#x43E;&#x43A; &#x438;&#x43C;&#x435;&#x435;&#x442; &#x437;&#x43D;&#x430;&#x447;&#x435;&#x43D;&#x438;&#x435;, &#x43F;&#x43E;&#x442;&#x43E;&#x43C;&#x443; &#x447;&#x442;&#x43E; &#x43A;&#x43E;&#x434; &#x433;&#x435;&#x43D;&#x435;&#x440;&#x438;&#x440;&#x443;&#x435;&#x442;&#x441;&#x44F; &#x432; &#x442;&#x43E;&#x43C; &#x436;&#x435; &#x43F;&#x43E;&#x440;&#x44F;&#x434;&#x43A;&#x435;. &#x41F;&#x43E;&#x44D;&#x442;&#x43E;&#x43C;&#x443; <code>v-on:click.prevent.self</code> &#x431;&#x443;&#x434;&#x435;&#x442; &#x43F;&#x440;&#x435;&#x434;&#x43E;&#x442;&#x432;&#x440;&#x430;&#x449;&#x430;&#x442;&#x44C; <strong>&#x432;&#x441;&#x435; &#x43A;&#x43B;&#x438;&#x43A;&#x438;</strong>, &#x432; &#x442;&#x43E; &#x432;&#x440;&#x435;&#x43C;&#x44F; &#x43A;&#x430;&#x43A; <code>v-on:click.self.prevent</code> &#x431;&#x443;&#x434;&#x435;&#x442; &#x43F;&#x440;&#x435;&#x434;&#x43E;&#x442;&#x432;&#x440;&#x430;&#x449;&#x430;&#x442;&#x44C; &#x43A;&#x43B;&#x438;&#x43A;&#x438; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x43D;&#x430; &#x441;&#x430;&#x43C;&#x43E;&#x43C; &#x44D;&#x43B;&#x435;&#x43C;&#x435;&#x43D;&#x442;&#x435;.</p>
+
+<blockquote>
+<p>&#x414;&#x43E;&#x431;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x43E; &#x432; &#x432;&#x435;&#x440;&#x441;&#x438;&#x438; 2.1.4+</p>
+</blockquote>
+<pre><code class="hljs html"><span class="hljs-comment">&lt;!-- &#x421;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x435; click &#x441;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x430;&#x435;&#x442; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; 1 &#x440;&#x430;&#x437; --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">v-on:click.once</span>=<span class="hljs-string">&quot;doThis&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span></code></pre>
+<p>&#x412; &#x43E;&#x442;&#x43B;&#x438;&#x447;&#x438;&#x435; &#x43E;&#x442; &#x43E;&#x441;&#x442;&#x430;&#x43B;&#x44C;&#x43D;&#x44B;&#x445; &#x43C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x43E;&#x432;, &#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x435; &#x43F;&#x43E;&#x434;&#x434;&#x435;&#x440;&#x436;&#x438;&#x432;&#x430;&#x44E;&#x442; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x43D;&#x430;&#x442;&#x438;&#x432;&#x43D;&#x44B;&#x435; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x44F; DOM, &#x43C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440; <code>.once</code> &#x43C;&#x43E;&#x436;&#x435;&#x442; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C;&#x441;&#x44F; &#x438; &#x432; <a href="components.html#&#x41E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x430;-&#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x439;-&#x440;&#x43E;&#x434;&#x438;&#x442;&#x435;&#x43B;&#x44F;&#x43C;-&#x441;-&#x43F;&#x43E;&#x43C;&#x43E;&#x449;&#x44C;&#x44E;-&#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439;">&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x43A;&#x438;&#x445; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x44F;&#x445; &#x43A;&#x43E;&#x43C;&#x43F;&#x43E;&#x43D;&#x435;&#x43D;&#x442;&#x43E;&#x432;</a>. &#x415;&#x441;&#x43B;&#x438; &#x432;&#x44B; &#x435;&#x449;&#x451; &#x43D;&#x435; &#x447;&#x438;&#x442;&#x430;&#x43B;&#x438; &#x43E; &#x43A;&#x43E;&#x43C;&#x43F;&#x43E;&#x43D;&#x435;&#x43D;&#x442;&#x430;&#x445;, &#x43D;&#x435; &#x431;&#x435;&#x441;&#x43F;&#x43E;&#x43A;&#x43E;&#x439;&#x442;&#x435;&#x441;&#x44C; &#x43E;&#x431; &#x44D;&#x442;&#x43E;&#x43C; &#x441;&#x435;&#x439;&#x447;&#x430;&#x441;.</p>
+<blockquote>
+<p>&#x414;&#x43E;&#x431;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x43E; &#x432; &#x432;&#x435;&#x440;&#x441;&#x438;&#x438; 2.3.0+</p>
+</blockquote>
+<p>Vue &#x442;&#x430;&#x43A;&#x436;&#x435; &#x43F;&#x440;&#x435;&#x434;&#x43E;&#x441;&#x442;&#x430;&#x432;&#x43B;&#x44F;&#x435;&#x442; &#x43C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440; <code>.passive</code>, &#x441;&#x43E;&#x43E;&#x442;&#x432;&#x435;&#x442;&#x441;&#x442;&#x432;&#x443;&#x44E;&#x449;&#x438;&#x439; &#x43E;&#x43F;&#x446;&#x438;&#x438; <a href="https://developer.mozilla.org/ru/docs/Web/API/EventTarget/addEventListener#Syntax" target="_blank" rel="noopener"><code>passive</code> &#x432; <code>addEventListener</code></a>.</p>
+<pre><code class="hljs html"><span class="hljs-comment">&lt;!-- &#x43F;&#x43E; &#x443;&#x43C;&#x43E;&#x43B;&#x447;&#x430;&#x43D;&#x438;&#x44E; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x435; scroll (&#x43F;&#x440;&#x438; &#x43F;&#x440;&#x43E;&#x43A;&#x440;&#x443;&#x442;&#x43A;&#x435;) &#x43F;&#x440;&#x43E;&#x438;&#x437;&#x43E;&#x439;&#x434;&#x451;&#x442; --&gt;</span>
+<span class="hljs-comment">&lt;!-- &#x43D;&#x435;&#x437;&#x430;&#x43C;&#x435;&#x434;&#x43B;&#x438;&#x442;&#x435;&#x43B;&#x44C;&#x43D;&#x43E;, &#x432;&#x43C;&#x435;&#x441;&#x442;&#x43E; &#x43E;&#x436;&#x438;&#x434;&#x430;&#x43D;&#x438;&#x44F; &#x43E;&#x43A;&#x43E;&#x43D;&#x447;&#x430;&#x43D;&#x438;&#x44F; `onScroll`  --&gt;</span>
+<span class="hljs-comment">&lt;!-- &#x43D;&#x430; &#x441;&#x43B;&#x443;&#x447;&#x430;&#x439;, &#x435;&#x441;&#x43B;&#x438; &#x442;&#x430;&#x43C; &#x431;&#x443;&#x434;&#x435;&#x442; `event.preventDefault()`     --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">v-on:scroll.passive</span>=<span class="hljs-string">&quot;onScroll&quot;</span>&gt;</span>...<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<p>&#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440; <code>.passive</code> &#x43E;&#x441;&#x43E;&#x431;&#x435;&#x43D;&#x43D;&#x43E; &#x43F;&#x43E;&#x43B;&#x435;&#x437;&#x435;&#x43D; &#x434;&#x43B;&#x44F; &#x43F;&#x43E;&#x432;&#x44B;&#x448;&#x435;&#x43D;&#x438;&#x44F; &#x43F;&#x440;&#x43E;&#x438;&#x437;&#x432;&#x43E;&#x434;&#x438;&#x442;&#x435;&#x43B;&#x44C;&#x43D;&#x43E;&#x441;&#x442;&#x438; &#x43D;&#x430; &#x43C;&#x43E;&#x431;&#x438;&#x43B;&#x44C;&#x43D;&#x44B;&#x445; &#x443;&#x441;&#x442;&#x440;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430;&#x445;.</p>
+<p class="tip">&#x41D;&#x435; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x443;&#x439;&#x442;&#x435; &#x432;&#x43C;&#x435;&#x441;&#x442;&#x435; <code>.passive</code> &#x438; <code>.prevent</code>, &#x43F;&#x43E;&#x442;&#x43E;&#x43C;&#x443; &#x447;&#x442;&#x43E; <code>.prevent</code> &#x431;&#x443;&#x434;&#x435;&#x442; &#x43F;&#x440;&#x43E;&#x438;&#x433;&#x43D;&#x43E;&#x440;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D; &#x438; &#x431;&#x440;&#x430;&#x443;&#x437;&#x435;&#x440; &#x432;&#x43E;&#x437;&#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x43F;&#x43E;&#x43A;&#x430;&#x436;&#x435;&#x442; &#x43F;&#x440;&#x435;&#x434;&#x443;&#x43F;&#x440;&#x435;&#x436;&#x434;&#x435;&#x43D;&#x438;&#x435;. &#x41F;&#x43E;&#x43C;&#x43D;&#x438;&#x442;&#x435;, &#x447;&#x442;&#x43E; <code>.passive</code> &#x441;&#x43E;&#x43E;&#x431;&#x449;&#x430;&#x435;&#x442; &#x431;&#x440;&#x430;&#x443;&#x437;&#x435;&#x440;&#x443;, &#x447;&#x442;&#x43E; &#x432;&#x44B; <em>&#x43D;&#x435; &#x445;&#x43E;&#x442;&#x438;&#x442;&#x435;</em> &#x43F;&#x440;&#x435;&#x434;&#x43E;&#x442;&#x432;&#x440;&#x430;&#x449;&#x430;&#x442;&#x44C; &#x43F;&#x43E;&#x432;&#x435;&#x434;&#x435;&#x43D;&#x438;&#x435; &#x43F;&#x43E; &#x443;&#x43C;&#x43E;&#x43B;&#x447;&#x430;&#x43D;&#x438;&#x44E; &#x434;&#x43B;&#x44F; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x44F;.</p>
+
+<h2 id="&#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B;-&#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;"><a href="#&#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B;-&#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;" class="headerlink" title="&#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;"></a>&#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;</h2><p>&#x41F;&#x440;&#x438; &#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x43A;&#x435; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x430;&#x442;&#x443;&#x440;&#x44B; &#x43D;&#x430;&#x441; &#x447;&#x430;&#x441;&#x442;&#x43E; &#x438;&#x43D;&#x442;&#x435;&#x440;&#x435;&#x441;&#x443;&#x44E;&#x442; &#x43A;&#x43E;&#x43D;&#x43A;&#x440;&#x435;&#x442;&#x43D;&#x44B;&#x435; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;&#x438;. Vue &#x43F;&#x43E;&#x437;&#x432;&#x43E;&#x43B;&#x44F;&#x435;&#x442; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x43C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448; &#x43F;&#x440;&#x438; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x438; <code>v-on</code> &#x434;&#x43B;&#x44F; &#x43E;&#x442;&#x441;&#x43B;&#x435;&#x436;&#x438;&#x432;&#x430;&#x43D;&#x438;&#x44F; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439; &#x43E;&#x442; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x430;&#x442;&#x443;&#x440;&#x44B;:</p>
+<pre><code class="hljs html"><span class="hljs-comment">&lt;!-- &#x432;&#x44B;&#x437;&#x432;&#x430;&#x442;&#x44C; `vm.submit()` &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x435;&#x441;&#x43B;&#x438; `key` &#x431;&#x443;&#x434;&#x435;&#x442; `Enter` --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">v-on:keyup.enter</span>=<span class="hljs-string">&quot;submit&quot;</span>&gt;</span></code></pre>
+<p>&#x41C;&#x43E;&#x436;&#x43D;&#x43E; &#x442;&#x430;&#x43A;&#x436;&#x435; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x43B;&#x44E;&#x431;&#x44B;&#x435; &#x434;&#x43E;&#x43F;&#x443;&#x441;&#x442;&#x438;&#x43C;&#x44B;&#x435; &#x438;&#x43C;&#x435;&#x43D;&#x430; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;, &#x43F;&#x440;&#x435;&#x434;&#x43E;&#x441;&#x442;&#x430;&#x432;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x435; &#x447;&#x435;&#x440;&#x435;&#x437; <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key/Key_Values" target="_blank" rel="noopener"><code>KeyboardEvent.key</code></a> &#x432; &#x43A;&#x430;&#x447;&#x435;&#x441;&#x442;&#x432;&#x435; &#x43C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x43E;&#x432;, &#x438;&#x43C;&#x435;&#x43D;&#x443;&#x44F; &#x438;&#x445; &#x432; kebab-case.</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">v-on:keyup.page-down</span>=<span class="hljs-string">&quot;onPageDown&quot;</span>&gt;</span></code></pre>
+<p>&#x412; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;&#x435; &#x432;&#x44B;&#x448;&#x435; &#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A; &#x431;&#x443;&#x434;&#x435;&#x442; &#x432;&#x44B;&#x437;&#x44B;&#x432;&#x430;&#x442;&#x44C;&#x441;&#x44F; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x435;&#x441;&#x43B;&#x438; <code>$event.key</code> &#x431;&#x443;&#x434;&#x435;&#x442; <code>&apos;PageDown&apos;</code>.</p>
+<h3 id="&#x41A;&#x43E;&#x434;&#x44B;-&#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;"><a href="#&#x41A;&#x43E;&#x434;&#x44B;-&#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;" class="headerlink" title="&#x41A;&#x43E;&#x434;&#x44B; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;"></a>&#x41A;&#x43E;&#x434;&#x44B; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;</h3><p class="tip">&#x418;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435; &#x437;&#x43D;&#x430;&#x447;&#x435;&#x43D;&#x438;&#x44F; <code>keyCode</code> &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439; &#x2014; <a href="https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/keyCode" target="_blank" rel="noopener">&#x443;&#x441;&#x442;&#x430;&#x440;&#x435;&#x432;&#x448;&#x430;&#x44F; &#x43F;&#x440;&#x430;&#x43A;&#x442;&#x438;&#x43A;&#x430;</a> &#x438; &#x43C;&#x43E;&#x436;&#x435;&#x442; &#x43D;&#x435; &#x43F;&#x43E;&#x434;&#x434;&#x435;&#x440;&#x436;&#x438;&#x432;&#x430;&#x442;&#x44C;&#x441;&#x44F; &#x432; &#x43D;&#x43E;&#x432;&#x44B;&#x445; &#x431;&#x440;&#x430;&#x443;&#x437;&#x435;&#x440;&#x430;&#x445;.</p>
+
+<p>&#x418;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435; &#x437;&#x43D;&#x430;&#x447;&#x435;&#x43D;&#x438;&#x439; <code>keyCode</code> &#x442;&#x430;&#x43A;&#x436;&#x435; &#x440;&#x430;&#x437;&#x440;&#x435;&#x448;&#x435;&#x43D;&#x43E;:</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">v-on:keyup.13</span>=<span class="hljs-string">&quot;submit&quot;</span>&gt;</span></code></pre>
+<p>Vue &#x43F;&#x440;&#x435;&#x434;&#x43E;&#x441;&#x442;&#x430;&#x432;&#x43B;&#x44F;&#x435;&#x442; &#x43F;&#x441;&#x435;&#x432;&#x434;&#x43E;&#x43D;&#x438;&#x43C;&#x44B; &#x434;&#x43B;&#x44F; &#x43D;&#x430;&#x438;&#x431;&#x43E;&#x43B;&#x435;&#x435; &#x447;&#x430;&#x441;&#x442;&#x43E; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x443;&#x435;&#x43C;&#x44B;&#x445; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;, &#x43A;&#x43E;&#x433;&#x434;&#x430; &#x44D;&#x442;&#x43E; &#x43D;&#x435;&#x43E;&#x431;&#x445;&#x43E;&#x434;&#x438;&#x43C;&#x43E; &#x434;&#x43B;&#x44F; &#x43F;&#x43E;&#x434;&#x434;&#x435;&#x440;&#x436;&#x43A;&#x438; &#x443;&#x441;&#x442;&#x430;&#x440;&#x435;&#x432;&#x448;&#x438;&#x445; &#x431;&#x440;&#x430;&#x443;&#x437;&#x435;&#x440;&#x43E;&#x432;:</p>
+<ul>
+<li><code>.enter</code></li>
+<li><code>.tab</code></li>
+<li><code>.delete</code> (&#x43B;&#x43E;&#x432;&#x438;&#x442; &#x43A;&#x430;&#x43A; &#xAB;Delete&#xBB;, &#x442;&#x430;&#x43A; &#x438; &#xAB;Backspace&#xBB;)</li>
+<li><code>.esc</code></li>
+<li><code>.space</code></li>
+<li><code>.up</code></li>
+<li><code>.down</code></li>
+<li><code>.left</code></li>
+<li><code>.right</code></li>
+</ul>
+<p class="tip">&#x41D;&#x435;&#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x435; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;&#x438; (<code>.esc</code> &#x438; &#x432;&#x441;&#x435; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;&#x438; &#x441;&#x43E; &#x441;&#x442;&#x440;&#x435;&#x43B;&#x43A;&#x430;&#x43C;&#x438;) &#x438;&#x43C;&#x435;&#x44E;&#x442; &#x43D;&#x435;&#x441;&#x43E;&#x433;&#x43B;&#x430;&#x441;&#x43E;&#x432;&#x430;&#x43D;&#x43D;&#x44B;&#x435; &#x437;&#x43D;&#x430;&#x447;&#x435;&#x43D;&#x438;&#x44F; &#x432; IE9, &#x43F;&#x43E;&#x44D;&#x442;&#x43E;&#x43C;&#x443; &#x438;&#x445; &#x432;&#x441;&#x442;&#x440;&#x43E;&#x435;&#x43D;&#x43D;&#x44B;&#x435; &#x43F;&#x441;&#x435;&#x432;&#x434;&#x43E;&#x43D;&#x438;&#x43C;&#x44B; &#x434;&#x43E;&#x43B;&#x436;&#x43D;&#x44B; &#x431;&#x44B;&#x442;&#x44C; &#x43F;&#x440;&#x435;&#x434;&#x43F;&#x43E;&#x447;&#x442;&#x438;&#x442;&#x435;&#x43B;&#x44C;&#x43D;&#x44B;&#x43C;&#x438;, &#x435;&#x441;&#x43B;&#x438; &#x43D;&#x435;&#x43E;&#x431;&#x445;&#x43E;&#x434;&#x438;&#x43C;&#x43E; &#x43F;&#x43E;&#x434;&#x434;&#x435;&#x440;&#x436;&#x438;&#x432;&#x430;&#x442;&#x44C; IE9.</p>
+
+<p>&#x41C;&#x43E;&#x436;&#x43D;&#x43E; &#x442;&#x430;&#x43A;&#x436;&#x435; <a href="../api/#keyCodes">&#x43E;&#x43F;&#x440;&#x435;&#x434;&#x435;&#x43B;&#x438;&#x442;&#x44C; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x43A;&#x438;&#x435; &#x43F;&#x441;&#x435;&#x432;&#x434;&#x43E;&#x43D;&#x438;&#x43C;&#x44B; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;</a> &#x447;&#x435;&#x440;&#x435;&#x437; &#x433;&#x43B;&#x43E;&#x431;&#x430;&#x43B;&#x44C;&#x43D;&#x443;&#x44E; &#x43E;&#x43F;&#x446;&#x438;&#x44E; <code>config.keyCodes</code>:</p>
+<pre><code class="hljs js"><span class="hljs-comment">// &#x43F;&#x43E;&#x437;&#x432;&#x43E;&#x43B;&#x438;&#x442; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; `v-on:keyup.f1`</span>
+Vue.config.keyCodes.f1 = <span class="hljs-number">112</span></code></pre>
+<h2 id="&#x421;&#x438;&#x441;&#x442;&#x435;&#x43C;&#x43D;&#x44B;&#x435;-&#x43C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B;-&#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;"><a href="#&#x421;&#x438;&#x441;&#x442;&#x435;&#x43C;&#x43D;&#x44B;&#x435;-&#x43C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B;-&#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;" class="headerlink" title="&#x421;&#x438;&#x441;&#x442;&#x435;&#x43C;&#x43D;&#x44B;&#x435; &#x43C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;"></a>&#x421;&#x438;&#x441;&#x442;&#x435;&#x43C;&#x43D;&#x44B;&#x435; &#x43C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;</h2><blockquote>
+<p>&#x414;&#x43E;&#x431;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x43E; &#x432; &#x432;&#x435;&#x440;&#x441;&#x438;&#x438; 2.1.0+</p>
+</blockquote>
+<p>&#x41C;&#x43E;&#x436;&#x43D;&#x43E; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x441;&#x43B;&#x435;&#x434;&#x443;&#x44E;&#x449;&#x438;&#x435; &#x43C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B; &#x434;&#x43B;&#x44F; &#x43E;&#x442;&#x441;&#x43B;&#x435;&#x436;&#x438;&#x432;&#x430;&#x43D;&#x438;&#x44F; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439; &#x43C;&#x44B;&#x448;&#x438; &#x438;&#x43B;&#x438; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x430;&#x442;&#x443;&#x440;&#x44B; &#x441; &#x437;&#x430;&#x436;&#x430;&#x442;&#x43E;&#x439; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;&#x435;&#x439;-&#x43C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x43E;&#x43C;:</p>
+<ul>
+<li><code>.ctrl</code></li>
+<li><code>.alt</code></li>
+<li><code>.shift</code></li>
+<li><code>.meta</code></li>
+</ul>
+<blockquote>
+<p>&#x41F;&#x440;&#x438;&#x43C;&#x435;&#x447;&#x430;&#x43D;&#x438;&#x435;: &#x41D;&#x430; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x430;&#x442;&#x443;&#x440;&#x430;&#x445; Apple &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;&#x430; meta &#x43E;&#x442;&#x43C;&#x435;&#x447;&#x435;&#x43D;&#x430; &#x437;&#x43D;&#x430;&#x43A;&#x43E;&#x43C; &#x2318;. &#x41D;&#x430; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x430;&#x442;&#x443;&#x440;&#x430;&#x445; Windows &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;&#x430; meta &#x43E;&#x442;&#x43C;&#x435;&#x447;&#x435;&#x43D;&#x430; &#x437;&#x43D;&#x430;&#x43A;&#x43E;&#x43C; &#x229E;. &#x41D;&#x430; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x430;&#x442;&#x443;&#x440;&#x430;&#x445; Sun Microsystems &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;&#x430; meta &#x43E;&#x442;&#x43C;&#x435;&#x447;&#x435;&#x43D;&#x430; &#x441;&#x438;&#x43C;&#x432;&#x43E;&#x43B;&#x43E;&#x43C; &#x440;&#x43E;&#x43C;&#x431;&#x430; &#x25C6;. &#x41D;&#x430; &#x43D;&#x435;&#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x445; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x430;&#x442;&#x443;&#x440;&#x430;&#x445;, &#x43E;&#x441;&#x43E;&#x431;&#x435;&#x43D;&#x43D;&#x43E; MIT &#x438; Lisp machine &#x438; &#x438;&#x445; &#x43F;&#x440;&#x435;&#x435;&#x43C;&#x43D;&#x438;&#x43A;&#x43E;&#x432;, &#x442;&#x430;&#x43A;&#x438;&#x445; &#x43A;&#x430;&#x43A; Knight &#x438;&#x43B;&#x438; space-cadet &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x430;&#x442;&#x443;&#x440;&#x44B;, &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;&#x430; meta &#x43E;&#x442;&#x43C;&#x435;&#x447;&#x435;&#x43D;&#x430; &#x441;&#x43B;&#x43E;&#x432;&#x43E;&#x43C; &#xAB;META&#xBB;. &#x41D;&#x430; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x430;&#x442;&#x443;&#x440;&#x430;&#x445; Symbolics, &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;&#x430; meta &#x43E;&#x442;&#x43C;&#x435;&#x447;&#x435;&#x43D;&#x430; &#x441;&#x43B;&#x43E;&#x432;&#x43E;&#x43C; &#xAB;META&#xBB; &#x438;&#x43B;&#x438; &#xAB;Meta&#xBB;.</p>
+</blockquote>
+<p>&#x41D;&#x430;&#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;:</p>
+<pre><code class="hljs html"><span class="hljs-comment">&lt;!-- Alt + C --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">input</span> @<span class="hljs-attr">keyup.alt.67</span>=<span class="hljs-string">&quot;clear&quot;</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- Ctrl + Click --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> @<span class="hljs-attr">click.ctrl</span>=<span class="hljs-string">&quot;doSomething&quot;</span>&gt;</span>&#x421;&#x434;&#x435;&#x43B;&#x430;&#x442;&#x44C; &#x447;&#x442;&#x43E;-&#x43D;&#x438;&#x431;&#x443;&#x434;&#x44C;<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<p class="tip">&#x41E;&#x431;&#x440;&#x430;&#x442;&#x438;&#x442;&#x435; &#x432;&#x43D;&#x438;&#x43C;&#x430;&#x43D;&#x438;&#x435;, &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;&#x438;-&#x43C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B; &#x43E;&#x442;&#x43B;&#x438;&#x447;&#x430;&#x44E;&#x442;&#x441;&#x44F; &#x43E;&#x442; &#x43E;&#x431;&#x44B;&#x447;&#x43D;&#x44B;&#x445; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448; &#x438; &#x43F;&#x440;&#x438; &#x43E;&#x442;&#x441;&#x43B;&#x435;&#x436;&#x438;&#x432;&#x430;&#x43D;&#x438;&#x438; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439; <code>keyup</code> &#x43E;&#x43D;&#x438; &#x434;&#x43E;&#x43B;&#x436;&#x43D;&#x44B; &#x431;&#x44B;&#x442;&#x44C; &#x43D;&#x430;&#x436;&#x430;&#x442;&#x44B;, &#x43A;&#x43E;&#x433;&#x434;&#x430; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x435; &#x433;&#x435;&#x43D;&#x435;&#x440;&#x438;&#x440;&#x443;&#x435;&#x442;&#x441;&#x44F;. &#x414;&#x440;&#x443;&#x433;&#x438;&#x43C;&#x438; &#x441;&#x43B;&#x43E;&#x432;&#x430;&#x43C;&#x438;, <code>keyup.ctrl</code> &#x441;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x430;&#x435;&#x442; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x442;&#x43E;&#x433;&#x434;&#x430;, &#x43A;&#x43E;&#x433;&#x434;&#x430; &#x432;&#x44B; &#x43E;&#x442;&#x43F;&#x443;&#x441;&#x442;&#x438;&#x442;&#x435; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;&#x443;, &#x443;&#x434;&#x435;&#x440;&#x436;&#x438;&#x432;&#x430;&#x44F; &#x43D;&#x430;&#x436;&#x430;&#x442;&#x43E;&#x439; <code>ctrl</code>. &#x42D;&#x442;&#x43E; &#x43D;&#x435; &#x441;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x430;&#x435;&#x442;, &#x435;&#x441;&#x43B;&#x438; &#x432;&#x44B; &#x43E;&#x442;&#x43F;&#x443;&#x441;&#x442;&#x438;&#x442;&#x435; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;&#x443; <code>ctrl</code>. &#x415;&#x441;&#x43B;&#x438; &#x432;&#x44B; &#x445;&#x43E;&#x442;&#x438;&#x442;&#x435; &#x442;&#x430;&#x43A;&#x43E;&#x435; &#x43F;&#x43E;&#x432;&#x435;&#x434;&#x435;&#x43D;&#x438;&#x435;, &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x443;&#x439;&#x442;&#x435; <code>keyCode</code> &#x434;&#x43B;&#x44F; <code>ctrl</code> &#x432;&#x43C;&#x435;&#x441;&#x442;&#x43E; <code>keyup.17</code>.</p>
+
+<h3 id="&#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;-exact"><a href="#&#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;-exact" class="headerlink" title="&#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440; .exact"></a>&#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440; <code>.exact</code></h3><blockquote>
+<p>&#x414;&#x43E;&#x431;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x43E; &#x432; &#x432;&#x435;&#x440;&#x441;&#x438;&#x438; 2.5.0+</p>
+</blockquote>
+<p>&#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440; <code>.exact</code> &#x43F;&#x43E;&#x437;&#x432;&#x43E;&#x43B;&#x44F;&#x435;&#x442; &#x43A;&#x43E;&#x43D;&#x442;&#x440;&#x43E;&#x43B;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x442;&#x43E;&#x447;&#x43D;&#x443;&#x44E; &#x43A;&#x43E;&#x43C;&#x431;&#x438;&#x43D;&#x430;&#x446;&#x438;&#x44E; &#x441;&#x438;&#x441;&#x442;&#x435;&#x43C;&#x43D;&#x44B;&#x445; &#x43C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x43E;&#x432;, &#x43D;&#x435;&#x43E;&#x431;&#x445;&#x43E;&#x434;&#x438;&#x43C;&#x44B;&#x445; &#x434;&#x43B;&#x44F; &#x437;&#x430;&#x43F;&#x443;&#x441;&#x43A;&#x430; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x44F;.</p>
+<pre><code class="hljs html"><span class="hljs-comment">&lt;!-- &#x441;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x430;&#x435;&#x442;, &#x434;&#x430;&#x436;&#x435; &#x435;&#x441;&#x43B;&#x438; Alt &#x438;&#x43B;&#x438; Shift &#x442;&#x430;&#x43A;&#x436;&#x435; &#x43D;&#x430;&#x436;&#x430;&#x442;&#x44B; --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> @<span class="hljs-attr">click.ctrl</span>=<span class="hljs-string">&quot;onClick&quot;</span>&gt;</span>A<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- &#x441;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x430;&#x435;&#x442;, &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x43A;&#x43E;&#x433;&#x434;&#x430; &#x43D;&#x430;&#x436;&#x430;&#x442; Ctrl &#x438; &#x43D;&#x435; &#x43D;&#x430;&#x436;&#x430;&#x442;&#x44B; &#x43D;&#x438;&#x43A;&#x430;&#x43A;&#x438;&#x435; &#x434;&#x440;&#x443;&#x433;&#x438;&#x435; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;&#x438; --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> @<span class="hljs-attr">click.ctrl.exact</span>=<span class="hljs-string">&quot;onCtrlClick&quot;</span>&gt;</span>A<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- &#x441;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x430;&#x435;&#x442;, &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x43A;&#x43E;&#x433;&#x434;&#x430; &#x43D;&#x435; &#x43D;&#x430;&#x436;&#x430;&#x442;&#x44B; &#x43D;&#x438;&#x43A;&#x430;&#x43A;&#x438;&#x435; &#x441;&#x438;&#x441;&#x442;&#x435;&#x43C;&#x43D;&#x44B;&#x435; &#x43C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B; --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> @<span class="hljs-attr">click.exact</span>=<span class="hljs-string">&quot;onClick&quot;</span>&gt;</span>A<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></code></pre>
+<h3 id="&#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B;-&#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;-&#x43C;&#x44B;&#x448;&#x438;"><a href="#&#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B;-&#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448;-&#x43C;&#x44B;&#x448;&#x438;" class="headerlink" title="&#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448; &#x43C;&#x44B;&#x448;&#x438;"></a>&#x41C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B; &#x43A;&#x43B;&#x430;&#x432;&#x438;&#x448; &#x43C;&#x44B;&#x448;&#x438;</h3><blockquote>
+<p>&#x414;&#x43E;&#x431;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x43E; &#x432; &#x432;&#x435;&#x440;&#x441;&#x438;&#x438; 2.2.0+</p>
+</blockquote>
+<ul>
+<li><code>.left</code></li>
+<li><code>.right</code></li>
+<li><code>.middle</code></li>
+</ul>
+<p>&#x42D;&#x442;&#x438; &#x43C;&#x43E;&#x434;&#x438;&#x444;&#x438;&#x43A;&#x430;&#x442;&#x43E;&#x440;&#x44B; &#x43E;&#x433;&#x440;&#x430;&#x43D;&#x438;&#x447;&#x438;&#x432;&#x430;&#x44E;&#x442; &#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x44F; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x432;&#x44B;&#x437;&#x43E;&#x432;&#x430;&#x43C;&#x438; &#x43E;&#x43F;&#x440;&#x435;&#x434;&#x435;&#x43B;&#x451;&#x43D;&#x43D;&#x43E;&#x439; &#x43A;&#x43D;&#x43E;&#x43F;&#x43A;&#x43E;&#x439; &#x43C;&#x44B;&#x448;&#x438;.</p>
+<h2 id="&#x41F;&#x43E;&#x447;&#x435;&#x43C;&#x443;-&#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x447;&#x438;&#x43A;&#x438;-&#x443;&#x43A;&#x430;&#x437;&#x44B;&#x432;&#x430;&#x44E;&#x442;&#x441;&#x44F;-&#x432;-HTML"><a href="#&#x41F;&#x43E;&#x447;&#x435;&#x43C;&#x443;-&#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x447;&#x438;&#x43A;&#x438;-&#x443;&#x43A;&#x430;&#x437;&#x44B;&#x432;&#x430;&#x44E;&#x442;&#x441;&#x44F;-&#x432;-HTML" class="headerlink" title="&#x41F;&#x43E;&#x447;&#x435;&#x43C;&#x443; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x447;&#x438;&#x43A;&#x438; &#x443;&#x43A;&#x430;&#x437;&#x44B;&#x432;&#x430;&#x44E;&#x442;&#x441;&#x44F; &#x432; HTML?"></a>&#x41F;&#x43E;&#x447;&#x435;&#x43C;&#x443; &#x43F;&#x43E;&#x434;&#x43F;&#x438;&#x441;&#x447;&#x438;&#x43A;&#x438; &#x443;&#x43A;&#x430;&#x437;&#x44B;&#x432;&#x430;&#x44E;&#x442;&#x441;&#x44F; &#x432; HTML?</h2><p>&#x41C;&#x43E;&#x436;&#x435;&#x442; &#x43F;&#x43E;&#x43A;&#x430;&#x437;&#x430;&#x442;&#x44C;&#x441;&#x44F;, &#x447;&#x442;&#x43E; &#x442;&#x430;&#x43A;&#x43E;&#x439; &#x43F;&#x43E;&#x434;&#x445;&#x43E;&#x434; &#x43A; &#x43E;&#x442;&#x441;&#x43B;&#x435;&#x436;&#x438;&#x432;&#x430;&#x43D;&#x438;&#x44E; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439; &#x43D;&#x430;&#x440;&#x443;&#x448;&#x430;&#x435;&#x442; &#x441;&#x442;&#x430;&#x440;&#x43E;&#x435; &#x434;&#x43E;&#x431;&#x440;&#x43E;&#x435; &#x43F;&#x440;&#x430;&#x432;&#x438;&#x43B;&#x43E; &#xAB;&#x440;&#x430;&#x437;&#x434;&#x435;&#x43B;&#x435;&#x43D;&#x438;&#x44F; &#x43C;&#x443;&#x445; &#x438; &#x43A;&#x43E;&#x442;&#x43B;&#x435;&#x442;&#xBB;. &#x41D;&#x435; &#x431;&#x435;&#x441;&#x43F;&#x43E;&#x43A;&#x43E;&#x439;&#x442;&#x435;&#x441;&#x44C; &#x2014; &#x43F;&#x43E;&#x441;&#x43A;&#x43E;&#x43B;&#x44C;&#x43A;&#x443; &#x432;&#x441;&#x435; &#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x438; &#x432;&#x43E; Vue &#x441;&#x432;&#x44F;&#x437;&#x44B;&#x432;&#x430;&#x44E;&#x442;&#x441;&#x44F; &#x441; &#x43E;&#x442;&#x432;&#x435;&#x442;&#x441;&#x442;&#x432;&#x435;&#x43D;&#x43D;&#x44B;&#x43C; &#x437;&#x430; &#x442;&#x435;&#x43A;&#x443;&#x449;&#x435;&#x435; &#x43F;&#x440;&#x435;&#x434;&#x441;&#x442;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x435; &#x44D;&#x43A;&#x437;&#x435;&#x43C;&#x43F;&#x43B;&#x44F;&#x440;&#x43E;&#x43C; vm, &#x442;&#x440;&#x443;&#x434;&#x43D;&#x43E;&#x441;&#x442;&#x435;&#x439; &#x432; &#x43F;&#x43E;&#x434;&#x434;&#x435;&#x440;&#x436;&#x43A;&#x435; &#x43D;&#x435; &#x432;&#x43E;&#x437;&#x43D;&#x438;&#x43A;&#x430;&#x435;&#x442;. &#x41D;&#x430; &#x43F;&#x440;&#x430;&#x43A;&#x442;&#x438;&#x43A;&#x435; &#x435;&#x441;&#x442;&#x44C; &#x434;&#x430;&#x436;&#x435; &#x43D;&#x435;&#x441;&#x43A;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x43F;&#x440;&#x435;&#x438;&#x43C;&#x443;&#x449;&#x435;&#x441;&#x442;&#x432; &#x43F;&#x440;&#x438; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x438; <code>v-on</code>:</p>
+<ol>
+<li><p>&#x41B;&#x435;&#x433;&#x447;&#x435; &#x43F;&#x43E;&#x43B;&#x443;&#x447;&#x438;&#x442;&#x44C; &#x43F;&#x440;&#x435;&#x434;&#x441;&#x442;&#x430;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x435; &#x43E;&#x431; &#x438;&#x43C;&#x435;&#x44E;&#x449;&#x438;&#x445;&#x441;&#x44F; &#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x430;&#x445;, &#x43F;&#x440;&#x43E;&#x441;&#x442;&#x43E; &#x43F;&#x440;&#x43E;&#x431;&#x435;&#x436;&#x430;&#x432; &#x433;&#x43B;&#x430;&#x437;&#x430;&#x43C;&#x438; &#x43F;&#x43E; HTML-&#x43A;&#x43E;&#x434;&#x443; &#x448;&#x430;&#x431;&#x43B;&#x43E;&#x43D;&#x430;.</p>
+</li>
+<li><p>&#x41F;&#x43E;&#x441;&#x43A;&#x43E;&#x43B;&#x44C;&#x43A;&#x443; &#x43D;&#x435;&#x442; &#x43D;&#x435;&#x43E;&#x431;&#x445;&#x43E;&#x434;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x438; &#x432;&#x440;&#x443;&#x447;&#x43D;&#x443;&#x44E; &#x43F;&#x440;&#x438;&#x432;&#x44F;&#x437;&#x44B;&#x432;&#x430;&#x442;&#x44C; &#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;&#x438; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439; &#x432; JS, &#x43A;&#x43E;&#x434; vm &#x43E;&#x441;&#x442;&#x430;&#x451;&#x442;&#x441;&#x44F; &#x43D;&#x435;&#x437;&#x430;&#x432;&#x438;&#x441;&#x438;&#x43C;&#x44B;&#x43C; &#x43E;&#x442; DOM &#x438; &#x441;&#x43E;&#x434;&#x435;&#x440;&#x436;&#x438;&#x442; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x43D;&#x435;&#x43E;&#x431;&#x445;&#x43E;&#x434;&#x438;&#x43C;&#x443;&#x44E; &#x43B;&#x43E;&#x433;&#x438;&#x43A;&#x443;. &#x42D;&#x442;&#x43E; &#x43E;&#x431;&#x43B;&#x435;&#x433;&#x447;&#x430;&#x435;&#x442; &#x442;&#x435;&#x441;&#x442;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435;.</p>
+</li>
+<li><p>&#x41A;&#x43E;&#x433;&#x434;&#x430; vm &#x443;&#x43D;&#x438;&#x447;&#x442;&#x43E;&#x436;&#x430;&#x435;&#x442;&#x441;&#x44F;, &#x432;&#x441;&#x435; &#x441;&#x43B;&#x443;&#x448;&#x430;&#x442;&#x435;&#x43B;&#x438; &#x441;&#x43E;&#x431;&#x44B;&#x442;&#x438;&#x439; &#x430;&#x432;&#x442;&#x43E;&#x43C;&#x430;&#x442;&#x438;&#x447;&#x435;&#x441;&#x43A;&#x438; &#x443;&#x434;&#x430;&#x43B;&#x44F;&#x44E;&#x442;&#x441;&#x44F;. &#x41D;&#x435;&#x442; &#x43D;&#x435;&#x43E;&#x431;&#x445;&#x43E;&#x434;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x438; &#x432;&#x43E;&#x43B;&#x43D;&#x43E;&#x432;&#x430;&#x442;&#x44C;&#x441;&#x44F;, &#x447;&#x442;&#x43E; &#x43F;&#x440;&#x438;&#x434;&#x451;&#x442;&#x441;&#x44F; &#x43F;&#x440;&#x438;&#x431;&#x438;&#x440;&#x430;&#x442;&#x44C;&#x441;&#x44F; &#x437;&#x430; &#x441;&#x43E;&#x431;&#x43E;&#x439;.</p>
+</li>
+</ol>
+
+    
+    
+      <div class="guide-links">
+        
+        
+          <span>&#x2190; <a href="/v2/guide/list.html">&#x41E;&#x442;&#x440;&#x438;&#x441;&#x43E;&#x432;&#x43A;&#x430; &#x441;&#x43F;&#x438;&#x441;&#x43A;&#x43E;&#x432;</a></span>
+        
+        
+        
+          <span style="float: right;"><a href="/v2/guide/forms.html">&#x420;&#x430;&#x431;&#x43E;&#x442;&#x430; &#x441; &#x444;&#x43E;&#x440;&#x43C;&#x430;&#x43C;&#x438;</a> &#x2192;</span>
+        
+      </div>
+    
+    <div class="footer">
+        <script src="//m.servedby-buysellads.com/monetization.js" type="text/javascript"></script>
+<div class="bsa-cpc"></div>
+<script>
+  (function(){
+    if(typeof _bsa !== 'undefined' && _bsa) {
+    _bsa.init('default', 'CKYD62QM', 'placement:vuejsorg', {
+      target: '.bsa-cpc',
+      align: 'horizontal',
+      disable_css: 'true'
+    });
+      }
+  })();
+</script>
+
+      &#x41E;&#x431;&#x43D;&#x430;&#x440;&#x443;&#x436;&#x438;&#x43B;&#x438; &#x43E;&#x448;&#x438;&#x431;&#x43A;&#x443; &#x438;&#x43B;&#x438; &#x445;&#x43E;&#x442;&#x438;&#x442;&#x435; &#x434;&#x43E;&#x431;&#x430;&#x432;&#x438;&#x442;&#x44C; &#x447;&#x442;&#x43E;-&#x442;&#x43E; &#x441;&#x432;&#x43E;&#x451; &#x432; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x446;&#x438;&#x44E;?
+      <a href="https://github.com/translation-gang/ru.vuejs.org/blob/master/src/v2/guide/events.md" target="_blank">
+        &#x41E;&#x442;&#x440;&#x435;&#x434;&#x430;&#x43A;&#x442;&#x438;&#x440;&#x443;&#x439;&#x442;&#x435; &#x44D;&#x442;&#x443; &#x441;&#x442;&#x440;&#x430;&#x43D;&#x438;&#x446;&#x443; &#x43D;&#x430; GitHub!
+      </a>
+    </div>
+
+</body>
+</html>

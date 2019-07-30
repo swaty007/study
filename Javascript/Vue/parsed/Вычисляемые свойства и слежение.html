@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" id="wrapper">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Вычисляемые свойства и слежение</title>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="./style.css" rel="stylesheet" type="text/css">
+
+    <!-- версия для разработки, отображает полезные предупреждения в консоли -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <!-- production-версия, оптимизированная для размера и скорости -->
+    <!--    <script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+
+</head>
+<body id="main">
+<p>Спаршено с: <a href="https://ru.vuejs.org/v2/guide/computed.html">https://ru.vuejs.org/v2/guide/computed.html</a></p>
+
+    
+      
+        
+
+      
+    
+    
+      <h1>&#x412;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x435; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430; &#x438; &#x441;&#x43B;&#x435;&#x436;&#x435;&#x43D;&#x438;&#x435;</h1>
+    
+    
+      <h2 id="&#x412;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x435;-&#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430;"><a href="#&#x412;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x435;-&#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430;" class="headerlink" title="&#x412;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x435; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430;"></a>&#x412;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x435; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430;</h2><p>&#x412;&#x441;&#x442;&#x440;&#x430;&#x438;&#x432;&#x430;&#x435;&#x43C;&#x44B;&#x435; &#x432; &#x448;&#x430;&#x431;&#x43B;&#x43E;&#x43D;&#x44B; &#x432;&#x44B;&#x440;&#x430;&#x436;&#x435;&#x43D;&#x438;&#x44F; &#x443;&#x434;&#x43E;&#x431;&#x43D;&#x44B;, &#x43D;&#x43E; &#x43C;&#x43E;&#x433;&#x443;&#x442; &#x43F;&#x440;&#x435;&#x434;&#x43D;&#x430;&#x437;&#x43D;&#x430;&#x447;&#x430;&#x442;&#x44C;&#x441;&#x44F; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x434;&#x43B;&#x44F; &#x43F;&#x440;&#x43E;&#x441;&#x442;&#x44B;&#x445; &#x43E;&#x43F;&#x435;&#x440;&#x430;&#x446;&#x438;&#x439;. &#x41F;&#x440;&#x438; &#x443;&#x441;&#x43B;&#x43E;&#x436;&#x43D;&#x435;&#x43D;&#x438;&#x438; &#x43B;&#x43E;&#x433;&#x438;&#x43A;&#x438; &#x438;&#x445; &#x442;&#x440;&#x443;&#x434;&#x43D;&#x435;&#x435; &#x43F;&#x43E;&#x434;&#x434;&#x435;&#x440;&#x436;&#x438;&#x432;&#x430;&#x442;&#x44C;:</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;example&quot;</span>&gt;</span>
+  {{ message.split(&apos;&apos;).reverse().join(&apos;&apos;) }}
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<p>&#x422;&#x430;&#x43A;&#x43E;&#x439; &#x448;&#x430;&#x431;&#x43B;&#x43E;&#x43D; &#x443;&#x436;&#x435; &#x43D;&#x435; &#x432;&#x44B;&#x433;&#x43B;&#x44F;&#x434;&#x438;&#x442; &#x43F;&#x440;&#x43E;&#x441;&#x442;&#x44B;&#x43C; &#x438; &#x434;&#x435;&#x43A;&#x43B;&#x430;&#x440;&#x430;&#x442;&#x438;&#x432;&#x43D;&#x44B;&#x43C;. &#x421; &#x43F;&#x435;&#x440;&#x432;&#x43E;&#x433;&#x43E; &#x432;&#x437;&#x433;&#x43B;&#x44F;&#x434;&#x430; &#x438; &#x43D;&#x435; &#x441;&#x43A;&#x430;&#x436;&#x435;&#x448;&#x44C;, &#x447;&#x442;&#x43E; &#x43E;&#x43D; &#x432;&#x441;&#x435;&#x433;&#x43E; &#x43B;&#x438;&#x448;&#x44C; &#x43E;&#x442;&#x43E;&#x431;&#x440;&#x430;&#x436;&#x430;&#x435;&#x442; <code>message</code> &#x437;&#x430;&#x434;&#x43E;&#x43C; &#x43D;&#x430;&#x43F;&#x435;&#x440;&#x451;&#x434;. &#x421;&#x438;&#x442;&#x443;&#x430;&#x446;&#x438;&#x44F; &#x441;&#x442;&#x430;&#x43D;&#x435;&#x442; &#x435;&#x449;&#x451; &#x445;&#x443;&#x436;&#x435;, &#x435;&#x441;&#x43B;&#x438; &#x44D;&#x442;&#x443; &#x43B;&#x43E;&#x433;&#x438;&#x43A;&#x443; &#x43F;&#x43E;&#x442;&#x440;&#x435;&#x431;&#x443;&#x435;&#x442;&#x441;&#x44F; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x432; &#x43D;&#x435;&#x441;&#x43A;&#x43E;&#x43B;&#x44C;&#x43A;&#x438;&#x445; &#x43C;&#x435;&#x441;&#x442;&#x430;&#x445; &#x448;&#x430;&#x431;&#x43B;&#x43E;&#x43D;&#x430;.</p>
+<p>&#x41D;&#x430; &#x43F;&#x43E;&#x43C;&#x43E;&#x449;&#x44C; &#x437;&#x434;&#x435;&#x441;&#x44C; &#x43F;&#x440;&#x438;&#x445;&#x43E;&#x434;&#x44F;&#x442; <strong>&#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x435; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430;</strong>.</p>
+<h3 id="&#x41F;&#x440;&#x43E;&#x441;&#x442;&#x43E;&#x439;-&#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;"><a href="#&#x41F;&#x440;&#x43E;&#x441;&#x442;&#x43E;&#x439;-&#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;" class="headerlink" title="&#x41F;&#x440;&#x43E;&#x441;&#x442;&#x43E;&#x439; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;"></a>&#x41F;&#x440;&#x43E;&#x441;&#x442;&#x43E;&#x439; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;</h3><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;example&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>&#x418;&#x437;&#x43D;&#x430;&#x447;&#x430;&#x43B;&#x44C;&#x43D;&#x43E;&#x435; &#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x435;: &#xAB;{{ message }}&#xBB;<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>&#x421;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x435; &#x437;&#x430;&#x434;&#x43E;&#x43C; &#x43D;&#x430;&#x43F;&#x435;&#x440;&#x451;&#x434;: &#xAB;{{ reversedMessage }}&#xBB;<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<pre><code class="hljs js"><span class="hljs-keyword">var</span> vm = <span class="hljs-keyword">new</span> Vue({
+  <span class="hljs-attr">el</span>: <span class="hljs-string">&apos;#example&apos;</span>,
+  <span class="hljs-attr">data</span>: {
+    <span class="hljs-attr">message</span>: <span class="hljs-string">&apos;&#x41F;&#x440;&#x438;&#x432;&#x435;&#x442;&apos;</span>
+  },
+  <span class="hljs-attr">computed</span>: {
+    <span class="hljs-comment">// &#x433;&#x435;&#x442;&#x442;&#x435;&#x440; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x43E;&#x433;&#x43E; &#x437;&#x43D;&#x430;&#x447;&#x435;&#x43D;&#x438;&#x44F;</span>
+    reversedMessage: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-comment">// `this` &#x443;&#x43A;&#x430;&#x437;&#x44B;&#x432;&#x430;&#x435;&#x442; &#x43D;&#x430; &#x44D;&#x43A;&#x437;&#x435;&#x43C;&#x43F;&#x43B;&#x44F;&#x440; vm</span>
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.message.split(<span class="hljs-string">&apos;&apos;</span>).reverse().join(<span class="hljs-string">&apos;&apos;</span>)
+    }
+  }
+})</code></pre>
+<p>&#x420;&#x435;&#x437;&#x443;&#x43B;&#x44C;&#x442;&#x430;&#x442;:</p>
+
+<div id="example" class="demo">
+  <p>&#x418;&#x437;&#x43D;&#x430;&#x447;&#x430;&#x43B;&#x44C;&#x43D;&#x43E;&#x435; &#x441;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x435;: &#xAB;{{ message }}&#xBB;</p>
+  <p>&#x421;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x435; &#x437;&#x430;&#x434;&#x43E;&#x43C; &#x43D;&#x430;&#x43F;&#x435;&#x440;&#x451;&#x434;: &#xAB;{{ reversedMessage }}&#xBB;</p>
+</div>
+<script>
+var vm = new Vue({
+  el: '#example',
+  data: {
+    message: 'Привет'
+  },
+  computed: {
+    reversedMessage: function () {
+      return this.message.split('').reverse().join('')
+    }
+  }
+})
+</script>
+
+<p>&#x41C;&#x44B; &#x43E;&#x43F;&#x440;&#x435;&#x434;&#x435;&#x43B;&#x438;&#x43B;&#x438; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x43E;&#x435; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x43E; <code>reversedMessage</code>. &#x41D;&#x430;&#x43F;&#x438;&#x441;&#x430;&#x43D;&#x43D;&#x430;&#x44F; &#x43D;&#x430;&#x43C;&#x438; &#x444;&#x443;&#x43D;&#x43A;&#x446;&#x438;&#x44F; &#x431;&#x443;&#x434;&#x435;&#x442; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C;&#x441;&#x44F; &#x43A;&#x430;&#x43A; &#x433;&#x435;&#x442;&#x442;&#x435;&#x440; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430; <code>vm.reversedMessage</code>:</p>
+<pre><code class="hljs js"><span class="hljs-built_in">console</span>.log(vm.reversedMessage) <span class="hljs-comment">// =&gt; &apos;&#x442;&#x435;&#x432;&#x438;&#x440;&#x41F;&apos;</span>
+vm.message = <span class="hljs-string">&apos;&#x41F;&#x43E;&#x43A;&#x430;&apos;</span>
+<span class="hljs-built_in">console</span>.log(vm.reversedMessage) <span class="hljs-comment">// =&gt; &apos;&#x430;&#x43A;&#x43E;&#x41F;&apos;</span></code></pre>
+<p>&#x412;&#x44B; &#x43C;&#x43E;&#x436;&#x435;&#x442;&#x435; &#x43E;&#x442;&#x43A;&#x440;&#x44B;&#x442;&#x44C; &#x43A;&#x43E;&#x43D;&#x441;&#x43E;&#x43B;&#x44C; &#x438; &#x43F;&#x43E;&#x438;&#x433;&#x440;&#x430;&#x442;&#x44C;&#x441;&#x44F; &#x441; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;&#x43E;&#x43C; &#x441;&#x430;&#x43C;&#x43E;&#x441;&#x442;&#x43E;&#x44F;&#x442;&#x435;&#x43B;&#x44C;&#x43D;&#x43E;. &#x417;&#x43D;&#x430;&#x447;&#x435;&#x43D;&#x438;&#x435; <code>vm.reversedMessage</code> &#x432;&#x441;&#x435;&#x433;&#x434;&#x430; &#x437;&#x430;&#x432;&#x438;&#x441;&#x438;&#x442; &#x43E;&#x442; &#x437;&#x43D;&#x430;&#x447;&#x435;&#x43D;&#x438;&#x44F; <code>vm.message</code>.</p>
+<p>&#x412; &#x448;&#x430;&#x431;&#x43B;&#x43E;&#x43D;&#x430;&#x445; &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x43E;&#x431;&#x440;&#x430;&#x449;&#x430;&#x442;&#x44C;&#x441;&#x44F; &#x43A; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x43C; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430;&#x43C; &#x43A;&#x430;&#x43A; &#x438; &#x43A; &#x43E;&#x431;&#x44B;&#x447;&#x43D;&#x44B;&#x43C;. Vue &#x437;&#x43D;&#x430;&#x435;&#x442;, &#x447;&#x442;&#x43E; <code>vm.reversedMessage</code> &#x437;&#x430;&#x432;&#x438;&#x441;&#x438;&#x442; &#x43E;&#x442; <code>vm.message</code>, &#x43F;&#x43E;&#x44D;&#x442;&#x43E;&#x43C;&#x443; &#x43F;&#x440;&#x438; &#x43E;&#x431;&#x43D;&#x43E;&#x432;&#x43B;&#x435;&#x43D;&#x438;&#x438; <code>vm.message</code> &#x43E;&#x431;&#x43D;&#x43E;&#x432;&#x44F;&#x442;&#x441;&#x44F; &#x438; &#x432;&#x441;&#x435; &#x437;&#x430;&#x432;&#x438;&#x441;&#x44F;&#x449;&#x438;&#x435; &#x43E;&#x442; &#x43D;&#x435;&#x433;&#x43E; &#x44D;&#x43B;&#x435;&#x43C;&#x435;&#x43D;&#x442;&#x44B;, &#x432; &#x43D;&#x430;&#x448;&#x435;&#x43C; &#x441;&#x43B;&#x443;&#x447;&#x430;&#x435; &#x43E;&#x431;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x441;&#x44F; <code>vm.reversedMessage</code>. &#x421;&#x430;&#x43C;&#x43E;&#x435; &#x432;&#x430;&#x436;&#x43D;&#x43E;&#x435; &#x2014; &#x44D;&#x442;&#x443; &#x437;&#x430;&#x432;&#x438;&#x441;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x44C; &#x442;&#x435;&#x43F;&#x435;&#x440;&#x44C; &#x43C;&#x44B; &#x443;&#x43A;&#x430;&#x437;&#x430;&#x43B;&#x438; &#x434;&#x435;&#x43A;&#x43B;&#x430;&#x440;&#x430;&#x442;&#x438;&#x432;&#x43D;&#x43E;: &#x433;&#x435;&#x442;&#x442;&#x435;&#x440; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x43E;&#x433;&#x43E; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430; &#x43D;&#x435; &#x438;&#x43C;&#x435;&#x435;&#x442; &#x43F;&#x43E;&#x431;&#x43E;&#x447;&#x43D;&#x44B;&#x445; &#x44D;&#x444;&#x444;&#x435;&#x43A;&#x442;&#x43E;&#x432;, &#x447;&#x442;&#x43E; &#x443;&#x43F;&#x440;&#x43E;&#x449;&#x430;&#x435;&#x442; &#x43F;&#x43E;&#x43D;&#x438;&#x43C;&#x430;&#x43D;&#x438;&#x435; &#x43A;&#x43E;&#x434;&#x430; &#x438; &#x435;&#x433;&#x43E; &#x442;&#x435;&#x441;&#x442;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435;.</p>
+<h3 id="&#x41A;&#x435;&#x448;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435;-&#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x445;-&#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;"><a href="#&#x41A;&#x435;&#x448;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435;-&#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x445;-&#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;" class="headerlink" title="&#x41A;&#x435;&#x448;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x445; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;"></a>&#x41A;&#x435;&#x448;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x445; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;</h3><p>&#x41C;&#x43E;&#x436;&#x43D;&#x43E; &#x437;&#x430;&#x43C;&#x435;&#x442;&#x438;&#x442;&#x44C;, &#x447;&#x442;&#x43E; &#x442;&#x430;&#x43A;&#x43E;&#x433;&#x43E; &#x436;&#x435; &#x440;&#x435;&#x437;&#x443;&#x43B;&#x44C;&#x442;&#x430;&#x442;&#x430; &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x434;&#x43E;&#x441;&#x442;&#x438;&#x447;&#x44C; &#x438; &#x441; &#x43F;&#x43E;&#x43C;&#x43E;&#x449;&#x44C;&#x44E; &#x43C;&#x435;&#x442;&#x43E;&#x434;&#x430;:</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>&#x421;&#x43E;&#x43E;&#x431;&#x449;&#x435;&#x43D;&#x438;&#x435; &#x437;&#x430;&#x434;&#x43E;&#x43C; &#x43D;&#x430;&#x43F;&#x435;&#x440;&#x451;&#x434;: &#xAB;{{ reverseMessage() }}&#xBB;<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></code></pre>
+<pre><code class="hljs js"><span class="hljs-comment">// &#x432; &#x43A;&#x43E;&#x43C;&#x43F;&#x43E;&#x43D;&#x435;&#x43D;&#x442;&#x435;</span>
+methods: {
+  <span class="hljs-attr">reverseMessage</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.message.split(<span class="hljs-string">&apos;&apos;</span>).reverse().join(<span class="hljs-string">&apos;&apos;</span>)
+  }
+}</code></pre>
+<p>&#x412;&#x43C;&#x435;&#x441;&#x442;&#x43E; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x43E;&#x433;&#x43E; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430;, &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x442;&#x443; &#x436;&#x435; &#x441;&#x430;&#x43C;&#x443;&#x44E; &#x444;&#x443;&#x43D;&#x43A;&#x446;&#x438;&#x44E; &#x432; &#x43A;&#x430;&#x447;&#x435;&#x441;&#x442;&#x432;&#x435; &#x43C;&#x435;&#x442;&#x43E;&#x434;&#x430;. &#x421; &#x442;&#x43E;&#x447;&#x43A;&#x438; &#x437;&#x440;&#x435;&#x43D;&#x438;&#x44F; &#x43A;&#x43E;&#x43D;&#x435;&#x447;&#x43D;&#x43E;&#x433;&#x43E; &#x440;&#x435;&#x437;&#x443;&#x43B;&#x44C;&#x442;&#x430;&#x442;&#x430;, &#x43E;&#x431;&#x430; &#x43F;&#x43E;&#x434;&#x445;&#x43E;&#x434;&#x430; &#x434;&#x435;&#x43B;&#x430;&#x44E;&#x442; &#x43E;&#x434;&#x43D;&#x43E; &#x438; &#x442;&#x43E; &#x436;&#x435;. &#x41D;&#x43E; &#x435;&#x441;&#x442;&#x44C; &#x432;&#x430;&#x436;&#x43D;&#x43E;&#x435; &#x43E;&#x442;&#x43B;&#x438;&#x447;&#x438;&#x435;: <strong>&#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x435; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430; &#x43A;&#x44D;&#x448;&#x438;&#x440;&#x443;&#x44E;&#x442;&#x441;&#x44F;, &#x43E;&#x441;&#x43D;&#x43E;&#x432;&#x44B;&#x432;&#x430;&#x44F;&#x441;&#x44C; &#x43D;&#x430; &#x441;&#x432;&#x43E;&#x438;&#x445; &#x440;&#x435;&#x430;&#x43A;&#x442;&#x438;&#x432;&#x43D;&#x44B;&#x445; &#x437;&#x430;&#x432;&#x438;&#x441;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x44F;&#x445;</strong>. &#x412;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x43E;&#x435; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x43E; &#x43F;&#x435;&#x440;&#x435;&#x441;&#x447;&#x438;&#x442;&#x44B;&#x432;&#x430;&#x435;&#x442;&#x441;&#x44F; &#x43B;&#x438;&#x448;&#x44C; &#x442;&#x43E;&#x433;&#x434;&#x430;, &#x43A;&#x43E;&#x433;&#x434;&#x430; &#x438;&#x437;&#x43C;&#x435;&#x43D;&#x438;&#x442;&#x441;&#x44F; &#x43E;&#x434;&#x43D;&#x430; &#x438;&#x437; &#x435;&#x433;&#x43E; &#x440;&#x435;&#x430;&#x43A;&#x442;&#x438;&#x432;&#x43D;&#x44B;&#x445; &#x437;&#x430;&#x432;&#x438;&#x441;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x435;&#x439;. &#x41F;&#x43E;&#x44D;&#x442;&#x43E;&#x43C;&#x443;, &#x43F;&#x43E;&#x43A;&#x430; <code>message</code> &#x43E;&#x441;&#x442;&#x430;&#x451;&#x442;&#x441;&#x44F; &#x43D;&#x435;&#x438;&#x437;&#x43C;&#x435;&#x43D;&#x43D;&#x44B;&#x43C;, &#x43C;&#x43D;&#x43E;&#x433;&#x43E;&#x43A;&#x440;&#x430;&#x442;&#x43D;&#x43E;&#x435; &#x43E;&#x431;&#x440;&#x430;&#x449;&#x435;&#x43D;&#x438;&#x435; &#x43A; <code>reversedMessage</code> &#x431;&#x443;&#x434;&#x435;&#x442; &#x43A;&#x430;&#x436;&#x434;&#x44B;&#x439; &#x440;&#x430;&#x437; &#x432;&#x43E;&#x437;&#x432;&#x440;&#x430;&#x449;&#x430;&#x442;&#x44C; &#x435;&#x434;&#x438;&#x43D;&#x43E;&#x436;&#x434;&#x44B; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x435;&#x43D;&#x43D;&#x43E;&#x435; &#x437;&#x43D;&#x430;&#x447;&#x435;&#x43D;&#x438;&#x435;, &#x43D;&#x435; &#x437;&#x430;&#x43F;&#x443;&#x441;&#x43A;&#x430;&#x44F; &#x444;&#x443;&#x43D;&#x43A;&#x446;&#x438;&#x44E; &#x432;&#x43D;&#x43E;&#x432;&#x44C;.</p>
+<p>&#x41E;&#x431;&#x440;&#x430;&#x442;&#x438;&#x442;&#x435; &#x432;&#x43D;&#x438;&#x43C;&#x430;&#x43D;&#x438;&#x435;, &#x447;&#x442;&#x43E; &#x441;&#x43B;&#x435;&#x434;&#x443;&#x44E;&#x449;&#x435;&#x435; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x43E;&#x435; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x43E; &#x43D;&#x438;&#x43A;&#x43E;&#x433;&#x434;&#x430; &#x43D;&#x435; &#x43E;&#x431;&#x43D;&#x43E;&#x432;&#x438;&#x442;&#x441;&#x44F;, &#x43F;&#x43E;&#x441;&#x43A;&#x43E;&#x43B;&#x44C;&#x43A;&#x443; <code>Date.now()</code> &#x43D;&#x435; &#x44F;&#x432;&#x43B;&#x44F;&#x435;&#x442;&#x441;&#x44F; &#x440;&#x435;&#x430;&#x43A;&#x442;&#x438;&#x432;&#x43D;&#x43E;&#x439; &#x437;&#x430;&#x432;&#x438;&#x441;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x44C;&#x44E;:</p>
+<pre><code class="hljs js">computed: {
+  <span class="hljs-attr">now</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Date</span>.now()
+  }
+}</code></pre>
+<p>&#x418;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435; &#x43C;&#x435;&#x442;&#x43E;&#x434;&#x430;, &#x43D;&#x430;&#x43F;&#x440;&#x43E;&#x442;&#x438;&#x432;, &#x431;&#x443;&#x434;&#x435;&#x442; &#x437;&#x430;&#x43F;&#x443;&#x441;&#x43A;&#x430;&#x442;&#x44C; &#x444;&#x443;&#x43D;&#x43A;&#x446;&#x438;&#x44E; <strong>&#x432;&#x441;&#x435;&#x433;&#x434;&#x430;, &#x43F;&#x440;&#x438; &#x43A;&#x430;&#x436;&#x434;&#x43E;&#x43C; &#x43E;&#x431;&#x440;&#x430;&#x449;&#x435;&#x43D;&#x438;&#x438; &#x43A; &#x43D;&#x435;&#x43C;&#x443;</strong>.</p>
+<p>&#x417;&#x430;&#x447;&#x435;&#x43C; &#x43D;&#x443;&#x436;&#x43D;&#x43E; &#x43A;&#x435;&#x448;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435;? &#x41F;&#x440;&#x435;&#x434;&#x441;&#x442;&#x430;&#x432;&#x44C;&#x442;&#x435;, &#x435;&#x441;&#x442;&#x44C; &#xAB;&#x434;&#x43E;&#x440;&#x43E;&#x433;&#x43E;&#x435;&#xBB; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x43E;&#x435; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x43E; <strong>A</strong>, &#x442;&#x440;&#x435;&#x431;&#x443;&#x44E;&#x449;&#x435;&#x435; &#x446;&#x438;&#x43A;&#x43B;&#x430; &#x43F;&#x43E; &#x43E;&#x433;&#x440;&#x43E;&#x43C;&#x43D;&#x43E;&#x43C;&#x443; &#x43C;&#x430;&#x441;&#x441;&#x438;&#x432;&#x443; &#x438; &#x432;&#x44B;&#x43F;&#x43E;&#x43B;&#x43D;&#x44F;&#x44E;&#x449;&#x435;&#x435; &#x43C;&#x43D;&#x43E;&#x436;&#x435;&#x441;&#x442;&#x432;&#x43E; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x435;&#x43D;&#x438;&#x439;. &#x418; &#x43F;&#x443;&#x441;&#x442;&#x44C; &#x435;&#x449;&#x451; &#x431;&#x443;&#x434;&#x443;&#x442; &#x434;&#x440;&#x443;&#x433;&#x438;&#x435; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x435; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430;, &#x432; &#x441;&#x432;&#x43E;&#x44E; &#x43E;&#x447;&#x435;&#x440;&#x435;&#x434;&#x44C;, &#x437;&#x430;&#x432;&#x438;&#x441;&#x44F;&#x449;&#x438;&#x435; &#x43E;&#x442; <strong>A</strong>. &#x411;&#x435;&#x437; &#x43A;&#x44D;&#x448;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F; &#x433;&#x435;&#x442;&#x442;&#x435;&#x440; <strong>A</strong> &#x431;&#x443;&#x434;&#x435;&#x442; &#x437;&#x430;&#x43F;&#x443;&#x441;&#x43A;&#x430;&#x442;&#x44C;&#x441;&#x44F; &#x43A;&#x443;&#x434;&#x430; &#x447;&#x430;&#x449;&#x435; &#x43D;&#x435;&#x43E;&#x431;&#x445;&#x43E;&#x434;&#x438;&#x43C;&#x43E;&#x433;&#x43E;! &#x412; &#x442;&#x435;&#x445; &#x436;&#x435; &#x441;&#x43B;&#x443;&#x447;&#x430;&#x44F;&#x445;, &#x43A;&#x43E;&#x433;&#x434;&#x430; &#x43A;&#x44D;&#x448;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F; &#x43D;&#x443;&#x436;&#x43D;&#x43E; &#x438;&#x437;&#x431;&#x435;&#x436;&#x430;&#x442;&#x44C; &#x2014; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x443;&#x439;&#x442;&#x435; &#x43C;&#x435;&#x442;&#x43E;&#x434;&#x44B;.</p>
+<h3 id="&#x412;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x435;-&#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430;-&#x438;-&#x441;&#x43B;&#x435;&#x436;&#x435;&#x43D;&#x438;&#x435;"><a href="#&#x412;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x435;-&#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430;-&#x438;-&#x441;&#x43B;&#x435;&#x436;&#x435;&#x43D;&#x438;&#x435;" class="headerlink" title="&#x412;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x435; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430; &#x438; &#x441;&#x43B;&#x435;&#x436;&#x435;&#x43D;&#x438;&#x435;"></a>&#x412;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x435; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430; &#x438; &#x441;&#x43B;&#x435;&#x436;&#x435;&#x43D;&#x438;&#x435;</h3><p>Vue &#x43F;&#x440;&#x435;&#x434;&#x43E;&#x441;&#x442;&#x430;&#x432;&#x43B;&#x44F;&#x435;&#x442; &#x438; &#x431;&#x43E;&#x43B;&#x435;&#x435; &#x43E;&#x431;&#x449;&#x438;&#x439; &#x441;&#x43F;&#x43E;&#x441;&#x43E;&#x431; &#x43D;&#x430;&#x431;&#x43B;&#x44E;&#x434;&#x435;&#x43D;&#x438;&#x44F; &#x438; &#x440;&#x435;&#x430;&#x433;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F; &#x43D;&#x430; &#x438;&#x437;&#x43C;&#x435;&#x43D;&#x435;&#x43D;&#x438;&#x44F; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445; &#x432; &#x44D;&#x43A;&#x437;&#x435;&#x43C;&#x43F;&#x43B;&#x44F;&#x440;&#x435;: <strong>&#x441;&#x43B;&#x435;&#x436;&#x435;&#x43D;&#x438;&#x435; &#x437;&#x430; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430;&#x43C;&#x438;</strong>. &#x41A;&#x43E;&#x433;&#x434;&#x430; &#x435;&#x441;&#x442;&#x44C; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x435;, &#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x435; &#x43D;&#x435;&#x43E;&#x431;&#x445;&#x43E;&#x434;&#x438;&#x43C;&#x43E; &#x43E;&#x431;&#x43D;&#x43E;&#x432;&#x43B;&#x44F;&#x442;&#x44C; &#x43F;&#x440;&#x438; &#x438;&#x437;&#x43C;&#x435;&#x43D;&#x435;&#x43D;&#x438;&#x438; &#x434;&#x440;&#x443;&#x433;&#x438;&#x445; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445;, &#x432;&#x43E;&#x437;&#x43D;&#x438;&#x43A;&#x430;&#x435;&#x442; &#x441;&#x43E;&#x431;&#x43B;&#x430;&#x437;&#x43D; &#x438;&#x437;&#x431;&#x44B;&#x442;&#x43E;&#x447;&#x43D;&#x43E; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x44D;&#x442;&#x43E;&#x442; &#x43F;&#x43E;&#x434;&#x445;&#x43E;&#x434;, &#x43E;&#x441;&#x43E;&#x431;&#x435;&#x43D;&#x43D;&#x43E; &#x435;&#x441;&#x43B;&#x438; &#x43F;&#x440;&#x438;&#x432;&#x44B;&#x43A;&#x43B;&#x438; &#x43A; Angular. &#x41D;&#x43E;, &#x43A;&#x430;&#x43A; &#x43F;&#x440;&#x430;&#x432;&#x438;&#x43B;&#x43E;, &#x43B;&#x443;&#x447;&#x448;&#x435; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x435; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430;, &#x430; &#x43D;&#x435; &#x438;&#x43C;&#x43F;&#x435;&#x440;&#x430;&#x442;&#x438;&#x432;&#x43D;&#x44B;&#x439; &#x43A;&#x43E;&#x43B;&#x43B;&#x431;&#x44D;&#x43A; &#x432; <code>watch</code>. &#x420;&#x430;&#x441;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x438;&#x43C; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;:</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;demo&quot;</span>&gt;</span>{{ fullName }}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<pre><code class="hljs js"><span class="hljs-keyword">var</span> vm = <span class="hljs-keyword">new</span> Vue({
+  <span class="hljs-attr">el</span>: <span class="hljs-string">&apos;#demo&apos;</span>,
+  <span class="hljs-attr">data</span>: {
+    <span class="hljs-attr">firstName</span>: <span class="hljs-string">&apos;Foo&apos;</span>,
+    <span class="hljs-attr">lastName</span>: <span class="hljs-string">&apos;Bar&apos;</span>,
+    <span class="hljs-attr">fullName</span>: <span class="hljs-string">&apos;Foo Bar&apos;</span>
+  },
+  <span class="hljs-attr">watch</span>: {
+    <span class="hljs-attr">firstName</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
+      <span class="hljs-keyword">this</span>.fullName = val + <span class="hljs-string">&apos; &apos;</span> + <span class="hljs-keyword">this</span>.lastName
+    },
+    <span class="hljs-attr">lastName</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">val</span>) </span>{
+      <span class="hljs-keyword">this</span>.fullName = <span class="hljs-keyword">this</span>.firstName + <span class="hljs-string">&apos; &apos;</span> + val
+    }
+  }
+})</code></pre>
+<p>&#x41A;&#x43E;&#x434; &#x432;&#x44B;&#x448;&#x435; &#x2014; &#x438;&#x43C;&#x43F;&#x435;&#x440;&#x430;&#x442;&#x438;&#x432;&#x43D;&#x44B;&#x439; &#x438; &#x438;&#x437;&#x431;&#x44B;&#x442;&#x43E;&#x447;&#x43D;&#x44B;&#x439;. &#x421;&#x440;&#x430;&#x432;&#x43D;&#x438;&#x442;&#x435; &#x441; &#x432;&#x435;&#x440;&#x441;&#x438;&#x435;&#x439; &#x441; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435;&#x43C; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x43E;&#x433;&#x43E; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430;:</p>
+<pre><code class="hljs js"><span class="hljs-keyword">var</span> vm = <span class="hljs-keyword">new</span> Vue({
+  <span class="hljs-attr">el</span>: <span class="hljs-string">&apos;#demo&apos;</span>,
+  <span class="hljs-attr">data</span>: {
+    <span class="hljs-attr">firstName</span>: <span class="hljs-string">&apos;Foo&apos;</span>,
+    <span class="hljs-attr">lastName</span>: <span class="hljs-string">&apos;Bar&apos;</span>
+  },
+  <span class="hljs-attr">computed</span>: {
+    <span class="hljs-attr">fullName</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.firstName + <span class="hljs-string">&apos; &apos;</span> + <span class="hljs-keyword">this</span>.lastName
+    }
+  }
+})</code></pre>
+<p>&#x422;&#x430;&#x43A; &#x433;&#x43E;&#x440;&#x430;&#x437;&#x434;&#x43E; &#x43B;&#x443;&#x447;&#x448;&#x435;, &#x43D;&#x435; &#x43F;&#x440;&#x430;&#x432;&#x434;&#x430; &#x43B;&#x438;?</p>
+<h3 id="&#x421;&#x435;&#x442;&#x442;&#x435;&#x440;&#x44B;-&#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x445;-&#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;"><a href="#&#x421;&#x435;&#x442;&#x442;&#x435;&#x440;&#x44B;-&#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x445;-&#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;" class="headerlink" title="&#x421;&#x435;&#x442;&#x442;&#x435;&#x440;&#x44B; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x445; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;"></a>&#x421;&#x435;&#x442;&#x442;&#x435;&#x440;&#x44B; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x445; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;</h3><p>&#x41F;&#x43E; &#x443;&#x43C;&#x43E;&#x43B;&#x447;&#x430;&#x43D;&#x438;&#x44E; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x435; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430; &#x440;&#x430;&#x431;&#x43E;&#x442;&#x430;&#x44E;&#x442; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x43D;&#x430; &#x447;&#x442;&#x435;&#x43D;&#x438;&#x435;, &#x43D;&#x43E; &#x43F;&#x440;&#x438; &#x43D;&#x435;&#x43E;&#x431;&#x445;&#x43E;&#x434;&#x438;&#x43C;&#x43E;&#x441;&#x442;&#x438; &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x442;&#x430;&#x43A;&#x436;&#x435; &#x443;&#x43A;&#x430;&#x437;&#x430;&#x442;&#x44C; &#x438; &#x441;&#x435;&#x442;&#x442;&#x435;&#x440;:</p>
+<pre><code class="hljs js"><span class="hljs-comment">// ...</span>
+computed: {
+  <span class="hljs-attr">fullName</span>: {
+    <span class="hljs-comment">// &#x433;&#x435;&#x442;&#x442;&#x435;&#x440;:</span>
+    get: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.firstName + <span class="hljs-string">&apos; &apos;</span> + <span class="hljs-keyword">this</span>.lastName
+    },
+    <span class="hljs-comment">// &#x441;&#x435;&#x442;&#x442;&#x435;&#x440;:</span>
+    set: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">newValue</span>) </span>{
+      <span class="hljs-keyword">var</span> names = newValue.split(<span class="hljs-string">&apos; &apos;</span>)
+      <span class="hljs-keyword">this</span>.firstName = names[<span class="hljs-number">0</span>]
+      <span class="hljs-keyword">this</span>.lastName = names[names.length - <span class="hljs-number">1</span>]
+    }
+  }
+}
+<span class="hljs-comment">// ...</span></code></pre>
+<p>&#x422;&#x435;&#x43F;&#x435;&#x440;&#x44C; &#x437;&#x430;&#x43F;&#x438;&#x441;&#x44C; <code>vm.fullName = &apos;&#x418;&#x432;&#x430;&#x43D; &#x418;&#x432;&#x430;&#x43D;&#x43E;&#x432;&apos;</code> &#x432;&#x44B;&#x437;&#x43E;&#x432;&#x435;&#x442; &#x441;&#x435;&#x442;&#x442;&#x435;&#x440;, &#x438; <code>vm.firstName</code> &#x438; <code>vm.lastName</code> &#x431;&#x443;&#x434;&#x443;&#x442; &#x441;&#x43E;&#x43E;&#x442;&#x432;&#x435;&#x442;&#x441;&#x442;&#x432;&#x443;&#x44E;&#x449;&#x438;&#x43C; &#x43E;&#x431;&#x440;&#x430;&#x437;&#x43E;&#x43C; &#x43E;&#x431;&#x43D;&#x43E;&#x432;&#x43B;&#x435;&#x43D;&#x44B;.</p>
+<h2 id="&#x41C;&#x435;&#x442;&#x43E;&#x434;&#x44B;-&#x43D;&#x430;&#x431;&#x43B;&#x44E;&#x434;&#x430;&#x442;&#x435;&#x43B;&#x438;"><a href="#&#x41C;&#x435;&#x442;&#x43E;&#x434;&#x44B;-&#x43D;&#x430;&#x431;&#x43B;&#x44E;&#x434;&#x430;&#x442;&#x435;&#x43B;&#x438;" class="headerlink" title="&#x41C;&#x435;&#x442;&#x43E;&#x434;&#x44B;-&#x43D;&#x430;&#x431;&#x43B;&#x44E;&#x434;&#x430;&#x442;&#x435;&#x43B;&#x438;"></a>&#x41C;&#x435;&#x442;&#x43E;&#x434;&#x44B;-&#x43D;&#x430;&#x431;&#x43B;&#x44E;&#x434;&#x430;&#x442;&#x435;&#x43B;&#x438;</h2><p>&#x425;&#x43E;&#x442;&#x44F; &#x432; &#x431;&#x43E;&#x43B;&#x44C;&#x448;&#x438;&#x43D;&#x441;&#x442;&#x432;&#x435; &#x441;&#x43B;&#x443;&#x447;&#x430;&#x435;&#x432; &#x43B;&#x443;&#x447;&#x448;&#x435; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x435; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;&#x430;, &#x438;&#x43D;&#x43E;&#x433;&#x434;&#x430; &#x43D;&#x435;&#x43E;&#x431;&#x445;&#x43E;&#x434;&#x438;&#x43C;&#x44B; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x43A;&#x438;&#x435; &#x43C;&#x435;&#x442;&#x43E;&#x434;&#x44B;-&#x43D;&#x430;&#x431;&#x43B;&#x44E;&#x434;&#x430;&#x442;&#x435;&#x43B;&#x438;. &#x41F;&#x43E;&#x44D;&#x442;&#x43E;&#x43C;&#x443; Vue &#x43F;&#x440;&#x435;&#x434;&#x43E;&#x441;&#x442;&#x430;&#x432;&#x43B;&#x44F;&#x435;&#x442; &#x431;&#x43E;&#x43B;&#x435;&#x435; &#x43E;&#x431;&#x449;&#x438;&#x439; &#x441;&#x43F;&#x43E;&#x441;&#x43E;&#x431; &#x440;&#x435;&#x430;&#x433;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F; &#x43D;&#x430; &#x438;&#x437;&#x43C;&#x435;&#x43D;&#x435;&#x43D;&#x438;&#x44F; &#x432; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445; &#x447;&#x435;&#x440;&#x435;&#x437; &#x43E;&#x43F;&#x446;&#x438;&#x44E; <code>watch</code>. &#x42D;&#x442;&#x430; &#x432;&#x43E;&#x437;&#x43C;&#x43E;&#x436;&#x43D;&#x43E;&#x441;&#x442;&#x44C; &#x43F;&#x43E;&#x43B;&#x435;&#x437;&#x43D;&#x430; &#x434;&#x43B;&#x44F; &#xAB;&#x434;&#x43E;&#x440;&#x43E;&#x433;&#x438;&#x445;&#xBB; &#x438;&#x43B;&#x438; &#x430;&#x441;&#x438;&#x43D;&#x445;&#x440;&#x43E;&#x43D;&#x43D;&#x44B;&#x445; &#x43E;&#x43F;&#x435;&#x440;&#x430;&#x446;&#x438;&#x439;, &#x432;&#x44B;&#x43F;&#x43E;&#x43B;&#x43D;&#x44F;&#x435;&#x43C;&#x44B;&#x445; &#x432; &#x43E;&#x442;&#x432;&#x435;&#x442; &#x43D;&#x430; &#x438;&#x437;&#x43C;&#x435;&#x43D;&#x435;&#x43D;&#x438;&#x435; &#x434;&#x430;&#x43D;&#x43D;&#x44B;&#x445;.</p>
+<p>&#x420;&#x430;&#x441;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x438;&#x43C; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;:</p>
+<pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">id</span>=<span class="hljs-string">&quot;watch-example&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>
+    &#x417;&#x430;&#x434;&#x430;&#x439;&#x442;&#x435; &#x432;&#x43E;&#x43F;&#x440;&#x43E;&#x441;, &#x43D;&#x430; &#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x439; &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x43E;&#x442;&#x432;&#x435;&#x442;&#x438;&#x442;&#x44C; &#xAB;&#x434;&#x430;&#xBB; &#x438;&#x43B;&#x438; &#xAB;&#x43D;&#x435;&#x442;&#xBB;:
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">&quot;question&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>{{ answer }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></code></pre>
+<pre><code class="hljs html"><span class="hljs-comment">&lt;!-- &#x41F;&#x43E;&#x441;&#x43A;&#x43E;&#x43B;&#x44C;&#x43A;&#x443; &#x443;&#x436;&#x435; &#x441;&#x443;&#x449;&#x435;&#x441;&#x442;&#x432;&#x443;&#x435;&#x442; &#x43E;&#x431;&#x448;&#x438;&#x440;&#x43D;&#x430;&#x44F; &#x44D;&#x43A;&#x43E;&#x441;&#x438;&#x441;&#x442;&#x435;&#x43C;&#x430; ajax-&#x431;&#x438;&#x431;&#x43B;&#x438;&#x43E;&#x442;&#x435;&#x43A; --&gt;</span>
+<span class="hljs-comment">&lt;!-- &#x438; &#x431;&#x438;&#x431;&#x43B;&#x438;&#x43E;&#x442;&#x435;&#x43A; &#x444;&#x443;&#x43D;&#x43A;&#x446;&#x438;&#x439; &#x43E;&#x431;&#x449;&#x435;&#x433;&#x43E; &#x43D;&#x430;&#x437;&#x43D;&#x430;&#x447;&#x435;&#x43D;&#x438;&#x44F;, &#x44F;&#x434;&#x440;&#x43E; Vue &#x43C;&#x43E;&#x436;&#x435;&#x442;       --&gt;</span>
+<span class="hljs-comment">&lt;!-- &#x43E;&#x441;&#x442;&#x430;&#x432;&#x430;&#x442;&#x44C;&#x441;&#x44F; &#x43C;&#x430;&#x43B;&#x435;&#x43D;&#x44C;&#x43A;&#x438;&#x43C; &#x438; &#x43D;&#x435; &#x438;&#x437;&#x43E;&#x431;&#x440;&#x435;&#x442;&#x430;&#x442;&#x44C; &#x438;&#x445; &#x437;&#x430;&#x43D;&#x43E;&#x432;&#x43E;. &#x41A;&#x440;&#x43E;&#x43C;&#x435; &#x442;&#x43E;&#x433;&#x43E;, --&gt;</span>
+<span class="hljs-comment">&lt;!-- &#x44D;&#x442;&#x43E; &#x43F;&#x43E;&#x437;&#x432;&#x43E;&#x43B;&#x44F;&#x435;&#x442; &#x432;&#x430;&#x43C; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x437;&#x43D;&#x430;&#x43A;&#x43E;&#x43C;&#x44B;&#x435; &#x438;&#x43D;&#x441;&#x442;&#x440;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x44B;. --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js&quot;</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span> <span class="hljs-attr">src</span>=<span class="hljs-string">&quot;https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js&quot;</span>&gt;</span><span class="undefined"></span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+<span class="hljs-keyword">var</span> watchExampleVM = <span class="hljs-keyword">new</span> Vue({
+  <span class="hljs-attr">el</span>: <span class="hljs-string">&apos;#watch-example&apos;</span>,
+  <span class="hljs-attr">data</span>: {
+    <span class="hljs-attr">question</span>: <span class="hljs-string">&apos;&apos;</span>,
+    <span class="hljs-attr">answer</span>: <span class="hljs-string">&apos;&#x41F;&#x43E;&#x43A;&#x430; &#x432;&#x44B; &#x43D;&#x435; &#x437;&#x430;&#x434;&#x430;&#x434;&#x438;&#x442;&#x435; &#x432;&#x43E;&#x43F;&#x440;&#x43E;&#x441;, &#x44F; &#x43D;&#x435; &#x43C;&#x43E;&#x433;&#x443; &#x43E;&#x442;&#x432;&#x435;&#x442;&#x438;&#x442;&#x44C;!&apos;</span>
+  },
+  <span class="hljs-attr">watch</span>: {
+    <span class="hljs-comment">// &#x44D;&#x442;&#x430; &#x444;&#x443;&#x43D;&#x43A;&#x446;&#x438;&#x44F; &#x437;&#x430;&#x43F;&#x443;&#x441;&#x43A;&#x430;&#x435;&#x442;&#x441;&#x44F; &#x43F;&#x440;&#x438; &#x43B;&#x44E;&#x431;&#x43E;&#x43C; &#x438;&#x437;&#x43C;&#x435;&#x43D;&#x435;&#x43D;&#x438;&#x438; &#x432;&#x43E;&#x43F;&#x440;&#x43E;&#x441;&#x430;</span>
+    question: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">newQuestion, oldQuestion</span>) </span>{
+      <span class="hljs-keyword">this</span>.answer = <span class="hljs-string">&apos;&#x41E;&#x436;&#x438;&#x434;&#x430;&#x44E;, &#x43A;&#x43E;&#x433;&#x434;&#x430; &#x432;&#x44B; &#x437;&#x430;&#x43A;&#x43E;&#x43D;&#x447;&#x438;&#x442;&#x435; &#x43F;&#x435;&#x447;&#x430;&#x442;&#x430;&#x442;&#x44C;...&apos;</span>
+      <span class="hljs-keyword">this</span>.debouncedGetAnswer()
+    }
+  },
+  <span class="hljs-attr">created</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-comment">// _.debounce &#x2014; &#x44D;&#x442;&#x43E; &#x444;&#x443;&#x43D;&#x43A;&#x446;&#x438;&#x44F; lodash, &#x43F;&#x43E;&#x437;&#x432;&#x43E;&#x43B;&#x44F;&#x44E;&#x449;&#x430;&#x44F; &#x43E;&#x433;&#x440;&#x430;&#x43D;&#x438;&#x447;&#x438;&#x442;&#x44C; &#x442;&#x43E;,</span>
+    <span class="hljs-comment">// &#x43D;&#x430;&#x441;&#x43A;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x447;&#x430;&#x441;&#x442;&#x43E; &#x43C;&#x43E;&#x436;&#x435;&#x442; &#x432;&#x44B;&#x43F;&#x43E;&#x43B;&#x43D;&#x44F;&#x442;&#x44C;&#x441;&#x44F; &#x43E;&#x43F;&#x440;&#x435;&#x434;&#x435;&#x43B;&#x451;&#x43D;&#x43D;&#x430;&#x44F; &#x43E;&#x43F;&#x435;&#x440;&#x430;&#x446;&#x438;&#x44F;.</span>
+    <span class="hljs-comment">// &#x412; &#x434;&#x430;&#x43D;&#x43D;&#x43E;&#x43C; &#x441;&#x43B;&#x443;&#x447;&#x430;&#x435; &#x43C;&#x44B; &#x43E;&#x433;&#x440;&#x430;&#x43D;&#x438;&#x447;&#x438;&#x432;&#x430;&#x435;&#x43C; &#x447;&#x430;&#x441;&#x442;&#x43E;&#x442;&#x443; &#x43E;&#x431;&#x440;&#x430;&#x449;&#x435;&#x43D;&#x438;&#x439; &#x43A; yesno.wtf/api,</span>
+    <span class="hljs-comment">// &#x434;&#x43E;&#x436;&#x438;&#x434;&#x430;&#x44F;&#x441;&#x44C; &#x437;&#x430;&#x432;&#x435;&#x440;&#x448;&#x435;&#x43D;&#x438;&#x44F; &#x43F;&#x435;&#x447;&#x430;&#x442;&#x438; &#x432;&#x43E;&#x43F;&#x440;&#x43E;&#x441;&#x430; &#x43F;&#x435;&#x440;&#x435;&#x434; &#x43E;&#x442;&#x43F;&#x440;&#x430;&#x432;&#x43A;&#x43E;&#x439; ajax-&#x437;&#x430;&#x43F;&#x440;&#x43E;&#x441;&#x430;.</span>
+    <span class="hljs-comment">// &#x423;&#x437;&#x43D;&#x430;&#x442;&#x44C; &#x431;&#x43E;&#x43B;&#x44C;&#x448;&#x435; &#x43E; &#x444;&#x443;&#x43D;&#x43A;&#x446;&#x438;&#x438; _.debounce (&#x438; &#x435;&#x451; &#x440;&#x43E;&#x434;&#x441;&#x442;&#x432;&#x435;&#x43D;&#x43D;&#x438;&#x446;&#x435; _.throttle),</span>
+    <span class="hljs-comment">// &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x432; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x446;&#x438;&#x438;: https://lodash.com/docs#debounce</span>
+    <span class="hljs-keyword">this</span>.debouncedGetAnswer = _.debounce(<span class="hljs-keyword">this</span>.getAnswer, <span class="hljs-number">500</span>)
+  },
+  <span class="hljs-attr">methods</span>: {
+    <span class="hljs-attr">getAnswer</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.question.indexOf(<span class="hljs-string">&apos;?&apos;</span>) === <span class="hljs-number">-1</span>) {
+        <span class="hljs-keyword">this</span>.answer = <span class="hljs-string">&apos;&#x412;&#x43E;&#x43F;&#x440;&#x43E;&#x441;&#x44B; &#x43E;&#x431;&#x44B;&#x447;&#x43D;&#x43E; &#x437;&#x430;&#x43A;&#x430;&#x43D;&#x447;&#x438;&#x432;&#x430;&#x44E;&#x442;&#x441;&#x44F; &#x432;&#x43E;&#x43F;&#x440;&#x43E;&#x441;&#x438;&#x442;&#x435;&#x43B;&#x44C;&#x43D;&#x44B;&#x43C; &#x437;&#x43D;&#x430;&#x43A;&#x43E;&#x43C;. ;-)&apos;</span>
+        <span class="hljs-keyword">return</span>
+      }
+      <span class="hljs-keyword">this</span>.answer = <span class="hljs-string">&apos;&#x414;&#x443;&#x43C;&#x430;&#x44E;...&apos;</span>
+      <span class="hljs-keyword">var</span> vm = <span class="hljs-keyword">this</span>
+      axios.get(<span class="hljs-string">&apos;https://yesno.wtf/api&apos;</span>)
+        .then(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">response</span>) </span>{
+          vm.answer = _.capitalize(response.data.answer)
+        })
+        .catch(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">error</span>) </span>{
+          vm.answer = <span class="hljs-string">&apos;&#x41E;&#x448;&#x438;&#x431;&#x43A;&#x430;! &#x41D;&#x435; &#x43C;&#x43E;&#x433;&#x443; &#x441;&#x432;&#x44F;&#x437;&#x430;&#x442;&#x44C;&#x441;&#x44F; &#x441; API. &apos;</span> + error
+        })
+    }
+  }
+})
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span></code></pre>
+<p>&#x420;&#x435;&#x437;&#x443;&#x43B;&#x44C;&#x442;&#x430;&#x442;:</p>
+
+<div id="watch-example" class="demo">
+  <p>
+    &#x417;&#x430;&#x434;&#x430;&#x439;&#x442;&#x435; &#x432;&#x43E;&#x43F;&#x440;&#x43E;&#x441;, &#x43D;&#x430; &#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x439; &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x43E;&#x442;&#x432;&#x435;&#x442;&#x438;&#x442;&#x44C; &#xAB;&#x434;&#x430;&#xBB; &#x438;&#x43B;&#x438; &#xAB;&#x43D;&#x435;&#x442;&#xBB;:
+    <input v-model="question">
+  </p>
+  <p>{{ answer }}</p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
+<script>
+var watchExampleVM = new Vue({
+  el: '#watch-example',
+  data: {
+    question: '',
+    answer: 'Пока вы не зададите вопрос, я не могу ответить!'
+  },
+  watch: {
+    question: function (newQuestion, oldQuestion) {
+      this.answer = 'Ожидаю, когда вы закончите печатать...'
+      this.debouncedGetAnswer()
+    }
+  },
+  created: function () {
+    this.debouncedGetAnswer = _.debounce(this.getAnswer, 500)
+  },
+  methods: {
+    getAnswer: function () {
+      if (this.question.indexOf('?') === -1) {
+        this.answer = 'Вопросы обычно заканчиваются вопросительным знаком. ;-)'
+        return
+      }
+      this.answer = 'Думаю...'
+      var vm = this
+      axios.get('https://yesno.wtf/api')
+        .then(function (response) {
+          vm.answer = _.capitalize(response.data.answer)
+        })
+        .catch(function (error) {
+          vm.answer = 'Ошибка! Не могу связаться с API. ' + error
+        })
+    }
+  }
+})
+</script>
+
+<p>&#x412; &#x434;&#x430;&#x43D;&#x43D;&#x43E;&#x43C; &#x441;&#x43B;&#x443;&#x447;&#x430;&#x435; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435; &#x43E;&#x43F;&#x446;&#x438;&#x438; <code>watch</code> &#x43F;&#x43E;&#x437;&#x432;&#x43E;&#x43B;&#x438;&#x43B;&#x43E; &#x432;&#x44B;&#x43F;&#x43E;&#x43B;&#x43D;&#x44F;&#x442;&#x44C; &#x430;&#x441;&#x438;&#x43D;&#x445;&#x440;&#x43E;&#x43D;&#x43D;&#x443;&#x44E; &#x43E;&#x43F;&#x435;&#x440;&#x430;&#x446;&#x438;&#x44E; (&#x43E;&#x431;&#x440;&#x430;&#x449;&#x435;&#x43D;&#x438;&#x435; &#x43A; API), &#x43E;&#x433;&#x440;&#x430;&#x43D;&#x438;&#x447;&#x438;&#x432;&#x430;&#x442;&#x44C; &#x447;&#x430;&#x441;&#x442;&#x43E;&#x442;&#x443; &#x432;&#x44B;&#x43F;&#x43E;&#x43B;&#x43D;&#x435;&#x43D;&#x438;&#x44F; &#x44D;&#x442;&#x43E;&#x439; &#x43E;&#x43F;&#x435;&#x440;&#x430;&#x446;&#x438;&#x438; &#x438; &#x443;&#x441;&#x442;&#x430;&#x43D;&#x430;&#x432;&#x43B;&#x438;&#x432;&#x430;&#x442;&#x44C; &#x43F;&#x440;&#x43E;&#x43C;&#x435;&#x436;&#x443;&#x442;&#x43E;&#x447;&#x43D;&#x44B;&#x435; &#x441;&#x43E;&#x441;&#x442;&#x43E;&#x44F;&#x43D;&#x438;&#x44F; &#x434;&#x43E; &#x43F;&#x43E;&#x43B;&#x443;&#x447;&#x435;&#x43D;&#x438;&#x44F; &#x43E;&#x442;&#x432;&#x435;&#x442;&#x430; &#x43E;&#x442; &#x441;&#x435;&#x440;&#x432;&#x435;&#x440;&#x430;. &#x41D;&#x438;&#x447;&#x435;&#x433;&#x43E; &#x438;&#x437; &#x44D;&#x442;&#x43E;&#x433;&#x43E; &#x43D;&#x435; &#x443;&#x434;&#x430;&#x43B;&#x43E;&#x441;&#x44C; &#x431;&#x44B; &#x434;&#x43E;&#x441;&#x442;&#x438;&#x447;&#x44C; &#x441; &#x43F;&#x43E;&#x43C;&#x43E;&#x449;&#x44C;&#x44E; &#x432;&#x44B;&#x447;&#x438;&#x441;&#x43B;&#x44F;&#x435;&#x43C;&#x44B;&#x445; &#x441;&#x432;&#x43E;&#x439;&#x441;&#x442;&#x432;.</p>
+<p>&#x41A;&#x440;&#x43E;&#x43C;&#x435; &#x43E;&#x43F;&#x446;&#x438;&#x438; <code>watch</code> &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x442;&#x430;&#x43A;&#x436;&#x435; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; <a href="../api/#vm-watch">vm.$watch</a> &#x432; &#x438;&#x43C;&#x43F;&#x435;&#x440;&#x430;&#x442;&#x438;&#x432;&#x43D;&#x43E;&#x43C; &#x441;&#x442;&#x438;&#x43B;&#x435;.</p>
+
+    
+    
+      <div class="guide-links">
+        
+        
+          <span>&#x2190; <a href="/v2/guide/syntax.html">&#x421;&#x438;&#x43D;&#x442;&#x430;&#x43A;&#x441;&#x438;&#x441; &#x448;&#x430;&#x431;&#x43B;&#x43E;&#x43D;&#x43E;&#x432;</a></span>
+        
+        
+        
+          <span style="float: right;"><a href="/v2/guide/class-and-style.html">&#x420;&#x430;&#x431;&#x43E;&#x442;&#x430; &#x441; &#x43A;&#x43B;&#x430;&#x441;&#x441;&#x430;&#x43C;&#x438; &#x438; &#x441;&#x442;&#x438;&#x43B;&#x44F;&#x43C;&#x438;</a> &#x2192;</span>
+        
+      </div>
+    
+    <div class="footer">
+        <script src="//m.servedby-buysellads.com/monetization.js" type="text/javascript"></script>
+<div class="bsa-cpc"></div>
+<script>
+  (function(){
+    if(typeof _bsa !== 'undefined' && _bsa) {
+    _bsa.init('default', 'CKYD62QM', 'placement:vuejsorg', {
+      target: '.bsa-cpc',
+      align: 'horizontal',
+      disable_css: 'true'
+    });
+      }
+  })();
+</script>
+
+      &#x41E;&#x431;&#x43D;&#x430;&#x440;&#x443;&#x436;&#x438;&#x43B;&#x438; &#x43E;&#x448;&#x438;&#x431;&#x43A;&#x443; &#x438;&#x43B;&#x438; &#x445;&#x43E;&#x442;&#x438;&#x442;&#x435; &#x434;&#x43E;&#x431;&#x430;&#x432;&#x438;&#x442;&#x44C; &#x447;&#x442;&#x43E;-&#x442;&#x43E; &#x441;&#x432;&#x43E;&#x451; &#x432; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x446;&#x438;&#x44E;?
+      <a href="https://github.com/translation-gang/ru.vuejs.org/blob/master/src/v2/guide/computed.md" target="_blank">
+        &#x41E;&#x442;&#x440;&#x435;&#x434;&#x430;&#x43A;&#x442;&#x438;&#x440;&#x443;&#x439;&#x442;&#x435; &#x44D;&#x442;&#x443; &#x441;&#x442;&#x440;&#x430;&#x43D;&#x438;&#x446;&#x443; &#x43D;&#x430; GitHub!
+      </a>
+    </div>
+
+</body>
+</html>

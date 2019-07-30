@@ -41,6 +41,7 @@ class Parser {
                 var $ = cheerio.load(res.body);
                 //информация о новости
 
+                $('#ad').remove();
                 this.results.push({
                     title: $('h1').text(),
                     href: url,
@@ -49,7 +50,7 @@ class Parser {
                     });
 
                 var next_el = $(this.active_link).parent('li').next('li');
-                console.log(next_el.find(this.next_link).length);
+
                 if (next_el.find(this.next_link).length) {
                     var href = next_el.find(this.next_link).attr('href');
                 } else {
@@ -59,7 +60,6 @@ class Parser {
                 console.log(this.domain,href);
                 if (href) {
                     this.q.push (this.domain+href);
-                    console.log(this.q);
                 }
                 callback(); //вызываем callback в конце
             });
@@ -67,7 +67,7 @@ class Parser {
         }, this.threads);
         // эта функция выполнится, когда в очереди закончатся ссылки
             this.q.drain = () => {
-                fs.writeFileSync('./data.json', JSON.stringify(this.results, null, 4));
+                // fs.writeFileSync('./data.json', JSON.stringify(this.results, null, 4));
                 resolve(this.results);
             }
         });

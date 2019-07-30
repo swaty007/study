@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" id="wrapper">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Примеси</title>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="./style.css" rel="stylesheet" type="text/css">
+
+    <!-- версия для разработки, отображает полезные предупреждения в консоли -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <!-- production-версия, оптимизированная для размера и скорости -->
+    <!--    <script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+
+</head>
+<body id="main">
+<p>Спаршено с: <a href="https://ru.vuejs.org/v2/guide/mixins.html">https://ru.vuejs.org/v2/guide/mixins.html</a></p>
+
+    
+      
+        
+
+      
+    
+    
+      <h1>&#x41F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x438;</h1>
+    
+    
+      <h2 id="&#x41E;&#x441;&#x43D;&#x43E;&#x432;&#x44B;"><a href="#&#x41E;&#x441;&#x43D;&#x43E;&#x432;&#x44B;" class="headerlink" title="&#x41E;&#x441;&#x43D;&#x43E;&#x432;&#x44B;"></a>&#x41E;&#x441;&#x43D;&#x43E;&#x432;&#x44B;</h2><p>&#x41F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x438; (mixins) &#x2014; &#x44D;&#x442;&#x43E; &#x433;&#x438;&#x431;&#x43A;&#x438;&#x439; &#x438;&#x43D;&#x441;&#x442;&#x440;&#x443;&#x43C;&#x435;&#x43D;&#x442; &#x43F;&#x43E;&#x432;&#x442;&#x43E;&#x440;&#x43D;&#x43E;&#x433;&#x43E; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F; &#x43A;&#x43E;&#x434;&#x430; &#x432; &#x43A;&#x43E;&#x43C;&#x43F;&#x43E;&#x43D;&#x435;&#x43D;&#x442;&#x430;&#x445; Vue. &#x41E;&#x431;&#x44A;&#x435;&#x43A;&#x442; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x438; &#x43C;&#x43E;&#x436;&#x435;&#x442; &#x441;&#x43E;&#x434;&#x435;&#x440;&#x436;&#x430;&#x442;&#x44C; &#x43B;&#x44E;&#x431;&#x44B;&#x435; &#x43E;&#x43F;&#x446;&#x438;&#x438; &#x43A;&#x43E;&#x43C;&#x43F;&#x43E;&#x43D;&#x435;&#x43D;&#x442;&#x43E;&#x432;. &#x41F;&#x440;&#x438; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x438; &#x43A;&#x43E;&#x43C;&#x43F;&#x43E;&#x43D;&#x435;&#x43D;&#x442;&#x43E;&#x43C; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x438;, &#x432;&#x441;&#x435; &#x43E;&#x43F;&#x446;&#x438;&#x438; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x438; &#xAB;&#x43F;&#x43E;&#x434;&#x43C;&#x435;&#x448;&#x438;&#x432;&#x430;&#x44E;&#x442;&#x441;&#x44F;&#xBB; &#x43A; &#x441;&#x43E;&#x431;&#x441;&#x442;&#x432;&#x435;&#x43D;&#x43D;&#x44B;&#x43C; &#x43E;&#x43F;&#x446;&#x438;&#x44F;&#x43C; &#x43A;&#x43E;&#x43C;&#x43F;&#x43E;&#x43D;&#x435;&#x43D;&#x442;&#x430;.</p>
+<div class="vue-mastery"><a href="https://www.vuemastery.com/courses/next-level-vue/mixins" target="_blank" rel="noopener" title="&#x412;&#x432;&#x435;&#x434;&#x435;&#x43D;&#x438;&#x435; &#x432; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x438;">&#x41F;&#x43E;&#x441;&#x43C;&#x43E;&#x442;&#x440;&#x438;&#x442;&#x435; &#x432;&#x438;&#x434;&#x435;&#x43E;-&#x43E;&#x431;&#x44A;&#x44F;&#x441;&#x43D;&#x435;&#x43D;&#x438;&#x435; &#x43D;&#x430; Vue Mastery</a></div>
+
+<p>&#x41F;&#x440;&#x438;&#x43C;&#x435;&#x440;:</p>
+<pre><code class="hljs js"><span class="hljs-comment">// &#x43E;&#x43F;&#x440;&#x435;&#x434;&#x435;&#x43B;&#x44F;&#x435;&#x43C; &#x43E;&#x431;&#x44A;&#x435;&#x43A;&#x442; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x438;</span>
+<span class="hljs-keyword">var</span> myMixin = {
+  <span class="hljs-attr">created</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">this</span>.hello()
+  },
+  <span class="hljs-attr">methods</span>: {
+    <span class="hljs-attr">hello</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;&#x43F;&#x440;&#x438;&#x432;&#x435;&#x442; &#x438;&#x437; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x438;!&apos;</span>)
+    }
+  }
+}
+
+<span class="hljs-comment">// &#x43E;&#x43F;&#x440;&#x435;&#x434;&#x435;&#x43B;&#x44F;&#x435;&#x43C; &#x43A;&#x43E;&#x43C;&#x43F;&#x43E;&#x43D;&#x435;&#x43D;&#x442;, &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x443;&#x44E;&#x449;&#x438;&#x439; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x44C;</span>
+<span class="hljs-keyword">var</span> Component = Vue.extend({
+  <span class="hljs-attr">mixins</span>: [myMixin]
+})
+
+<span class="hljs-keyword">var</span> component = <span class="hljs-keyword">new</span> Component() <span class="hljs-comment">// =&gt; &quot;&#x43F;&#x440;&#x438;&#x432;&#x435;&#x442; &#x438;&#x437; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x438;!&quot;</span></code></pre>
+<h2 id="&#x421;&#x43B;&#x438;&#x44F;&#x43D;&#x438;&#x435;-&#x43E;&#x43F;&#x446;&#x438;&#x439;"><a href="#&#x421;&#x43B;&#x438;&#x44F;&#x43D;&#x438;&#x435;-&#x43E;&#x43F;&#x446;&#x438;&#x439;" class="headerlink" title="&#x421;&#x43B;&#x438;&#x44F;&#x43D;&#x438;&#x435; &#x43E;&#x43F;&#x446;&#x438;&#x439;"></a>&#x421;&#x43B;&#x438;&#x44F;&#x43D;&#x438;&#x435; &#x43E;&#x43F;&#x446;&#x438;&#x439;</h2><p>&#x415;&#x441;&#x43B;&#x438; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x44C; &#x438; &#x43A;&#x43E;&#x43C;&#x43F;&#x43E;&#x43D;&#x435;&#x43D;&#x442; &#x441;&#x43E;&#x434;&#x435;&#x440;&#x436;&#x430;&#x442; &#x43F;&#x435;&#x440;&#x435;&#x441;&#x435;&#x43A;&#x430;&#x44E;&#x449;&#x438;&#x435;&#x441;&#x44F; &#x43E;&#x43F;&#x446;&#x438;&#x438;, &#x43E;&#x43D;&#x438; &#x431;&#x443;&#x434;&#x443;&#x442; &#x43E;&#x43F;&#x440;&#x435;&#x434;&#x435;&#x43B;&#x451;&#x43D;&#x43D;&#x44B;&#x43C; &#x43E;&#x431;&#x440;&#x430;&#x437;&#x43E;&#x43C; &#x43E;&#x431;&#x44A;&#x435;&#x434;&#x438;&#x43D;&#x435;&#x43D;&#x44B;.</p>
+<p>&#x41D;&#x430;&#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;, &#x43E;&#x431;&#x44A;&#x435;&#x43A;&#x442; <code>data</code> &#x43F;&#x440;&#x435;&#x442;&#x435;&#x440;&#x43F;&#x435;&#x432;&#x430;&#x435;&#x442; &#x440;&#x435;&#x43A;&#x443;&#x440;&#x441;&#x438;&#x432;&#x43D;&#x43E;&#x435; &#x441;&#x43B;&#x438;&#x44F;&#x43D;&#x438;&#x435; &#x441; &#x43E;&#x431;&#x44A;&#x435;&#x43A;&#x442;&#x43E;&#x43C; <code>data</code> &#x43A;&#x43E;&#x43C;&#x43F;&#x43E;&#x43D;&#x435;&#x43D;&#x442;&#x430;, &#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x44B;&#x439; &#x438;&#x43C;&#x435;&#x435;&#x442; &#x43F;&#x440;&#x438;&#x43E;&#x440;&#x438;&#x442;&#x435;&#x442; &#x432; &#x441;&#x43B;&#x443;&#x447;&#x430;&#x44F;&#x445; &#x43A;&#x43E;&#x43D;&#x444;&#x43B;&#x438;&#x43A;&#x442;&#x43E;&#x432;.</p>
+<pre><code class="hljs js"><span class="hljs-keyword">var</span> mixin = {
+  <span class="hljs-attr">data</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">message</span>: <span class="hljs-string">&apos;hello&apos;</span>,
+      <span class="hljs-attr">foo</span>: <span class="hljs-string">&apos;abc&apos;</span>
+    }
+  }
+}
+
+<span class="hljs-keyword">new</span> Vue({
+  <span class="hljs-attr">mixins</span>: [mixin],
+  <span class="hljs-attr">data</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">message</span>: <span class="hljs-string">&apos;goodbye&apos;</span>,
+      <span class="hljs-attr">bar</span>: <span class="hljs-string">&apos;def&apos;</span>
+    }
+  },
+  <span class="hljs-attr">created</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-keyword">this</span>.$data)
+    <span class="hljs-comment">// =&gt; { message: &quot;goodbye&quot;, foo: &quot;abc&quot;, bar: &quot;def&quot; }</span>
+  }
+})</code></pre>
+<p>&#x424;&#x443;&#x43D;&#x43A;&#x446;&#x438;&#x438; &#x445;&#x443;&#x43A;&#x43E;&#x432; &#x441; &#x43E;&#x434;&#x438;&#x43D;&#x430;&#x43A;&#x43E;&#x432;&#x44B;&#x43C;&#x438; &#x438;&#x43C;&#x435;&#x43D;&#x430;&#x43C;&#x438; &#x43E;&#x431;&#x44A;&#x435;&#x434;&#x438;&#x43D;&#x44F;&#x44E;&#x442;&#x441;&#x44F; &#x432; &#x43C;&#x430;&#x441;&#x441;&#x438;&#x432;, &#x447;&#x442;&#x43E;&#x431;&#x44B; &#x432;&#x441;&#x435; &#x43E;&#x43D;&#x438; &#x432;&#x44B;&#x437;&#x44B;&#x432;&#x430;&#x43B;&#x438;&#x441;&#x44C;. &#x425;&#x443;&#x43A;&#x438; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x438; &#x431;&#x443;&#x434;&#x443;&#x442; &#x432;&#x44B;&#x437;&#x44B;&#x432;&#x430;&#x442;&#x44C;&#x441;&#x44F; <strong>&#x43F;&#x435;&#x440;&#x435;&#x434;</strong> &#x441;&#x43E;&#x431;&#x441;&#x442;&#x432;&#x435;&#x43D;&#x43D;&#x44B;&#x43C;&#x438; &#x445;&#x443;&#x43A;&#x430;&#x43C;&#x438; &#x43A;&#x43E;&#x43C;&#x43F;&#x43E;&#x43D;&#x435;&#x43D;&#x442;&#x430;.</p>
+<pre><code class="hljs js"><span class="hljs-keyword">var</span> mixin = {
+  <span class="hljs-attr">created</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;&#x432;&#x44B;&#x437;&#x432;&#x430;&#x43D; &#x445;&#x443;&#x43A; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x438;&apos;</span>)
+  }
+}
+
+<span class="hljs-keyword">new</span> Vue({
+  <span class="hljs-attr">mixins</span>: [mixin],
+  <span class="hljs-attr">created</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;&#x432;&#x44B;&#x437;&#x432;&#x430;&#x43D; &#x445;&#x443;&#x43A; &#x43A;&#x43E;&#x43C;&#x43F;&#x43E;&#x43D;&#x435;&#x43D;&#x442;&#x430;&apos;</span>)
+  }
+})
+
+<span class="hljs-comment">// =&gt; &quot;&#x432;&#x44B;&#x437;&#x432;&#x430;&#x43D; &#x445;&#x443;&#x43A; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x438;&quot;</span>
+<span class="hljs-comment">// =&gt; &quot;&#x432;&#x44B;&#x437;&#x432;&#x430;&#x43D; &#x445;&#x443;&#x43A; &#x43A;&#x43E;&#x43C;&#x43F;&#x43E;&#x43D;&#x435;&#x43D;&#x442;&#x430;&quot;</span></code></pre>
+<p>&#x41E;&#x43F;&#x446;&#x438;&#x438;, &#x43E;&#x436;&#x438;&#x434;&#x430;&#x44E;&#x449;&#x438;&#x435; &#x437;&#x43D;&#x430;&#x447;&#x435;&#x43D;&#x438;&#x44F; &#x432; &#x444;&#x43E;&#x440;&#x43C;&#x435; &#x43E;&#x431;&#x44A;&#x435;&#x43A;&#x442;&#x43E;&#x432;, &#x442;&#x430;&#x43A;&#x438;&#x435; &#x43A;&#x430;&#x43A; <code>methods</code>, <code>components</code> &#x438; <code>directives</code> &#x431;&#x443;&#x434;&#x443;&#x442; &#x43E;&#x431;&#x44A;&#x435;&#x434;&#x438;&#x43D;&#x435;&#x43D;&#x44B;. &#x412; &#x441;&#x43B;&#x443;&#x447;&#x430;&#x435; &#x43A;&#x43E;&#x43D;&#x444;&#x43B;&#x438;&#x43A;&#x442;&#x430;, &#x43F;&#x440;&#x438;&#x43E;&#x440;&#x438;&#x442;&#x435;&#x442; &#x438;&#x43C;&#x435;&#x44E;&#x442; &#x43E;&#x43F;&#x446;&#x438;&#x438; &#x43A;&#x43E;&#x43C;&#x43F;&#x43E;&#x43D;&#x435;&#x43D;&#x442;&#x430;:</p>
+<pre><code class="hljs js"><span class="hljs-keyword">var</span> mixin = {
+  <span class="hljs-attr">methods</span>: {
+    <span class="hljs-attr">foo</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;foo&apos;</span>)
+    },
+    <span class="hljs-attr">conflicting</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;&#x438;&#x437; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x438;&apos;</span>)
+    }
+  }
+}
+
+<span class="hljs-keyword">var</span> vm = <span class="hljs-keyword">new</span> Vue({
+  <span class="hljs-attr">mixins</span>: [mixin],
+  <span class="hljs-attr">methods</span>: {
+    <span class="hljs-attr">bar</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;bar&apos;</span>)
+    },
+    <span class="hljs-attr">conflicting</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;&#x438;&#x437; &#x441;&#x430;&#x43C;&#x43E;&#x433;&#x43E; &#x43A;&#x43E;&#x43C;&#x43F;&#x43E;&#x43D;&#x435;&#x43D;&#x442;&#x430;&apos;</span>)
+    }
+  }
+})
+
+vm.foo() <span class="hljs-comment">// =&gt; &quot;foo&quot;</span>
+vm.bar() <span class="hljs-comment">// =&gt; &quot;bar&quot;</span>
+vm.conflicting() <span class="hljs-comment">// =&gt; &quot;&#x438;&#x437; &#x441;&#x430;&#x43C;&#x43E;&#x433;&#x43E; &#x43A;&#x43E;&#x43C;&#x43F;&#x43E;&#x43D;&#x435;&#x43D;&#x442;&#x430;&quot;</span></code></pre>
+<p>&#x41E;&#x431;&#x440;&#x430;&#x442;&#x438;&#x442;&#x435; &#x432;&#x43D;&#x438;&#x43C;&#x430;&#x43D;&#x438;&#x435;, &#x447;&#x442;&#x43E; &#x442;&#x435; &#x436;&#x435; &#x441;&#x430;&#x43C;&#x44B;&#x435; &#x441;&#x442;&#x440;&#x430;&#x442;&#x435;&#x433;&#x438;&#x438; &#x441;&#x43B;&#x438;&#x44F;&#x43D;&#x438;&#x44F; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x443;&#x44E;&#x442;&#x441;&#x44F; &#x438; &#x432;&#x43E; <code>Vue.extend()</code>.</p>
+<h2 id="&#x413;&#x43B;&#x43E;&#x431;&#x430;&#x43B;&#x44C;&#x43D;&#x44B;&#x435;-&#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x438;"><a href="#&#x413;&#x43B;&#x43E;&#x431;&#x430;&#x43B;&#x44C;&#x43D;&#x44B;&#x435;-&#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x438;" class="headerlink" title="&#x413;&#x43B;&#x43E;&#x431;&#x430;&#x43B;&#x44C;&#x43D;&#x44B;&#x435; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x438;"></a>&#x413;&#x43B;&#x43E;&#x431;&#x430;&#x43B;&#x44C;&#x43D;&#x44B;&#x435; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x438;</h2><p>&#x41F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x44C; &#x43C;&#x43E;&#x436;&#x435;&#x442; &#x431;&#x44B;&#x442;&#x44C; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x43D;&#x435;&#x43D;&#x430; &#x438; &#x433;&#x43B;&#x43E;&#x431;&#x430;&#x43B;&#x44C;&#x43D;&#x43E;. &#x41D;&#x43E; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x443;&#x439;&#x442;&#x435; &#x434;&#x430;&#x43D;&#x43D;&#x443;&#x44E; &#x432;&#x43E;&#x437;&#x43C;&#x43E;&#x436;&#x43D;&#x43E;&#x441;&#x442;&#x44C; &#x43E;&#x441;&#x442;&#x43E;&#x440;&#x43E;&#x436;&#x43D;&#x43E;! &#x41F;&#x43E;&#x441;&#x43B;&#x435; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x43D;&#x435;&#x43D;&#x438;&#x44F;, &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x44C; &#x43E;&#x43A;&#x430;&#x436;&#x435;&#x442; &#x432;&#x43B;&#x438;&#x44F;&#x43D;&#x438;&#x435; &#x43D;&#x430; <strong>&#x432;&#x441;&#x435;</strong> &#x44D;&#x43A;&#x437;&#x435;&#x43C;&#x43F;&#x43B;&#x44F;&#x440;&#x44B; Vue, &#x441;&#x43E;&#x437;&#x434;&#x430;&#x432;&#x430;&#x435;&#x43C;&#x44B;&#x435; &#x432; &#x434;&#x430;&#x43B;&#x44C;&#x43D;&#x435;&#x439;&#x448;&#x435;&#x43C;. &#x41F;&#x440;&#x438; &#x43F;&#x440;&#x430;&#x432;&#x438;&#x43B;&#x44C;&#x43D;&#x43E;&#x43C; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x438; &#x44D;&#x442;&#x43E; &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x434;&#x43B;&#x44F; &#x432;&#x441;&#x442;&#x430;&#x432;&#x43A;&#x438; &#x43B;&#x43E;&#x433;&#x438;&#x43A;&#x438; &#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x43A;&#x438; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x43A;&#x438;&#x445; &#x43E;&#x43F;&#x446;&#x438;&#x439;:</p>
+<pre><code class="hljs js"><span class="hljs-comment">// &#x434;&#x43E;&#x431;&#x430;&#x432;&#x43B;&#x44F;&#x435;&#x43C; &#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A; &#x434;&#x43B;&#x44F; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x43A;&#x43E;&#x439; &#x43E;&#x43F;&#x446;&#x438;&#x438; `myOption`</span>
+Vue.mixin({
+  <span class="hljs-attr">created</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> myOption = <span class="hljs-keyword">this</span>.$options.myOption
+    <span class="hljs-keyword">if</span> (myOption) {
+      <span class="hljs-built_in">console</span>.log(myOption)
+    }
+  }
+})
+
+<span class="hljs-keyword">new</span> Vue({
+  <span class="hljs-attr">myOption</span>: <span class="hljs-string">&apos;hello!&apos;</span>
+})
+<span class="hljs-comment">// =&gt; &quot;hello!&quot;</span></code></pre>
+<p class="tip">&#x418;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x443;&#x439;&#x442;&#x435; &#x433;&#x43B;&#x43E;&#x431;&#x430;&#x43B;&#x44C;&#x43D;&#x44B;&#x435; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x441;&#x438; &#x441; &#x43E;&#x441;&#x442;&#x43E;&#x440;&#x43E;&#x436;&#x43D;&#x43E;&#x441;&#x442;&#x44C;&#x44E;, &#x43F;&#x43E;&#x441;&#x43A;&#x43E;&#x43B;&#x44C;&#x43A;&#x443; &#x43E;&#x43D;&#x438; &#x432;&#x43B;&#x438;&#x44F;&#x44E;&#x442; &#x43D;&#x430; &#x432;&#x441;&#x435; &#x434;&#x43E; &#x435;&#x434;&#x438;&#x43D;&#x43E;&#x433;&#x43E; &#x441;&#x43E;&#x437;&#x434;&#x430;&#x432;&#x430;&#x435;&#x43C;&#x44B;&#x435; &#x44D;&#x43A;&#x437;&#x435;&#x43C;&#x43F;&#x43B;&#x44F;&#x440;&#x44B; Vue, &#x432;&#x43A;&#x43B;&#x44E;&#x447;&#x430;&#x44F; &#x432;&#x43D;&#x435;&#x448;&#x43D;&#x438;&#x435; &#x43A;&#x43E;&#x43C;&#x43F;&#x43E;&#x43D;&#x435;&#x43D;&#x442;&#x44B;. &#x412; &#x431;&#x43E;&#x43B;&#x44C;&#x448;&#x438;&#x43D;&#x441;&#x442;&#x432;&#x435; &#x441;&#x43B;&#x443;&#x447;&#x430;&#x435;&#x432; &#x438;&#x445; &#x441;&#x442;&#x43E;&#x438;&#x442; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x442;&#x43E;&#x43B;&#x44C;&#x43A;&#x43E; &#x434;&#x43B;&#x44F; &#x43E;&#x431;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x43A;&#x438; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x43A;&#x438;&#x445; &#x43E;&#x43F;&#x446;&#x438;&#x439;, &#x43F;&#x43E;&#x434;&#x43E;&#x431;&#x43D;&#x43E; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;&#x443; &#x432;&#x44B;&#x448;&#x435;. &#x41D;&#x435;&#x43F;&#x43B;&#x43E;&#x445;&#x43E;&#x439; &#x438;&#x434;&#x435;&#x435;&#x439; &#x431;&#x443;&#x434;&#x435;&#x442; &#x438;&#x445; &#x43E;&#x444;&#x43E;&#x440;&#x43C;&#x43B;&#x435;&#x43D;&#x438;&#x435; &#x432; &#x432;&#x438;&#x434;&#x435; <a href="plugins.html">&#x43F;&#x43B;&#x430;&#x433;&#x438;&#x43D;&#x43E;&#x432;</a>, &#x447;&#x442;&#x43E; &#x43F;&#x43E;&#x437;&#x432;&#x43E;&#x43B;&#x438;&#x442; &#x438;&#x437;&#x431;&#x435;&#x436;&#x430;&#x442;&#x44C; &#x434;&#x443;&#x431;&#x43B;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x44F; &#x43A;&#x43E;&#x434;&#x430;.</p>
+
+<h2 id="&#x41F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x43A;&#x438;&#x435;-&#x441;&#x442;&#x440;&#x430;&#x442;&#x435;&#x433;&#x438;&#x438;-&#x441;&#x43B;&#x438;&#x44F;&#x43D;&#x438;&#x44F;-&#x43E;&#x43F;&#x446;&#x438;&#x439;"><a href="#&#x41F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x43A;&#x438;&#x435;-&#x441;&#x442;&#x440;&#x430;&#x442;&#x435;&#x433;&#x438;&#x438;-&#x441;&#x43B;&#x438;&#x44F;&#x43D;&#x438;&#x44F;-&#x43E;&#x43F;&#x446;&#x438;&#x439;" class="headerlink" title="&#x41F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x43A;&#x438;&#x435; &#x441;&#x442;&#x440;&#x430;&#x442;&#x435;&#x433;&#x438;&#x438; &#x441;&#x43B;&#x438;&#x44F;&#x43D;&#x438;&#x44F; &#x43E;&#x43F;&#x446;&#x438;&#x439;"></a>&#x41F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x43A;&#x438;&#x435; &#x441;&#x442;&#x440;&#x430;&#x442;&#x435;&#x433;&#x438;&#x438; &#x441;&#x43B;&#x438;&#x44F;&#x43D;&#x438;&#x44F; &#x43E;&#x43F;&#x446;&#x438;&#x439;</h2><p>&#x41F;&#x440;&#x438; &#x441;&#x43B;&#x438;&#x44F;&#x43D;&#x438;&#x438; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x43A;&#x438;&#x445; &#x43E;&#x43F;&#x446;&#x438;&#x439; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x43D;&#x44F;&#x435;&#x442;&#x441;&#x44F; &#x441;&#x442;&#x440;&#x430;&#x442;&#x435;&#x433;&#x438;&#x44F; &#x43F;&#x43E; &#x443;&#x43C;&#x43E;&#x43B;&#x447;&#x430;&#x43D;&#x438;&#x44E;, &#x43A;&#x43E;&#x442;&#x43E;&#x440;&#x430;&#x44F; &#x43F;&#x440;&#x43E;&#x441;&#x442;&#x43E; &#x437;&#x430;&#x43C;&#x435;&#x43D;&#x44F;&#x435;&#x442; &#x43E;&#x434;&#x43D;&#x438; &#x437;&#x43D;&#x430;&#x447;&#x435;&#x43D;&#x438;&#x44F; &#x434;&#x440;&#x443;&#x433;&#x438;&#x43C;&#x438;. &#x415;&#x441;&#x43B;&#x438; &#x432;&#x44B; &#x445;&#x43E;&#x442;&#x438;&#x442;&#x435; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x43A;&#x443;&#x44E; &#x43B;&#x43E;&#x433;&#x438;&#x43A;&#x443; &#x43F;&#x440;&#x438; &#x441;&#x43B;&#x438;&#x44F;&#x43D;&#x438;&#x438; &#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x43A;&#x438;&#x445; &#x43E;&#x43F;&#x446;&#x438;&#x439;, &#x434;&#x43E;&#x431;&#x430;&#x432;&#x44C;&#x442;&#x435; &#x444;&#x443;&#x43D;&#x43A;&#x446;&#x438;&#x44E; &#x432; <code>Vue.config.optionMergeStrategies</code>:</p>
+<pre><code class="hljs js">Vue.config.optionMergeStrategies.myOption = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">toVal, fromVal</span>) </span>{
+  <span class="hljs-comment">// return mergedVal</span>
+}</code></pre>
+<p>&#x414;&#x43B;&#x44F; &#x431;&#x43E;&#x43B;&#x44C;&#x448;&#x435;&#x439; &#x447;&#x430;&#x441;&#x442;&#x438; &#x43E;&#x43F;&#x446;&#x438;&#x439;-&#x43E;&#x431;&#x44A;&#x435;&#x43A;&#x442;&#x43E;&#x432; &#x43C;&#x43E;&#x436;&#x43D;&#x43E; &#x43F;&#x440;&#x43E;&#x441;&#x442;&#x43E; &#x438;&#x441;&#x43F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x44C; &#x441;&#x442;&#x440;&#x430;&#x442;&#x435;&#x433;&#x438;&#x44E;, &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x43D;&#x44F;&#x435;&#x43C;&#x443;&#x44E; &#x43F;&#x43E; &#x443;&#x43C;&#x43E;&#x43B;&#x447;&#x430;&#x43D;&#x438;&#x44E; &#x434;&#x43B;&#x44F; &#x43E;&#x43F;&#x446;&#x438;&#x438; <code>methods</code>:</p>
+<pre><code class="hljs js"><span class="hljs-keyword">var</span> strategies = Vue.config.optionMergeStrategies
+strategies.myOption = strategies.methods</code></pre>
+<p>&#x411;&#x43E;&#x43B;&#x435;&#x435; &#x441;&#x43B;&#x43E;&#x436;&#x43D;&#x44B;&#x43C; &#x43F;&#x440;&#x438;&#x43C;&#x435;&#x440;&#x43E;&#x43C; &#x43C;&#x43E;&#x436;&#x435;&#x442; &#x43F;&#x43E;&#x441;&#x43B;&#x443;&#x436;&#x438;&#x442;&#x44C; &#x441;&#x442;&#x440;&#x430;&#x442;&#x435;&#x433;&#x438;&#x44F; &#x441;&#x43B;&#x438;&#x44F;&#x43D;&#x438;&#x44F; &#x438;&#x437; <a href="https://github.com/vuejs/vuex" target="_blank" rel="noopener">Vuex</a> 1.x:</p>
+<pre><code class="hljs js"><span class="hljs-keyword">const</span> merge = Vue.config.optionMergeStrategies.computed
+Vue.config.optionMergeStrategies.vuex = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">toVal, fromVal</span>) </span>{
+  <span class="hljs-keyword">if</span> (!toVal) <span class="hljs-keyword">return</span> fromVal
+  <span class="hljs-keyword">if</span> (!fromVal) <span class="hljs-keyword">return</span> toVal
+  <span class="hljs-keyword">return</span> {
+    <span class="hljs-attr">getters</span>: merge(toVal.getters, fromVal.getters),
+    <span class="hljs-attr">state</span>: merge(toVal.state, fromVal.state),
+    <span class="hljs-attr">actions</span>: merge(toVal.actions, fromVal.actions)
+  }
+}</code></pre>
+
+    
+    
+      <div class="guide-links">
+        
+        
+          <span>&#x2190; <a href="/v2/guide/transitioning-state.html">&#x410;&#x43D;&#x438;&#x43C;&#x438;&#x440;&#x43E;&#x432;&#x430;&#x43D;&#x438;&#x435; &#x43F;&#x435;&#x440;&#x435;&#x445;&#x43E;&#x434;&#x43E;&#x432; &#x43C;&#x435;&#x436;&#x434;&#x443; &#x441;&#x43E;&#x441;&#x442;&#x43E;&#x44F;&#x43D;&#x438;&#x44F;&#x43C;&#x438;</a></span>
+        
+        
+        
+          <span style="float: right;"><a href="/v2/guide/custom-directive.html">&#x41F;&#x43E;&#x43B;&#x44C;&#x437;&#x43E;&#x432;&#x430;&#x442;&#x435;&#x43B;&#x44C;&#x441;&#x43A;&#x438;&#x435; &#x434;&#x438;&#x440;&#x435;&#x43A;&#x442;&#x438;&#x432;&#x44B;</a> &#x2192;</span>
+        
+      </div>
+    
+    <div class="footer">
+        <script src="//m.servedby-buysellads.com/monetization.js" type="text/javascript"></script>
+<div class="bsa-cpc"></div>
+<script>
+  (function(){
+    if(typeof _bsa !== 'undefined' && _bsa) {
+    _bsa.init('default', 'CKYD62QM', 'placement:vuejsorg', {
+      target: '.bsa-cpc',
+      align: 'horizontal',
+      disable_css: 'true'
+    });
+      }
+  })();
+</script>
+
+      &#x41E;&#x431;&#x43D;&#x430;&#x440;&#x443;&#x436;&#x438;&#x43B;&#x438; &#x43E;&#x448;&#x438;&#x431;&#x43A;&#x443; &#x438;&#x43B;&#x438; &#x445;&#x43E;&#x442;&#x438;&#x442;&#x435; &#x434;&#x43E;&#x431;&#x430;&#x432;&#x438;&#x442;&#x44C; &#x447;&#x442;&#x43E;-&#x442;&#x43E; &#x441;&#x432;&#x43E;&#x451; &#x432; &#x434;&#x43E;&#x43A;&#x443;&#x43C;&#x435;&#x43D;&#x442;&#x430;&#x446;&#x438;&#x44E;?
+      <a href="https://github.com/translation-gang/ru.vuejs.org/blob/master/src/v2/guide/mixins.md" target="_blank">
+        &#x41E;&#x442;&#x440;&#x435;&#x434;&#x430;&#x43A;&#x442;&#x438;&#x440;&#x443;&#x439;&#x442;&#x435; &#x44D;&#x442;&#x443; &#x441;&#x442;&#x440;&#x430;&#x43D;&#x438;&#x446;&#x443; &#x43D;&#x430; GitHub!
+      </a>
+    </div>
+
+</body>
+</html>

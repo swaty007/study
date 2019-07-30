@@ -12,8 +12,12 @@ nbproject
 # windows thumbnail cache
 Thumbs.db
 
+# node vendor dir
+/node_modules
 # composer vendor dir
 /vendor
+
+package-lock.json
 
 # composer itself is not needed
 composer.phar

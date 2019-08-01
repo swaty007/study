@@ -2,9 +2,11 @@
 <html>
   <head>
     <title>{{ title }}</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/style-bundled.css' />
+
   </head>
   <body>
     {% block body %}{% endblock %}
+    <script src="/javascripts/scripts-bundled.js"></script>
   </body>
 </html>

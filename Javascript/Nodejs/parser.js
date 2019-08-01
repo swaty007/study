@@ -6,18 +6,17 @@ const tress = require('tress'),
 
 class Parser {
     constructor() {
-        this.URL = 'https://ru.vuejs.org/v2/guide/installation.html';
-        this.domain = 'https://ru.vuejs.org';
         this.results = [];
+        this.threads = 10;
+    }
+
+    initParserHtml() {
+        this.domain = 'https://ru.vuejs.org';
+        this.URL = 'https://ru.vuejs.org/v2/guide/installation.html';
         this.active_link = '.sidebar-link.current';
         this.next_link = '.sidebar-link';
         this.content = '.content.guide.with-sidebar';
-        this.threads = 10;
-        this.init();
-    }
-
-    init() {
-        console.log(resolve,'resolve')
+        console.log(resolve,'resolve');
         // `tress` последовательно вызывает наш обработчик для каждой ссылки в очереди
         this.promise = new Promise((resolve, reject) => {
             // Эта функция будет вызвана автоматически
@@ -69,11 +68,135 @@ class Parser {
             this.q.drain = () => {
                 // fs.writeFileSync('./data.json', JSON.stringify(this.results, null, 4));
                 resolve(this.results);
+                this.results.forEach(function (i) {
+                    console.log('write', i.title);
+                    let html = `<!DOCTYPE html>
+<html lang="en" id="wrapper">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>${i.title}</title>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <link href="./style.css" rel="stylesheet" type="text/css">
+
+    <!-- версия для разработки, отображает полезные предупреждения в консоли -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    <!-- production-версия, оптимизированная для размера и скорости -->
+    <!--    <script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+
+</head>
+<body id="main">
+<p>Спаршено с: <a href="${i.href}">${i.href}</a></p>
+${i.content}
+</body>
+</html>`;
+                    fs.writeFileSync('./Javascript/Vue/parsed/'+i.title.replace('/','')+'.html', html);
+                });
+            }
+        });
+    }
+    initGoogle() {
+//         var $ = cheerio.load(`
+//        <div1 id="parent">
+//     <div2 id="parent1">
+//         <div3 id="parent2">
+//             <a href="lol"></a>
+//         </div3>
+//         <a href="noob"></a>
+//     </div2>
+//
+// </div1>`);
+//         $('a').each((index, element) => {
+//             let link = $(element);
+//
+//             var papa = $('a').parents().filter(function() { return $.contains(this, link); }).first();
+//             // var papa = link.closest(':has(a)');
+//             console.log('papa',papa.attr('id'));
+//         });
+//         // var papa = $('a').parents().filter(function() { return $.contains(this, $('a')); }).first();
+//
+// return;
+
+        this.sites = {};
+        console.log(resolve,'resolve2');
+        this.promise = new Promise((resolve, reject) => {
+            this.q = tress((data, callback) => {
+
+                needle.get(data.url, (err, res) => {
+                    if (err) throw err;
+                    let $ = cheerio.load(res.body),
+                        sites = {},
+                        n = 0;
+
+                    $('footer').remove();
+                    $('header').remove();
+
+                    $('a').each((index, element) => {
+                        let link = $(element),
+                            href = decodeURI(link.attr('href')),
+                            domain = href.slice(
+                            href.indexOf('://')+3,
+                            href.indexOf('/', href.indexOf('://')+3));
+
+                        if (href.indexOf("url?q=") > -1) {
+                            if (link.parent().siblings('span').find('a').length > 0) {
+                                return;
+                            }
+                            if (typeof this.sites[domain] === 'undefined') {
+                                this.sites[domain] = {};
+                            }
+                            this.sites[domain] = Object.assign(this.sites[domain], {
+                                title: link.text(),
+                                href: href.slice(href.indexOf("url?q=")+6, href.indexOf('&',href.indexOf("url?q="))),
+                                query: data.query,
+                                position: n,
+                            });
+                            n++;
+                        }
+                    });
+                    // this.sites[data.query] = sites;
+
+                    this.results.push({
+                        html: $('html').html(),
+                        href: data.url,
+                        query: data.query,
+                    });
+                    console.log(data.query,data.url);
+                    callback();
+                });
+
+            }, this.threads);
+            this.q.drain = () => {
+                this.results.forEach(i => {
+                    fs.writeFileSync('./Javascript/Nodejs/googleParse/'+i.query+'.html', i.html);
+                });
+
+                resolve(this.sites);
             }
         });
     }
     getHtml () {
+        this.initParserHtml();
         this.q.push(this.URL);
+        return this.promise;
+    }
+    getGoogle (urls) {
+        this.initGoogle();
+        urls.forEach(i => {
+            this.q.push({
+                url: encodeURI(`https://www.google.com.ua/search?hl=ru&source=hp&q=${i}&oq=${i}`),
+                query: i
+            });
+        });
         return this.promise;
     }
 };

@@ -148,22 +148,23 @@ ${i.content}
                             href.indexOf('/', href.indexOf('://')+3));
 
                         if (href.indexOf("url?q=") > -1) {
-                            if (link.parent().siblings('span').find('a').length > 0) {
+                            if (link.parent().siblings('span').find('a').length > 0 || link.text().length === 0) {
                                 return;
                             }
                             if (typeof this.sites[domain] === 'undefined') {
-                                this.sites[domain] = {};
+                                this.sites[domain] = [];
                             }
-                            this.sites[domain] = Object.assign(this.sites[domain], {
+                            sites = {
                                 title: link.text(),
                                 href: href.slice(href.indexOf("url?q=")+6, href.indexOf('&',href.indexOf("url?q="))),
                                 query: data.query,
                                 position: n,
-                            });
+                            };
+                            this.sites[domain].push(sites);
+                            // this.sites[domain] = Object.assign(this.sites[domain], sites);
                             n++;
                         }
                     });
-                    // this.sites[data.query] = sites;
 
                     this.results.push({
                         html: $('html').html(),

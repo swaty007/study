@@ -5,11 +5,15 @@ const {Parser}  = require('./Javascript/Nodejs/parser'),
 console.log(__dirname);
 var parse = new Parser();
 parse.getGoogle([
-    'инфинитум','черный тмин','грин аура','casino online','porno'
+    'ореховое масло','купить черный тмин'
 ]).then( result => {
-    console.log(result);
-    fs.writeFileSync('./Javascript/Nodejs/googleParse/google.json', JSON.stringify(result));
+    console.log("finish");
+    fs.writeFile('./Javascript/Nodejs/googleParse/google.json', JSON.stringify(result, null, 4),'utf8', (err,res) => {
+        if (err) {
+            console.log(err,'err'); throw new err;
+        }
+    });
 });
 
-// parse.getHtml().then( res => { }, req => {console.log(req)});
+// parse.getHtmlVue().then( res => { }, req => {console.log(req)});
 

@@ -11,6 +11,7 @@
             <th>Position</th>
             <th>query</th>
             <th>title</th>
+            <th>meta</th>
             <th>href</th>
         </tr>
         </thead>
@@ -23,6 +24,14 @@
                     <td>{{ item.position }}</td>
                     <td>{{ item.query }}</td>
                     <td>{{ item.title }}</td>
+                    <td>
+                        {% for metaKey,meta in item.meta %}
+                            <p>
+                                <strong>{{ metaKey }}:</strong>
+                                <span>{{ meta }}</span>
+                            </p>
+                        {% endfor %}
+                    </td>
                     <td>{{ item.href }}</td>
                 </tr>
             {% endfor %}

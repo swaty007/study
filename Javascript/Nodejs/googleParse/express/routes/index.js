@@ -15,7 +15,7 @@ router.get('/', function(req, res, next) {
 
 router.get('/calc', function(req, res, next) {
   parse.getGoogle([
-    'инфинитум','черный тмин','грин аура','casino online','porno','содержантки киева'
+    'инфинитум','черный тмин','грин аура'
   ]).then( result => {
     res.render('calc', {
       title: 'Google Calc',

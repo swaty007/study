@@ -1,1 +1,390 @@
-{}
+{
+    "ru.wikipedia.org": [
+        {
+            "title": "Ореховое масло — Википедияhttps://ru.wikipedia.org › wiki › Ореховое_масло",
+            "domain": "ru.wikipedia.org",
+            "href": "https://ru.wikipedia.org/wiki/%D0%9E%D1%80%D0%B5%D1%85%D0%BE%D0%B2%D0%BE%D0%B5_%D0%BC%D0%B0%D1%81%D0%BB%D0%BE",
+            "query": "ореховое масло",
+            "position": 0
+        }
+    ],
+    "xcook.info": [
+        {
+            "title": "Ореховое масло – полезные свойства и вред, как сделать в ...xcook.info › product › orehovoe-maslo",
+            "domain": "xcook.info",
+            "href": "http://xcook.info/product/orehovoe-maslo.html",
+            "query": "ореховое масло",
+            "position": 1
+        }
+    ],
+    "food-tips.ru": [
+        {
+            "title": "Ореховое масло: польза и вред, советы по применениюfood-tips.ru › 000101215-orexovoe-maslo-polza-i-vred-sovety-po-primen...",
+            "domain": "food-tips.ru",
+            "href": "http://food-tips.ru/000101215-orexovoe-maslo-polza-i-vred-sovety-po-primeneniyu/",
+            "query": "ореховое масло",
+            "position": 2
+        }
+    ],
+    "www.youtube.com": [
+        {
+            "title": "Делаем ореховое масло (How to make peanut butter) - YouTubehttps://www.youtube.com › watch",
+            "domain": "www.youtube.com",
+            "href": "https://www.youtube.com/watch%3Fv%3D3FzLGL8lEsg",
+            "query": "ореховое масло",
+            "position": 3
+        }
+    ],
+    "mport.ua": [
+        {
+            "title": "Ореховое масло: самый ленивый рецепт приготовления - mport.uahttps://mport.ua › Здоровье › Еда",
+            "domain": "mport.ua",
+            "href": "https://mport.ua/zdorove/eda/757550-orehovoe-maslo-samyj-lenivyj-recept-prigotovlenija",
+            "query": "ореховое масло",
+            "position": 4
+        }
+    ],
+    "delo-vcusa.ru": [
+        {
+            "title": "Ореховое масло из грецких орехов рецепт с фото – пошаговое ...https://delo-vcusa.ru › Рецепты › Десерты › Другие десерты",
+            "domain": "delo-vcusa.ru",
+            "href": "https://delo-vcusa.ru/recept/orehovoe-maslo-iz-gretskih-orehov/",
+            "query": "ореховое масло",
+            "position": 5
+        }
+    ],
+    "prom.ua": [
+        {
+            "title": "Ореховое масло в Украине. Сравнить цены, купить ...https://prom.ua › Потребительские товары › Maslo",
+            "domain": "prom.ua",
+            "href": "https://prom.ua/Orehovoe-maslo.html",
+            "query": "ореховое масло",
+            "position": 6
+        },
+        {
+            "title": "Черный тмин в Украине. Сравнить цены, купить ...https://prom.ua › Потребительские товары",
+            "domain": "prom.ua",
+            "href": "https://prom.ua/Chernyj-tmin.html",
+            "query": "купить черный тмин",
+            "position": 2,
+            "meta": {
+                "title": " Черный тмин в Украине. Сравнить цены, купить потребительские товары на маркетплейсе Prom.ua",
+                "description": "Черный тмин. Продажа, поиск, поставщики и магазины, цены в Украине"
+            }
+        },
+        {
+            "title": "Семена Черный тмин в Украине. Сравнить цены, купить ...https://prom.ua › Потребительские товары",
+            "domain": "prom.ua",
+            "href": "https://prom.ua/Semena-chernyj-tmin.html",
+            "query": "купить черный тмин",
+            "position": 3,
+            "meta": {
+                "title": " Семена Черный тмин в Украине. Сравнить цены, купить потребительские товары на маркетплейсе Prom.ua",
+                "description": "Семена Черный тмин. Продажа, поиск, поставщики и магазины, цены в Украине"
+            }
+        }
+    ],
+    "eda.ru": [
+        {
+            "title": "«Ореховое масло», описание, фотография и лучшие рецепты на ...https://eda.ru › wiki › ingredienty › bakaleya › orehovoe-maslo-13767",
+            "domain": "eda.ru",
+            "href": "https://eda.ru/wiki/ingredienty/bakaleya/orehovoe-maslo-13767",
+            "query": "ореховое масло",
+            "position": 7
+        }
+    ],
+    "orehi-zerna.ru": [
+        {
+            "title": "Ореховое масло: польза и вред, состав, свойства, применениеhttps://orehi-zerna.ru › Растительные масла",
+            "domain": "orehi-zerna.ru",
+            "href": "https://orehi-zerna.ru/orehovye-masla-polza-vred/",
+            "query": "ореховое масло",
+            "position": 8
+        }
+    ],
+    "www.cookingpalette.net": [
+        {
+            "title": "Ореховое масло (арахисовое, миндальное, кешью, фундук ...www.cookingpalette.net › **КУХНИ МИРА",
+            "domain": "www.cookingpalette.net",
+            "href": "http://www.cookingpalette.net/orehovoe-maslo-arahisovoe-mindalno/",
+            "query": "ореховое масло",
+            "position": 9
+        }
+    ],
+    "city-soap.com.ua": [
+        {
+            "title": "Масло грецкого ореха, цена на ореховое масло, купить масло ...https://city-soap.com.ua › ... › Базовые масла › Жидкие базовые масла",
+            "domain": "city-soap.com.ua",
+            "href": "https://city-soap.com.ua/products/maslo_gretskogo_oreha",
+            "query": "ореховое масло",
+            "position": 10
+        }
+    ],
+    "vkusnoblog.net": [
+        {
+            "title": "Ореховое масло. Полезные свойства, состав, особенности, вред ...vkusnoblog.net › products › orehovoe-maslo",
+            "domain": "vkusnoblog.net",
+            "href": "http://vkusnoblog.net/products/orehovoe-maslo",
+            "query": "ореховое масло",
+            "position": 11
+        }
+    ],
+    "smak.ua": [
+        {
+            "title": "масло грецкого ореха: свойства - Smak.uahttps://smak.ua › Продукты › Полезные продукты",
+            "domain": "smak.ua",
+            "href": "https://smak.ua/foods/poleznie/50403-chem-polezno-maslo-greckogo-oreha",
+            "query": "ореховое масло",
+            "position": 12
+        }
+    ],
+    "lady.mail.ru": [
+        {
+            "title": "Масло грецкого ореха - полезные свойства и калорийность ...https://lady.mail.ru › product › maslo-gretskogo-oreha",
+            "domain": "lady.mail.ru",
+            "href": "https://lady.mail.ru/product/maslo-gretskogo-oreha/",
+            "query": "ореховое масло",
+            "position": 13
+        }
+    ],
+    "www.ukoha.ru": [
+        {
+            "title": "Ореховое масло в живописиwww.ukoha.ru › article › lightart › oil › orehovoe_maclo_v_givopici",
+            "domain": "www.ukoha.ru",
+            "href": "http://www.ukoha.ru/article/lightart/oil/orehovoe_maclo_v_givopici.htm",
+            "query": "ореховое масло",
+            "position": 14
+        }
+    ],
+    "myka-maslo.com": [
+        {
+            "title": "Масло ореховое холодного отжима от производителя 100 ...https://myka-maslo.com › masla › orehovoe-maslo",
+            "domain": "myka-maslo.com",
+            "href": "https://myka-maslo.com/masla/orehovoe-maslo.html",
+            "query": "ореховое масло",
+            "position": 15
+        }
+    ],
+    "sovkusom.ru": [
+        {
+            "title": "Ореховое масло - Со Вкусомhttps://sovkusom.ru › recept › orehovoe-maslo",
+            "domain": "sovkusom.ru",
+            "href": "https://sovkusom.ru/recept/orehovoe-maslo/",
+            "query": "ореховое масло",
+            "position": 16
+        }
+    ],
+    "edaplus.info": [
+        {
+            "title": "Масло грецкого ореха - полезные и опасные свойства - Еда+https://edaplus.info › produce › walnut-oil",
+            "domain": "edaplus.info",
+            "href": "https://edaplus.info/produce/walnut-oil.html",
+            "query": "ореховое масло",
+            "position": 17
+        }
+    ],
+    "tutknow.ru": [
+        {
+            "title": "Ореховое масло: польза и вредhttps://tutknow.ru › meal › 3559-polza-i-vred-orehovogo-masla",
+            "domain": "tutknow.ru",
+            "href": "https://tutknow.ru/meal/3559-polza-i-vred-orehovogo-masla.html",
+            "query": "ореховое масло",
+            "position": 18
+        }
+    ],
+    "sostavproduktov.ru": [
+        {
+            "title": "Масло грецкого ореха полезные свойства для кожи и волос ...https://sostavproduktov.ru › produkty › rastitelnye-masla › greckogo-oreha",
+            "domain": "sostavproduktov.ru",
+            "href": "https://sostavproduktov.ru/produkty/rastitelnye-masla/greckogo-oreha",
+            "query": "ореховое масло",
+            "position": 19
+        }
+    ],
+    "alsaha.com.ua": [
+        {
+            "title": "Купить Черный Тмин в Киеве, цены в Украине - АльСахаhttps://alsaha.com.ua › chernyj-tmin",
+            "domain": "alsaha.com.ua",
+            "href": "https://alsaha.com.ua/chernyj-tmin/",
+            "query": "купить черный тмин",
+            "position": 0,
+            "meta": {
+                "title": "Купить Черный Тмин в Киеве, цены в Украине",
+                "description": "Купить в Украине ◉ Черный Тмин ◉. Цены в Киеве - ☎ Звоните! ✓ (099) 180-18-21 ✓(068) 435-95-96 магазин АльСаха."
+            }
+        }
+    ],
+    "eco-lavka.ck.ua": [
+        {
+            "title": "Черный тмин семена Купить Цена 155 грн/кг. Купить семена ...https://eco-lavka.ck.ua › chernyiy-tmin-(kalindji)-semena",
+            "domain": "eco-lavka.ck.ua",
+            "href": "https://eco-lavka.ck.ua/spetsii-eko-produktyi/spetsii-i-pryanosti/chernyiy-tmin-(kalindji)-semena.html",
+            "query": "купить черный тмин",
+            "position": 1,
+            "meta": {
+                "title": "Черный тмин семена Купить Цена 155 грн/кг. Купить семена черного тмина Украина"
+            }
+        }
+    ],
+    "www.olx.ua": [
+        {
+            "title": "Черный Тмин - Продукты питания / напитки - OLX.uahttps://www.olx.ua › Все объявления › Дом и сад",
+            "domain": "www.olx.ua",
+            "href": "https://www.olx.ua/dom-i-sad/produkty-pitaniya-napitki/q-%D1%87%D0%B5%D1%80%D0%BD%D1%8B%D0%B9-%D1%82%D0%BC%D0%B8%D0%BD/",
+            "query": "купить черный тмин",
+            "position": 4,
+            "meta": {
+                "title": "Черный Тмин - Продукты питания / напитки - OLX.ua",
+                "description": "Черный Тмин OLX.ua"
+            }
+        },
+        {
+            "title": "Черный Тмин - Красота / здоровье - OLX.uahttps://www.olx.ua › Все объявления › Мода и стиль",
+            "domain": "www.olx.ua",
+            "href": "https://www.olx.ua/moda-i-stil/krasota-zdorove/q-%D1%87%D0%B5%D1%80%D0%BD%D1%8B%D0%B9-%D1%82%D0%BC%D0%B8%D0%BD/",
+            "query": "купить черный тмин",
+            "position": 5,
+            "meta": {
+                "title": "Черный Тмин - Красота / здоровье - OLX.ua",
+                "description": "Черный Тмин OLX.ua"
+            }
+        }
+    ],
+    "biomir.kiev.ua": [
+        {
+            "title": "Чёрный тмин. Калинджи, чернушка. Купить в Киеве, Украинеhttps://biomir.kiev.ua › приправы, специи › Черный тмин",
+            "domain": "biomir.kiev.ua",
+            "href": "https://biomir.kiev.ua/pripravy-so-vsego-mira/chjornyj-tmin-kupit",
+            "query": "купить черный тмин",
+            "position": 6,
+            "meta": {
+                "title": "Чёрный тмин. Калинджи, чернушка. Купить в Киеве, Украине",
+                "description": "Семена чёрного тмина. Купить в Киеве с доставкой по Украине 066 750 06 62"
+            }
+        }
+    ],
+    "flagma.ua": [
+        {
+            "title": "Черный тмин цена, где купить в Украинеhttps://flagma.ua › cherny-tmin-so1407867-1",
+            "domain": "flagma.ua",
+            "href": "https://flagma.ua/cherny-tmin-so1407867-1.html",
+            "query": "купить черный тмин",
+            "position": 7,
+            "meta": {
+                "title": "Черный тмин цена, где купить в Украине",
+                "description": "Черный тмин в Украине, цена оптом и в розницу, где купить черный тмин по регионам - предложения продам куплю от компаний портала Flagma Украина"
+            }
+        }
+    ],
+    "banka-speciy.in.ua": [
+        {
+            "title": "Калинджи (черный тмин) купить оптом и розницу – Банка Специй ...https://banka-speciy.in.ua › Специи",
+            "domain": "banka-speciy.in.ua",
+            "href": "https://banka-speciy.in.ua/specii/chernyy-tmin",
+            "query": "купить черный тмин",
+            "position": 8
+        }
+    ],
+    "deluxe.com.ua": [
+        {
+            "title": "Черный тмин, нигелла – купить в Киеве, оперативная доставка ...https://deluxe.com.ua › Каталог › Специи",
+            "domain": "deluxe.com.ua",
+            "href": "https://deluxe.com.ua/catalog/spetsii/nigella.html",
+            "query": "купить черный тмин",
+            "position": 9,
+            "meta": {
+                "title": "Черный тмин, нигелла – купить в Киеве, оперативная доставка по Украине | Магазин специй Делюкс "
+            }
+        }
+    ],
+    "bigl.ua": [
+        {
+            "title": "Семена Черный Тмин — Купить Недорого у Проверенных ...https://bigl.ua › Все категории",
+            "domain": "bigl.ua",
+            "href": "https://bigl.ua/sc-249198-Semena-chernyj-tmin",
+            "query": "купить черный тмин",
+            "position": 10
+        }
+    ],
+    "www.tmin.dn.ua": [
+        {
+            "title": "Семена черного тмина, калинджи (Nigella Sativa) : Масло ...www.tmin.dn.ua › semena-chernogo-tmina-kupit",
+            "domain": "www.tmin.dn.ua",
+            "href": "http://www.tmin.dn.ua/ru/semena-chernogo-tmina-kupit.html",
+            "query": "купить черный тмин",
+            "position": 11
+        }
+    ],
+    "blackseed.com.ua": [
+        {
+            "title": "Черный тмин | Купить масло и семена черного тмина в Киеве ...blackseed.com.ua",
+            "domain": "blackseed.com.ua",
+            "href": "http://blackseed.com.ua/",
+            "query": "купить черный тмин",
+            "position": 12
+        }
+    ],
+    "ecolotos.com.ua": [
+        {
+            "title": "Черный тмин 150г: семена пряности купить недорого - 432772895https://ecolotos.com.ua › ... › Семена черного тмина (Калинджи)",
+            "domain": "ecolotos.com.ua",
+            "href": "https://ecolotos.com.ua/p432772895-semena-chernogo-tmina.html",
+            "query": "купить черный тмин",
+            "position": 13
+        }
+    ],
+    "eco-zone.com.ua": [
+        {
+            "title": "Черный Тмин, 250г. Калинджи. Индия: продажа, цена в ...https://eco-zone.com.ua › Товары и услуги › Специи",
+            "domain": "eco-zone.com.ua",
+            "href": "https://eco-zone.com.ua/p85669556-chernyj-tmin-250g.html",
+            "query": "купить черный тмин",
+            "position": 14
+        }
+    ],
+    "ecolub.com.ua": [
+        {
+            "title": "Пенка для интимной гигиены Чайное дерево, черный тмин и ...ecolub.com.ua › penka-dlja-intimnoj-gigieny-chajnoe",
+            "domain": "ecolub.com.ua",
+            "href": "http://ecolub.com.ua/penka-dlja-intimnoj-gigieny-chajnoe",
+            "query": "купить черный тмин",
+            "position": 15
+        }
+    ],
+    "ukrspice.kiev.ua": [
+        {
+            "title": "Черный тмин – купить в Киеве, Украине по цене 56 грн за 100 ...https://ukrspice.kiev.ua › special › nigella",
+            "domain": "ukrspice.kiev.ua",
+            "href": "https://ukrspice.kiev.ua/special/nigella.html",
+            "query": "купить черный тмин",
+            "position": 16
+        }
+    ],
+    "aromanature.com.ua": [
+        {
+            "title": "Купить масло черного тмина Королевское Эль-Хаваджhttps://aromanature.com.ua › Масло черного тмина",
+            "domain": "aromanature.com.ua",
+            "href": "https://aromanature.com.ua/maslo-chernogo-tmina-al-hawag-500-ml.html",
+            "query": "купить черный тмин",
+            "position": 17
+        }
+    ],
+    "hemani-ukraine.com.ua": [
+        {
+            "title": "Масло черного тмина купить Днепропетровск, заказать, Украинаhemani-ukraine.com.ua › maslo-chernogo-tmina-kupit-dnepropetrovsk_ss",
+            "domain": "hemani-ukraine.com.ua",
+            "href": "http://hemani-ukraine.com.ua/ru/stati/maslo-chernogo-tmina-kupit-dnepropetrovsk_ss.html",
+            "query": "купить черный тмин",
+            "position": 18
+        }
+    ],
+    "fito.ua": [
+        {
+            "title": "Черный тмин купить таблетки - Фитоаптека интернет магазинhttps://fito.ua › Фито-аптека",
+            "domain": "fito.ua",
+            "href": "https://fito.ua/fito-apteka/chernyj-tmin-kupit.html",
+            "query": "купить черный тмин",
+            "position": 19
+        }
+    ]
+}

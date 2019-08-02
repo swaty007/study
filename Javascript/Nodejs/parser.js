@@ -7,7 +7,7 @@ var tunnel = require('tunnel');
 var myAgent = tunnel.httpsOverHttp({
     proxy: {
         host: '95.38.209.126',
-        port: 8080, // Defaults to 443
+        port: 80, // Defaults to 443
     }
 });
 
@@ -16,9 +16,11 @@ class Parser {
         this.results = [];
         this.threads = 1;
         this.sites = {};
+        this.query_json = [];
+        this.html_cache_time = 24;
     }
 
-    initParserHtml() {
+    initParserHtmlVue() {
         this.domain = 'https://ru.vuejs.org';
         this.URL = 'https://ru.vuejs.org/v2/guide/installation.html';
         this.active_link = '.sidebar-link.current';
@@ -113,75 +115,135 @@ ${i.content}
         });
     }
     initGoogle() {
-
-        this.size = 5; //x10
+        this.size = 2; //x10
+        this.sites = {};
         this.promise = new Promise((resolve, reject) => {
             this.q = tress((data, callback) => {
-
-                needle.get(data.url, (err, res) => { // { agent: myAgent },
-                    console.log(res.body)
-                    if (err) throw err;
-                    let $ = cheerio.load(res.body),
-                        sites = {},
-                        n = data.n_start;
-                    $('footer').remove();
-                    $('header').remove();
-
-                    $('a').each((index, element) => {
-                        let link = $(element),
-                            href = decodeURI(link.attr('href')),
-                            domain = href.slice(
-                            href.indexOf('://')+3,
-                            href.indexOf('/', href.indexOf('://')+3));
-
-                        if (href.indexOf("url?q=") > -1) {
-                            if (link.parent().siblings('span').find('a').length > 0 || link.text().length === 0) {
-                                return;
-                            }
-                            if (typeof this.sites[domain] === 'undefined') {
-                                this.sites[domain] = [];
-                            }
-                            sites = {
-                                title: link.text(),
-                                href: href.slice(href.indexOf("url?q=")+6, href.indexOf('&',href.indexOf("url?q="))),
-                                query: data.query,
-                                position: n,
-                            };
-                            this.sites[domain].push(sites);
-                            // this.sites[domain] = Object.assign(this.sites[domain], sites);
-                            n++;
-                            console.log(this.sites);
-                        }
-                    });
-
-                    // this.results.push({
-                        // html: $('html').html(),
-                        // href: data.url,
-                        // query: data.query,
-                    // });
-                    console.log(data.query,data.url);
-                    setTimeout(() => {
-                        callback();
-                    },1000);
-
-                });
-
+                this.requestGet(data,callback);
             }, this.threads);
             this.q.drain = () => {
-                console.log(this.sites);
-                this.results.forEach(i => {
-                    // fs.writeFileSync('./Javascript/Nodejs/googleParse/'+i.query+'.html', i.html);
-                });
-
                 resolve(this.sites);
             }
         });
     }
-    googleParseMeta () {
-        this.sites
+    requestGet (data, callback) {
+        var proxy = {
+            agent: myAgent,
+        };
+        console.log(data.query,'query');
+        fs.stat('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json',(error_stats, stats) => {
+            if (error_stats || (Date.now() - stats.mtimeMs)/(1000*60*60) > this.html_cache_time) {
+                console.log(error_stats,'error');
+                needle.get(data.url, {},(err, res) => { // { agent: myAgent },
+                    if (err) {
+                        console.log(err,'err');
+                        return;
+                    }
+                    console.log('res.body');
+                    parseHtml (res.body)
+                });
+                return;
+            }
+            fs.readFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json','utf8',  (error, contentHtml) => {
+                console.log('contentHtml');
+                if (error) {
+                    throw new error;
+                }
+                loadHtml(contentHtml);
+            });
+        });
+
+         var parseHtml = (html) => {
+            let $ = cheerio.load(html),
+                sites = {},
+                n = data.n_start;
+             this.query_json = []
+            $('footer').remove();
+            $('header').remove();
+
+            $('a').each((index, element) => {
+                let link = $(element),
+                    href = decodeURI(link.attr('href')),
+                    domain = href.slice(
+                        href.indexOf('://')+3,
+                        href.indexOf('/', href.indexOf('://')+3));
+
+                if (href.indexOf("url?q=") > -1) {
+                    if (link.parent().siblings('span').find('a').length > 0 || link.text().length === 0) {
+                        return;
+                    }
+                    if (typeof this.sites[domain] === 'undefined') {
+                        this.sites[domain] = [];
+                    }
+                    sites = {
+                        title: link.text(),
+                        domain: domain,
+                        href: href.slice(href.indexOf("url?q=")+6, href.indexOf('&',href.indexOf("url?q="))),
+                        query: data.query,
+                        position: n,
+                    };
+                    this.query_json.push(sites);
+                    this.sites[domain].push(sites);
+                    // this.sites[domain] = Object.assign(this.sites[domain], sites);
+                    n++;
+                }
+            });
+             this.googleParseMeta();
+             this.meta_q.drain = () => {
+                 fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json',
+                     JSON.stringify(this.query_json, null, 4),
+                     'utf8', (w_err,w_res) => {
+                         if (w_err) {
+                             console.log(w_err,'w_err'); throw new w_err;
+                         }
+                         console.log(data.query, "GET");
+                         setTimeout(() => {
+                             callback();
+                         },1000);
+                     });
+             };
+        };
+        var loadHtml = (json) => {
+            JSON.parse(json).forEach( site => {
+                if (typeof this.sites[site.domain] === 'undefined') {
+                    this.sites[site.domain] = [];
+                }
+                this.sites[site.domain].push(site);
+            });
+            console.log(data.query, "JSON LOAD");
+            callback();
+        }
     }
-    getHtml () {
-        this.initParserHtml();
+    googleParseMeta () {
+        this.meta_q = tress((urlMeta, callbackMeta) => {
+            // console.log(urlMeta,'urlMeta');
+            needle.get(urlMeta.href, (errMeta, resMeta) => { // { agent: myAgent },
+                if (errMeta) {
+                    console.log(errMeta,'errMeta');
+                    callbackMeta();
+                    return;
+                }
+                let $ = cheerio.load(resMeta.body);
+                urlMeta.meta = {
+                    title: $("head title").text(),
+                    description: $("meta[name='description']").attr("content"),
+                };
+                callbackMeta();
+            });
+
+        },20);
+        this.query_json.forEach(site => {
+            if (Object.keys(site).indexOf('meta') === -1) {
+                this.meta_q.push(site);
+            }
+        });
+
+
+        // console.log(sites_url);
+        // resolve(this.sites);
+    }
+    getHtmlVue () {
+        this.initParserHtmlVue();
         this.q.push(this.URL);
         return this.promise;
     }

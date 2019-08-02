@@ -7,6 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf ./Javascript/Nodejs/googleParse/express/public/javascripts/scripts-bundled.js && webpack --mode development && rm -rf ./dist",
+    "buildWin": "webpack --mode development",
     "start": "node ./Javascript/Nodejs/googleParse/express/bin/www"
   },
   "repository": {
@@ -22,6 +23,7 @@
   "dependencies": {
     "bootstrap": "^4.3.1",
     "cheerio": "^1.0.0-rc.3",
+    "console-log-html": "^2.0.2",
     "cookie-parser": "^1.4.4",
     "datatables.net": "^1.10.19",
     "datatables.net-bs": "^1.10.19",
@@ -33,6 +35,7 @@
     "debug": "~4.1.1",
     "express": "^4.17.1",
     "fs": "^0.0.1-security",
+    "http": "0.0.0",
     "http-errors": "^1.7.3",
     "jquery": "^3.4.1",
     "jszip": "^3.2.2",
@@ -41,6 +44,7 @@
     "node-sass-middleware": "^0.11.0",
     "pdfmake": "^0.1.58",
     "request": "^2.88.0",
+    "socket.io": "^2.2.0",
     "tress": "^1.1.4",
     "tunnel": "0.0.6",
     "twig": "~1.13.3",
@@ -52,6 +56,7 @@
     "babel-loader": "^8.0.6",
     "css-loader": "^3.1.0",
     "cssnano": "^4.1.10",
+    "extract-text-webpack-plugin": "^3.0.2",
     "html-loader": "^0.5.5",
     "html-webpack-plugin": "^3.2.0",
     "mini-css-extract-plugin": "^0.8.0",

@@ -6,6 +6,13 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
+table {
+  tr {
+    td {
+      word-break: break-all;
+    }
+  }
+}
 
 a {
   color: #00B7FF;

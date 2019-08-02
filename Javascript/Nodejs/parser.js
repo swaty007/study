@@ -10,6 +10,17 @@ var myAgent = tunnel.httpsOverHttp({
         port: 80, // Defaults to 443
     }
 });
+var app = require('express')();
+var server = require('http').Server(app);
+var io = require('socket.io')(server);
+server.listen(3038);
+io.on('connection', function(socket){
+    console.log('a user is connected')
+    setInterval(()=>{
+        socket.emit('news', { hello: 'world' });
+    },5000)
+});
+
 
 class Parser {
     constructor() {
@@ -224,6 +235,8 @@ ${i.content}
                 urlMeta.meta = {
                     title: $("head title").text(),
                     description: $("meta[name='description']").attr("content"),
+                    keywords: $("meta[name='keywords']").attr("content"),
+                    h1: $('h1').text()
                 };
                 callbackMeta();
             });

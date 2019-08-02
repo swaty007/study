@@ -16,6 +16,8 @@ router.get('/', function(req, res, next) {
 router.post('/calc', function(req, res, next) {
   const values = req.body.sites.split(',').map(site => site.trim());
   parse.getGoogle(values).then( result => {
+
+
     res.render('calc', {
       title: 'Google Calc',
       data: result });

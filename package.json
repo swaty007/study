@@ -34,6 +34,7 @@
     "node-sass-middleware": "^0.11.0",
     "request": "^2.88.0",
     "tress": "^1.1.4",
+    "tunnel": "0.0.6",
     "twig": "~1.13.3",
     "url": "^0.11.0"
   },

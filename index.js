@@ -6,8 +6,9 @@ console.log(__dirname);
 var parse = new Parser();
 parse.getGoogle([
     'инфинитум','черный тмин','грин аура','casino online','porno'
-]).then( res => {
-    fs.writeFileSync('./Javascript/Nodejs/googleParse/google.json', JSON.stringify(res, null, 4));
+]).then( result => {
+    console.log(result);
+    fs.writeFileSync('./Javascript/Nodejs/googleParse/google.json', JSON.stringify(result));
 });
 
 // parse.getHtml().then( res => { }, req => {console.log(req)});

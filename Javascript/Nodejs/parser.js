@@ -3,11 +3,19 @@ const tress = require('tress'),
     cheerio = require('cheerio'),
     resolve = require('url').resolve,
     fs = require('fs');
+var tunnel = require('tunnel');
+var myAgent = tunnel.httpsOverHttp({
+    proxy: {
+        host: '95.38.209.126',
+        port: 8080, // Defaults to 443
+    }
+});
 
 class Parser {
     constructor() {
         this.results = [];
-        this.threads = 10;
+        this.threads = 1;
+        this.sites = {};
     }
 
     initParserHtml() {
@@ -105,38 +113,17 @@ ${i.content}
         });
     }
     initGoogle() {
-//         var $ = cheerio.load(`
-//        <div1 id="parent">
-//     <div2 id="parent1">
-//         <div3 id="parent2">
-//             <a href="lol"></a>
-//         </div3>
-//         <a href="noob"></a>
-//     </div2>
-//
-// </div1>`);
-//         $('a').each((index, element) => {
-//             let link = $(element);
-//
-//             var papa = $('a').parents().filter(function() { return $.contains(this, link); }).first();
-//             // var papa = link.closest(':has(a)');
-//             console.log('papa',papa.attr('id'));
-//         });
-//         // var papa = $('a').parents().filter(function() { return $.contains(this, $('a')); }).first();
-//
-// return;
 
-        this.sites = {};
-        console.log(resolve,'resolve2');
+        this.size = 5; //x10
         this.promise = new Promise((resolve, reject) => {
             this.q = tress((data, callback) => {
 
-                needle.get(data.url, (err, res) => {
+                needle.get(data.url, (err, res) => { // { agent: myAgent },
+                    console.log(res.body)
                     if (err) throw err;
                     let $ = cheerio.load(res.body),
                         sites = {},
-                        n = 0;
-
+                        n = data.n_start;
                     $('footer').remove();
                     $('header').remove();
 
@@ -163,27 +150,35 @@ ${i.content}
                             this.sites[domain].push(sites);
                             // this.sites[domain] = Object.assign(this.sites[domain], sites);
                             n++;
+                            console.log(this.sites);
                         }
                     });
 
-                    this.results.push({
-                        html: $('html').html(),
-                        href: data.url,
-                        query: data.query,
-                    });
+                    // this.results.push({
+                        // html: $('html').html(),
+                        // href: data.url,
+                        // query: data.query,
+                    // });
                     console.log(data.query,data.url);
-                    callback();
+                    setTimeout(() => {
+                        callback();
+                    },1000);
+
                 });
 
             }, this.threads);
             this.q.drain = () => {
+                console.log(this.sites);
                 this.results.forEach(i => {
-                    fs.writeFileSync('./Javascript/Nodejs/googleParse/'+i.query+'.html', i.html);
+                    // fs.writeFileSync('./Javascript/Nodejs/googleParse/'+i.query+'.html', i.html);
                 });
 
                 resolve(this.sites);
             }
         });
+    }
+    googleParseMeta () {
+        this.sites
     }
     getHtml () {
         this.initParserHtml();
@@ -193,10 +188,17 @@ ${i.content}
     getGoogle (urls) {
         this.initGoogle();
         urls.forEach(i => {
-            this.q.push({
-                url: encodeURI(`https://www.google.com.ua/search?hl=ru&source=hp&q=${i}&oq=${i}`),
-                query: i
-            });
+            for (let n = 0; n < this.size; n++) {
+                let url = encodeURI(`https://www.google.com.ua/search?hl=ru&source=hp&q=${i}&oq=${i}`);
+                if (n > 0) {
+                    url += '&start='+String(n*10)
+                }
+                this.q.push({
+                    url: url,
+                    query: i,
+                    n_start: n*10
+                });
+            }
         });
         return this.promise;
     }

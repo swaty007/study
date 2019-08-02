@@ -1,4 +1,5 @@
-@import '../../../../../../node_modules/datatables.net-dt/css/jquery.dataTables.min.css';
+@import '~datatables.net-dt/css/jquery.dataTables.min.css';
+@import "~bootstrap/dist/css/bootstrap.min.css";
 
 body {
   padding: 50px;

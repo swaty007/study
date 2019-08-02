@@ -130,23 +130,21 @@ ${i.content}
         var proxy = {
             agent: myAgent,
         };
-        console.log(data.query,'query');
         fs.stat('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json',(error_stats, stats) => {
             if (error_stats || (Date.now() - stats.mtimeMs)/(1000*60*60) > this.html_cache_time) {
-                console.log(error_stats,'error');
+                console.log(error_stats,'error_stats or cache_time');
                 needle.get(data.url, {},(err, res) => { // { agent: myAgent },
                     if (err) {
                         console.log(err,'err');
                         return;
                     }
-                    console.log('res.body');
                     parseHtml (res.body)
                 });
                 return;
             }
             fs.readFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json','utf8',  (error, contentHtml) => {
-                console.log('contentHtml');
                 if (error) {
+                    console.log(error, "error");
                     throw new error;
                 }
                 loadHtml(contentHtml);
@@ -157,7 +155,7 @@ ${i.content}
             let $ = cheerio.load(html),
                 sites = {},
                 n = data.n_start;
-             this.query_json = []
+             this.query_json = [];
             $('footer').remove();
             $('header').remove();
 
@@ -196,7 +194,7 @@ ${i.content}
                          if (w_err) {
                              console.log(w_err,'w_err'); throw new w_err;
                          }
-                         console.log(data.query, "GET");
+                         console.log(data.query,data.n_start, "GET");
                          setTimeout(() => {
                              callback();
                          },1000);
@@ -210,13 +208,12 @@ ${i.content}
                 }
                 this.sites[site.domain].push(site);
             });
-            console.log(data.query, "JSON LOAD");
+            console.log(data.query, data.n_start, "JSON LOAD");
             callback();
         }
     }
     googleParseMeta () {
         this.meta_q = tress((urlMeta, callbackMeta) => {
-            // console.log(urlMeta,'urlMeta');
             needle.get(urlMeta.href, (errMeta, resMeta) => { // { agent: myAgent },
                 if (errMeta) {
                     console.log(errMeta,'errMeta');
@@ -230,15 +227,12 @@ ${i.content}
                 };
                 callbackMeta();
             });
-
         },20);
         this.query_json.forEach(site => {
             if (Object.keys(site).indexOf('meta') === -1) {
                 this.meta_q.push(site);
             }
         });
-
-
         // console.log(sites_url);
         // resolve(this.sites);
     }
@@ -264,7 +258,7 @@ ${i.content}
         });
         return this.promise;
     }
-};
+}
 
 // export default Parser;
 module.exports = {

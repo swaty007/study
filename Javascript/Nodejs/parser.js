@@ -15,10 +15,10 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 server.listen(3038);
 io.on('connection', function(socket){
-    console.log('a user is connected')
-    setInterval(()=>{
-        socket.emit('news', { hello: 'world' });
-    },5000)
+    console.log('a user is connected');
+    socket.emit('news', { query:  new Promise((resolve, reject) => {
+
+        } )});
 });
 
 
@@ -124,6 +124,11 @@ ${i.content}
                 });
             }
         });
+    }
+    getHtmlVue () {
+        this.initParserHtmlVue();
+        this.q.push(this.URL);
+        return this.promise;
     }
     initGoogle() {
         this.size = 2; //x10
@@ -248,11 +253,6 @@ ${i.content}
         });
         // console.log(sites_url);
         // resolve(this.sites);
-    }
-    getHtmlVue () {
-        this.initParserHtmlVue();
-        this.q.push(this.URL);
-        return this.promise;
     }
     getGoogle (urls) {
         this.initGoogle();

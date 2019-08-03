@@ -128,7 +128,7 @@ $(document).ready(function () {
   });
   var socket = io.connect('http://localhost:3038/', {// 'reconnectionDelay': 10 // defaults to 500
   });
-  socket.on('message', function (message) {
+  socket.on('news', function (message) {
     console.log(message);
   });
 });

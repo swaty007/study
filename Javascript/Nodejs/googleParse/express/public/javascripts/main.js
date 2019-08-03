@@ -10,6 +10,11 @@ require( 'datatables.net-buttons/js/buttons.html5.js' );
 require( 'datatables.net-buttons/js/buttons.print.js' )
 require( 'datatables.net-fixedheader-bs' );
 require( 'datatables.net-responsive-bs' );
+var needle = require("needle");
+var cheerio = require("cheerio");
+var request = require('request');
+var resolve = require('url').resolve;
+
 var io = require ('socket.io-client/dist/socket.io.js');
 var ConsoleLogHTML = require('console-log-html');
 
@@ -26,7 +31,7 @@ $(document).ready(function() {
         }
     );
 
-    socket.on('message', (message) => {
+    socket.on('news', (message) => {
         console.log(message);
     })
-} );
+});

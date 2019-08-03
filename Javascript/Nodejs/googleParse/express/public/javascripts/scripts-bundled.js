@@ -123,13 +123,88 @@ var ConsoleLogHTML = __webpack_require__(/*! console-log-html */ "./node_modules
 
 $(document).ready(function () {
   ConsoleLogHTML.connect(document.getElementById("myULContainer"));
-  $('#table_id').DataTable({
-    buttons: ['copy', 'csv', 'excel', 'pdf', 'print']
-  });
   var socket = io.connect('http://localhost:3038/', {// 'reconnectionDelay': 10 // defaults to 500
   });
-  socket.on('news', function (message) {
-    console.log(message);
+  socket.on('getGoogle', function (result) {
+    console.log(result, 'result get Google Front');
+    $.get(result.data.url, function (res) {
+      socket.emit('getGoogle', {
+        res: res,
+        data: result.data,
+        cb: result.cb
+      });
+    });
+  });
+  socket.on('console', function (result) {
+    console.log(result, ' NodeJs');
+  });
+  $("#form_google").on('submit', function (e) {
+    e.preventDefault();
+    var sites = $("#form_google input[name='sites']");
+    $.ajax({
+      type: "POST",
+      url: "/calc",
+      // cache : false,
+      // processData: false,
+      // dataType: 'json',
+      // contentType: false,
+      data: {
+        sites: sites.val()
+      },
+      success: function success(data) {
+        var DTdata = [];
+        $.each(data, function (i, domain) {
+          domain.forEach(function (site) {
+            if (site["meta"] === undefined) {
+              site["meta"] = {
+                title: ""
+              };
+            }
+
+            DTdata.push(site);
+          });
+        });
+        $('#table_id').DataTable({
+          lengthMenu: [[10, 100, 300, -1], [10, 100, 300, "All"]],
+          dom: 'Bfrtip',
+          data: DTdata,
+          // processing: true,
+          // lengthChange: true,
+          // serverSide: true,
+          // ordering: true,
+          columns: [{
+            "data": "domain"
+          }, {
+            "data": "position"
+          }, {
+            "data": "query"
+          }, {
+            "data": "title"
+          }, {
+            "data": "href"
+          }, {
+            "data": "meta"
+          }],
+          "columnDefs": [{
+            "targets": 5,
+            "data": "meta",
+            "render": function render(data1, type, row, meta) {
+              var html = "";
+
+              for (var key in data1) {
+                html += "<p><strong>".concat(key, "</strong><span>").concat(data1[key], "</span></p>");
+              }
+
+              return html;
+            }
+          }],
+          buttons: ['copy', 'csv', 'excel', 'pageLength' // 'pdf', 'print'
+          ]
+        });
+        $("#table_id_wrapper").removeClass("form-inline");
+        sites.val('');
+      }
+    });
   });
 });
 

@@ -1,0 +1,121 @@
+[
+    {
+        "title": "Как написать универсальный парсер для множества однообразных ...https://toster.ru › ...",
+        "domain": "toster.ru",
+        "href": "https://toster.ru/q/170961",
+        "query": "универсальный парсер",
+        "position": 10,
+        "meta": {
+            "title": "Как написать универсальный парсер для множества однообразных сайтов? — Toster.ru",
+            "description": "Доброго времени суток.\nСтоит задача написать парсер для порядка 30 однообразных сайтов объявлений.\nУ всех сайтов разная структура сайта и разные наборы данные - где-то данных больше, где-то меньше.\nПарсер для выдергивания данных по любому надо писать специализированный под каждый сайт, верно? Или все-таки есть какие-то варианты?\nА как на счет БД? \nК примеру у меня сейчас готов парсер для одного сайта. Есть входные URL-ы категорий при заходе на который парсер выдергивает URL-ы pagination по опред",
+            "keywords": "Тостер, вопросы, ответы, ИТ, информационные технологии, toster, toster.ru, IT",
+            "h1": "\n  Как написать универсальный парсер для множества однообразных сайтов?"
+        }
+    },
+    {
+        "title": "Возможно ли написать универсальный парсер сайтов? — Toster.ruhttps://toster.ru › ...",
+        "domain": "toster.ru",
+        "href": "https://toster.ru/q/336272",
+        "query": "универсальный парсер",
+        "position": 11,
+        "meta": {
+            "title": "Возможно ли написать универсальный парсер сайтов? — Toster.ru",
+            "description": "Добрый день.\nВозникла необходимость написать парсер сайтов, универсальный.\nЗадача в следующем. \nПользователь вводит адрес сайта в поле формы, через cURL получают содержимое сайта, выделить из выдачи только текст(из div, p, table, span и т.д.).\nНо вот вопрос. Каждый сайт, это индивидуальная структура. Как в этом случае, настроив парсер только раз, получать данные с любого сайта, не меняя настройки парсера под каждый сайт? Возможно ли это?\nСейчас использую php, cUrl, htmlpurifier для получения тек",
+            "keywords": "Тостер, вопросы, ответы, ИТ, информационные технологии, toster, toster.ru, IT",
+            "h1": "\n  Возможно ли написать универсальный парсер сайтов?"
+        }
+    },
+    {
+        "title": "Content Downloader X1 – универсальный парсер контента ...sbfactory.ru › ...",
+        "domain": "sbfactory.ru",
+        "href": "http://sbfactory.ru/%3Fp%3D600",
+        "query": "универсальный парсер",
+        "position": 12,
+        "meta": {
+            "title": "404 Not Found",
+            "h1": "Not Found"
+        }
+    },
+    {
+        "title": "SelfParser - универсальный парсер контента - Kylaksizov.ruhttps://kylaksizov.ru › 150-selfparser",
+        "domain": "kylaksizov.ru",
+        "href": "https://kylaksizov.ru/150-selfparser.html",
+        "query": "универсальный парсер",
+        "position": 13,
+        "meta": {
+            "title": "SelfParser - парсер для получения контента",
+            "description": "Универсальный парсер контента для любых CMS.  SelfParser - универсальный парсер новостей, товаров. Сам парсер не требует базу данных, полученные данные Вы можете сохранять в любой формат. Что бы понять принцип работы парсера, читайте эту статью до конца.  Требования PHP 7.1 и IonCube Loader",
+            "keywords": "парсер, Универсальный, IonCube, Требования, конца, статью, читайте, парсера, работы, принцип, понять, формат, любой, сохранять, можете, данные, полученные, данных, требует, товаров",
+            "h1": "SelfParser - универсальный парсер контента"
+        }
+    },
+    {
+        "title": "Универсальный и очень простой PHP парсерhttps://obninsksite.ru › blog › php-scripts › php-parser",
+        "domain": "obninsksite.ru",
+        "href": "https://obninsksite.ru/blog/php-scripts/php-parser",
+        "query": "универсальный парсер",
+        "position": 14,
+        "meta": {
+            "title": "Универсальный и очень простой PHP парсер",
+            "description": "Универсальный и очень простой PHP парсер. С помощью данного скрипта можно спарсить любую информацию с сайта, будь то погода, курсы валют или цена товара.",
+            "keywords": "php парсер, простой парсер, пхп парсер, парсер сайтов",
+            "h1": "Универсальный и очень простой PHP парсер"
+        }
+    },
+    {
+        "title": "FlowCrawler: универсальный парсер и постер - Форум об интернет ...https://searchengines.guru › showthread",
+        "domain": "searchengines.guru",
+        "href": "https://searchengines.guru/showthread.php%3Ft%3D961940",
+        "query": "универсальный парсер",
+        "position": 15
+    },
+    {
+        "title": "Личный опыт Content Downloader VS Datacol Универсальный парсер ...https://www.seocafe.info › soft-optimizatora-seo-utility › 38179-content-do...",
+        "domain": "www.seocafe.info",
+        "href": "https://www.seocafe.info/soft-optimizatora-seo-utility/38179-content-downloader-vs-datacol-universalnyi-parser.html",
+        "query": "универсальный парсер",
+        "position": 16,
+        "meta": {
+            "title": "Личный опыт Content Downloader VS Datacol Универсальный парсер - SEO форум - оптимизация и продвижение сайтов",
+            "description": "В этом обзоре речь пойдет о парсерах . На сегодняшний день существует огромное количество парсеров. И перед пользователем возникает вопрос: какой парсер использовать для решения своих задач? Скорее все",
+            "keywords": "Content,Downloader,VS,Datacol,Универсальный,парсер,content downloader, datacol универсальный парсер, Личный опыт Content Downloader VS Datacol Универсальный парсер, сео, seo, форум, поисковая, оптимизация, создание, продвижение, раскрутка, сайт",
+            "h1": "\n\t[ Личный опыт ] Content Downloader VS Datacol Универсальный парсер\n\n"
+        }
+    },
+    {
+        "title": "Datacol – универсальный парсер для любых задач (10% скидка)tods-blog.com.ua › Софт › SEO софт",
+        "domain": "tods-blog.com.ua",
+        "href": "http://tods-blog.com.ua/software/seo-soft/datacol/",
+        "query": "универсальный парсер",
+        "position": 17,
+        "meta": {
+            "title": "Datacol – универсальный парсер для любых задач (10% скидка)",
+            "description": "Обзор парсера Datacol – универсальный софт с визуализацией сбора данных для наполнения интернет магазинов, парсинга выдачи, показателей сайтов",
+            "h1": "Datacol – универсальный парсер для любых задач (10% скидка)"
+        }
+    },
+    {
+        "title": "polymorphism - Универсальный парсер для полиморфного ... - Qaruqaru.site › questions › universal-parser-to-polymorphic-variant-type",
+        "domain": "qaru.site",
+        "href": "http://qaru.site/questions/7615940/universal-parser-to-polymorphic-variant-type",
+        "query": "универсальный парсер",
+        "position": 18,
+        "meta": {
+            "title": " Универсальный парсер для полиморфного варианта - polymorphism | Qaru",
+            "description": " type t = [ 'A | 'B | 'C | ... ]\n\nexception Invalid_user_input\n\nlet input_ab : string -&gt; [&lt; 'A | 'B ] = function\n  | \"a\" -&gt; 'A\n  | \"b\" -&gt; 'B\n  | _ -&gt; raise Invalid_user_input\n\nlet input_ac : string -&gt; [&lt; 'A | 'C ] = function\n  | ",
+            "h1": " Универсальный парсер для полиморфного варианта"
+        }
+    },
+    {
+        "title": "python-3.x - Python: универсальный парсер XML - Qaruqaru.site › questions › python-universal-xml-parser",
+        "domain": "qaru.site",
+        "href": "http://qaru.site/questions/11521957/python-universal-xml-parser",
+        "query": "универсальный парсер",
+        "position": 19,
+        "meta": {
+            "title": " Python: универсальный парсер XML - python-3.x | Qaru",
+            "description": " Я пытаюсь сделать простую программу Python 3 для чтения информации о погоде из веб-источника XML, конвертировать ее в Python-читаемый объект (возможно, словарь) и обрабатывать его (например, визуализировать несколько наблюдений на графике).  Источни",
+            "h1": " Python: универсальный парсер XML"
+        }
+    }
+]

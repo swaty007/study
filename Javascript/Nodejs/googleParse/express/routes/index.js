@@ -13,12 +13,10 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-router.post('/calc', function(req, res, next) {
+router.post('/calc', function(req, response, next) {
   const values = req.body.sites.split(',').map(site => site.trim());
   parse.getGoogle(values).then( result => {
-    res.render('calc', {
-      title: 'Google Calc',
-      data: result });
+    response.json(result);
   });
 
 });

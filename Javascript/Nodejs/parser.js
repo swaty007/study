@@ -1,7 +1,7 @@
 const tress = require('tress'),
     needle = require('needle'),
     cheerio = require('cheerio'),
-    resolve = require('url').resolve,
+    // resolve = require('url').resolve,
     fs = require('fs');
 var tunnel = require('tunnel');
 var myAgent = tunnel.httpsOverHttp({
@@ -10,16 +10,11 @@ var myAgent = tunnel.httpsOverHttp({
         port: 80, // Defaults to 443
     }
 });
-var app = require('express')();
-var server = require('http').Server(app);
-var io = require('socket.io')(server);
+const app = require('express')(),
+    server = require('http').Server(app),
+    io = require('socket.io')(server);
 server.listen(3038);
-io.on('connection', function(socket){
-    console.log('a user is connected');
-    socket.emit('news', { query:  new Promise((resolve, reject) => {
 
-        } )});
-});
 
 
 class Parser {
@@ -29,6 +24,16 @@ class Parser {
         this.sites = {};
         this.query_json = [];
         this.html_cache_time = 24;
+        this.socket = "";
+
+        io.sockets.on('connection', (socket) => {
+            this.socket = socket;
+            console.log('connect');
+            this.socket.on('getGoogle', (result) => {
+                console.log(result,'result getGoogle Back');
+                this.parseHtml(result.res.body, result.data, result.cb);
+            });
+        });
     }
 
     initParserHtmlVue() {
@@ -148,75 +153,30 @@ ${i.content}
         };
         fs.stat('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json',(error_stats, stats) => {
             if (error_stats || (Date.now() - stats.mtimeMs)/(1000*60*60) > this.html_cache_time) {
-                console.log(error_stats,'error_stats or cache_time');
+                if (error_stats != null) {
+                    console.log('error_stats or cache_time',error_stats.path,error_stats.code);
+                    this.socket.emit('console',['error_stats or cache_time',error_stats.path,error_stats.code]);
+                }
+                // this.socket.emit('getGoogle', { data: data, cb: callback });
                 needle.get(data.url, {},(err, res) => { // { agent: myAgent },
                     if (err) {
                         console.log(err,'err');
+                        this.socket.emit('console',[err,'err']);
                         return;
                     }
-                    parseHtml (res.body)
+                    this.parseHtml (res.body, data, callback)
                 });
                 return;
             }
             fs.readFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json','utf8',  (error, contentHtml) => {
                 if (error) {
                     console.log(error, "error");
+                    this.socket.emit('console',[error, "error"]);
                     throw new error;
                 }
                 loadHtml(contentHtml);
             });
         });
-
-         var parseHtml = (html) => {
-            let $ = cheerio.load(html),
-                sites = {},
-                n = data.n_start;
-             this.query_json = [];
-            $('footer').remove();
-            $('header').remove();
-
-            $('a').each((index, element) => {
-                let link = $(element),
-                    href = decodeURI(link.attr('href')),
-                    domain = href.slice(
-                        href.indexOf('://')+3,
-                        href.indexOf('/', href.indexOf('://')+3));
-
-                if (href.indexOf("url?q=") > -1) {
-                    if (link.parent().siblings('span').find('a').length > 0 || link.text().length === 0) {
-                        return;
-                    }
-                    if (typeof this.sites[domain] === 'undefined') {
-                        this.sites[domain] = [];
-                    }
-                    sites = {
-                        title: link.text(),
-                        domain: domain,
-                        href: href.slice(href.indexOf("url?q=")+6, href.indexOf('&',href.indexOf("url?q="))),
-                        query: data.query,
-                        position: n,
-                    };
-                    this.query_json.push(sites);
-                    this.sites[domain].push(sites);
-                    // this.sites[domain] = Object.assign(this.sites[domain], sites);
-                    n++;
-                }
-            });
-             this.googleParseMeta();
-             this.meta_q.drain = () => {
-                 fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json',
-                     JSON.stringify(this.query_json, null, 4),
-                     'utf8', (w_err,w_res) => {
-                         if (w_err) {
-                             console.log(w_err,'w_err'); throw new w_err;
-                         }
-                         console.log(data.query,data.n_start, "GET");
-                         setTimeout(() => {
-                             callback();
-                         },1000);
-                     });
-             };
-        };
         var loadHtml = (json) => {
             JSON.parse(json).forEach( site => {
                 if (typeof this.sites[site.domain] === 'undefined') {
@@ -225,17 +185,73 @@ ${i.content}
                 this.sites[site.domain].push(site);
             });
             console.log(data.query, data.n_start, "JSON LOAD");
+            this.socket.emit('console',[data.query, data.n_start, "JSON LOAD"]);
             callback();
         }
+    }
+    parseHtml (html, data, callback) {
+        let $ = cheerio.load(html),
+            sites = {},
+            n = data.n_start;
+        this.query_json = [];
+        $('footer').remove();
+        $('header').remove();
+
+        $('a').each((index, element) => {
+            let link = $(element),
+                href = decodeURI(link.attr('href')),
+                domain = href.slice(
+                    href.indexOf('://')+3,
+                    href.indexOf('/', href.indexOf('://')+3));
+
+            if (href.indexOf("url?q=") > -1) {
+                if (link.parent().siblings('span').find('a').length > 0 || link.text().length === 0) {
+                    return;
+                }
+                if (typeof this.sites[domain] === 'undefined') {
+                    this.sites[domain] = [];
+                }
+                sites = {
+                    title: link.text(),
+                    domain: domain,
+                    href: href.slice(href.indexOf("url?q=")+6, href.indexOf('&',href.indexOf("url?q="))),
+                    query: data.query,
+                    position: n,
+                };
+                this.query_json.push(sites);
+                this.sites[domain].push(sites);
+                // this.sites[domain] = Object.assign(this.sites[domain], sites);
+                n++;
+            }
+        });
+        this.googleParseMeta();
+        this.meta_q.drain = () => {
+            fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json',
+                JSON.stringify(this.query_json, null, 4),
+                'utf8', (w_err, w_res) => {
+                    if (w_err) {
+                        this.socket.emit('console',[w_err,'w_err']);
+                        console.log(w_err,'w_err');
+                        throw new w_err;
+                    }
+                    console.log(data.query,data.n_start, "GET");
+                    this.socket.emit('console',[data.query,data.n_start, "GET"]);
+                    setTimeout(() => {
+                        callback();
+                    },1000);
+                });
+        };
     }
     googleParseMeta () {
         this.meta_q = tress((urlMeta, callbackMeta) => {
             needle.get(urlMeta.href, (errMeta, resMeta) => { // { agent: myAgent },
                 if (errMeta) {
                     console.log(errMeta,'errMeta');
+                    // this.socket.emit('console',[errMeta,'errMeta']);
                     callbackMeta();
                     return;
                 }
+                this.socket.emit('console',['Parsed Meta => ',urlMeta.href]);
                 let $ = cheerio.load(resMeta.body);
                 urlMeta.meta = {
                     title: $("head title").text(),
@@ -251,10 +267,13 @@ ${i.content}
                 this.meta_q.push(site);
             }
         });
-        // console.log(sites_url);
-        // resolve(this.sites);
     }
     getGoogle (urls) {
+        if (urls.indexOf("") !== -1) {
+            console.log('return');
+            this.socket.emit('console',['return']);
+            return;
+        }
         this.initGoogle();
         urls.forEach(i => {
             for (let n = 0; n < this.size; n++) {

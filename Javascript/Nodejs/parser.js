@@ -14,9 +14,19 @@ const app = require('express')(),
     server = require('http').Server(app),
     io = require('socket.io')(server);
 server.listen(3038);
-const puppeteer = require('puppeteer');
-
-
+const puppeteer = require('puppeteer-extra');
+// add stealth plugin and use defaults (all evasion techniques)
+const pluginStealth = require("puppeteer-extra-plugin-stealth");
+// add recaptcha plugin and provide it your 2captcha token
+// 2captcha is the builtin solution provider but others work as well.
+const RecaptchaPlugin = require('puppeteer-extra-plugin-recaptcha');
+puppeteer.use(pluginStealth());
+puppeteer.use(
+    RecaptchaPlugin({
+        provider: { id: '2captcha', token: 'XXXXXXX' },
+        visualFeedback: true // colorize reCAPTCHAs (violet = detected, green = solved)
+    })
+);
 
 
 class Parser {
@@ -138,26 +148,45 @@ ${i.content}
         return this.promise;
     }
     initTruecaller () {
-        (async () => {
-            const browser = await puppeteer.launch({headless: false,slowMo: 300 });
-            const page = await browser.newPage();
-            await page.goto('https://www.truecaller.com/auth/sign-in');
-            // await page.addScriptTag({url: 'https://code.jquery.com/jquery-3.2.1.min.js'});
+            const browser = puppeteer.launch({headless: false}).then( async browser => {
+                const page = await browser.newPage();
+                await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36');
+                await page.goto('https://www.truecaller.com/auth/sign-in');
+                await page.solveRecaptchas();
+                // await page.addScriptTag({url: 'https://code.jquery.com/jquery-3.2.1.min.js'});
 
-            const listHandle =
+                const listHandle =
+                    await page.$('main>div>a:nth-child(3)');
+                const hndle = listHandle.asElement();
                 await page.$('main>div>a:nth-child(3)');
-            const hndle = listHandle.asElement();
-            await page.$('main>div>a:nth-child(3)');
-            await page.click('main>div>a:nth-child(3)');
-            await page.$('input[type=email]');
-            await page.type('input[type=email]', 'zubgniloy@gmail.com', {delay: 20});
-            await page.click('#identifierNext');
-            await page.$('input[type=password]');
-            await page.type('input[type=password]', 'teST67maNey', {delay: 20});
-            await page.click('#passwordNext');
+                await page.click('main>div>a:nth-child(3)');
+                await page.waitFor(1000);
+                await page.$('input[type=email]');
+                await page.type('input[type=email]', 'zubgniloy@gmail.com', {delay: 20});
+                await page.click('#identifierNext');
+                await page.waitFor(1000);
+                await page.$('input[type=password]');
+                await page.type('input[type=password]', 'teST67maNey', {delay: 20});
+                await page.click('#passwordNext');
+                await page.waitFor(3000);
+                page.waitForNavigation();
+                await page.waitFor(3000);
+                await page.$('form input[type=tel]');
+                await page.type('form input[type=tel]', '638316055', {delay: 20});
+                await page.click('button[type=submit]');
+                await page.waitFor(1000);
+                page.waitForNavigation();
+                // For DOM element properties
+                const element = await page.$("h1");
+                const text = await page.evaluate(element => { return element.textContent}, element);
+                console.log(text);
+                // For HTML attributes:
+                // const element = await page.$("#april");
+                // await page.evaluate(element => { element.setAttribute('value', 7); }, element);
 
-            const page2 = await browser.newPage();
-            await page2.goto('https://www.truecaller.com/search/ua/638316055');
+                await page.screenshot({ path: "./Javascript/Nodejs/googleParse/photos/screen.png", fullPage: true });
+            });
+
 
             // const dimensions = await page.evaluate(() => {
             //     const $ = window.$;
@@ -173,7 +202,6 @@ ${i.content}
             // });
             // console.log('Dimensions:', dimensions);
             // await browser.close();
-        })();
     }
     initGoogle() {
         this.size = 2; //x10

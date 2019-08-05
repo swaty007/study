@@ -14,6 +14,8 @@ const app = require('express')(),
     server = require('http').Server(app),
     io = require('socket.io')(server);
 server.listen(3038);
+const puppeteer = require('puppeteer');
+
 
 
 
@@ -134,6 +136,44 @@ ${i.content}
         this.initParserHtmlVue();
         this.q.push(this.URL);
         return this.promise;
+    }
+    initTruecaller () {
+        (async () => {
+            const browser = await puppeteer.launch({headless: false,slowMo: 300 });
+            const page = await browser.newPage();
+            await page.goto('https://www.truecaller.com/auth/sign-in');
+            // await page.addScriptTag({url: 'https://code.jquery.com/jquery-3.2.1.min.js'});
+
+            const listHandle =
+                await page.$('main>div>a:nth-child(3)');
+            const hndle = listHandle.asElement();
+            await page.$('main>div>a:nth-child(3)');
+            await page.click('main>div>a:nth-child(3)');
+            await page.$('input[type=email]');
+            await page.type('input[type=email]', 'zubgniloy@gmail.com', {delay: 20});
+            await page.click('#identifierNext');
+            await page.$('input[type=password]');
+            await page.type('input[type=password]', 'teST67maNey', {delay: 20});
+            await page.click('#passwordNext');
+
+            const page2 = await browser.newPage();
+            await page2.goto('https://www.truecaller.com/search/ua/638316055');
+
+            // const dimensions = await page.evaluate(() => {
+            //     const $ = window.$;
+            //         var login_btn = $('main>div>a:nth-child(3)');
+            //         console.log(login_btn);
+            //         login_btn.click();
+            //         console.log('test');
+            //         return {
+            //             width: document.documentElement.clientWidth,
+            //             height: document.documentElement.clientHeight,
+            //             deviceScaleFactor: window.devicePixelRatio
+            //         };
+            // });
+            // console.log('Dimensions:', dimensions);
+            // await browser.close();
+        })();
     }
     initGoogle() {
         this.size = 2; //x10

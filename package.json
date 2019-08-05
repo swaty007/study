@@ -44,6 +44,7 @@
     "needle": "^2.4.0",
     "node-sass-middleware": "^0.11.0",
     "pdfmake": "^0.1.58",
+    "puppeteer": "^1.19.0",
     "request": "^2.88.0",
     "socket.io": "^2.2.0",
     "tough-cookie": "^3.0.1",

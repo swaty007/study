@@ -34,7 +34,10 @@ class Parser {
         this.results = [];
         this.threads = 1;
         this.sites = {};
-        this.query_json = [];
+        this.query_json = {
+            queriesMore: [],
+            googleSearch: []
+        };
         this.html_cache_time = 24;
         this.socket = "";
 
@@ -253,7 +256,7 @@ ${i.content}
             });
         });
         var loadHtml = (json) => {
-            JSON.parse(json).forEach( site => {
+            JSON.parse(json)["googleSearch"].forEach( site => {
                 if (typeof this.sites[site.domain] === 'undefined') {
                     this.sites[site.domain] = [];
                 }
@@ -267,8 +270,12 @@ ${i.content}
     parseHtml (html, data, callback) {
         let $ = cheerio.load(html),
             sites = {},
+            queries = {},
             n = data.n_start;
-        this.query_json = [];
+        this.query_json = {
+            queriesMore: [],
+            googleSearch: []
+        };
         $('footer').remove();
         $('header').remove();
 
@@ -293,13 +300,18 @@ ${i.content}
                     query: data.query,
                     position: n,
                 };
-                this.query_json.push(sites);
+                this.query_json["googleSearch"].push(sites);
                 this.sites[domain].push(sites);
                 // this.sites[domain] = Object.assign(this.sites[domain], sites);
                 n++;
+            } else if (href.indexOf("/search?") > -1 && link.parent().is('li')) {
+                queries = {
+                    title: link.text(),
+                    href: "https://google.com"+href
+                }
             }
         });
-        this.googleParseMeta();
+        this.googleParseMeta(); //init this.meta_q
         this.meta_q.drain = () => {
             fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json',
                 JSON.stringify(this.query_json, null, 4),
@@ -337,7 +349,7 @@ ${i.content}
                 callbackMeta();
             });
         },20);
-        this.query_json.forEach(site => {
+        this.query_json["googleSearch"].forEach(site => {
             if (Object.keys(site).indexOf('meta') === -1) {
                 this.meta_q.push(site);
             }

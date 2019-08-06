@@ -150,12 +150,17 @@ ${i.content}
     initTruecaller () {
             const browser = puppeteer.launch({args: ["--no-sandbox"], headless: false}).then( async browser => {
                 const page = await browser.newPage();
-                // await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36');
+                await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36');
                 // await page.goto('https://www.truecaller.com/auth/sign-in');
-                await page.goto('https://recaptcha-demo.appspot.com/recaptcha-v3-request-scores.php');
+                await page.goto('https://usr.minjust.gov.ua/ua/freesearch');
+                // await page.goto('https://recaptcha-demo.appspot.com/recaptcha-v3-request-scores.php');
                 // await page.goto('https://bot.sannysoft.com/');
                 await page.solveRecaptchas();
                 // await page.addScriptTag({url: 'https://code.jquery.com/jquery-3.2.1.min.js'});
+
+                await page.$('input#query');
+                await page.type('input#query', '3081600974', {delay: 20});
+
 
                 const listHandle =
                     await page.$('main>div>a:nth-child(3)');
@@ -206,7 +211,7 @@ ${i.content}
             // await browser.close();
     }
     initGoogle() {
-        this.size = 2; //x10
+        this.size = 1; //x10
         this.sites = {};
         this.promise = new Promise((resolve, reject) => {
             this.q = tress((data, callback) => {

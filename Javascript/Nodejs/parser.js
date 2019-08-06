@@ -148,10 +148,12 @@ ${i.content}
         return this.promise;
     }
     initTruecaller () {
-            const browser = puppeteer.launch({headless: false}).then( async browser => {
+            const browser = puppeteer.launch({args: ["--no-sandbox"], headless: false}).then( async browser => {
                 const page = await browser.newPage();
-                await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36');
-                await page.goto('https://www.truecaller.com/auth/sign-in');
+                // await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36');
+                // await page.goto('https://www.truecaller.com/auth/sign-in');
+                await page.goto('https://recaptcha-demo.appspot.com/recaptcha-v3-request-scores.php');
+                // await page.goto('https://bot.sannysoft.com/');
                 await page.solveRecaptchas();
                 // await page.addScriptTag({url: 'https://code.jquery.com/jquery-3.2.1.min.js'});
 

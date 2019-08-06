@@ -308,7 +308,8 @@ ${i.content}
                 queries = {
                     title: link.text(),
                     href: "https://google.com"+href
-                }
+                };
+                this.query_json["queriesMore"].push(queries);
             }
         });
         this.googleParseMeta(); //init this.meta_q

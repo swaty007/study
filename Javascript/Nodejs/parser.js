@@ -267,24 +267,28 @@ ${i.content}
             callback();
         }
     }
-    parseHtml (html, data, callback) {
+    parseHtml (html, data, callback, meta = true) {
         let $ = cheerio.load(html),
             sites = {},
             queries = {},
+            result = {
+                queriesMore: [],
+                googleSearch: []
+            },
             n = data.n_start,
             n_inside = 0;
 
-        fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.html',
-            html,
-            'utf8', (w_err, w_res) => {
-                if (w_err) {
-                    this.socket.emit('console',[w_err,'w_errHTML']);
-                    console.log(w_err,'w_errHTML');
-                    throw new w_err;
-                }
-                console.log(data.query,data.n_start, "HTML WRITE");
-                this.socket.emit('console',[data.query,data.n_start, "HTML WRITE"]);
-            });
+        // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.html',
+        //     html,
+        //     'utf8', (w_err, w_res) => {
+        //         if (w_err) {
+        //             this.socket.emit('console',[w_err,'w_errHTML']);
+        //             console.log(w_err,'w_errHTML');
+        //             throw new w_err;
+        //         }
+        //         console.log(data.query,data.n_start, "HTML WRITE");
+        //         this.socket.emit('console',[data.query,data.n_start, "HTML WRITE"]);
+        //     });
 
         this.query_json = {
             queriesMore: [],
@@ -314,83 +318,42 @@ ${i.content}
                     query: data.query,
                     position: n,
                 };
-                this.query_json["googleSearch"].push(sites);
+                // this.query_json["googleSearch"].push(sites);
+                result["googleSearch"].push(sites);
                 this.sites[domain].push(sites);
                 // this.sites[domain] = Object.assign(this.sites[domain], sites);
                 n++;
-            } else if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe")) {
-                var googleParseQueries = () => {
-                    return new Promise((resolve, reject) => {
-                        needle.get("https://www.google.com"+encodeURI(href), {}, (errIn, resIn) => { // { agent: myAgent },
-                            if (errIn) {
-                                console.log(errIn,'errIn');
-                                this.socket.emit('console',[errIn,'errIn']);
-                                return;
-                            }
-                            fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+this.query_json["queriesMore"][n_inside].title+'.html',
-                                resIn.body,
-                                'utf8', (w_err, w_res) => {
-                                    if (w_err) {
-                                        this.socket.emit('console',[w_err,'w_errHTML']);
-                                        console.log(w_err,'w_errHTML');
-                                        throw new w_err;
-                                    }
-                                    console.log("HTML WRITE ING");
-                                });
-
-                            let $In = cheerio.load(resIn.body),
-                                queriesIn = {};
-                            $In('footer').remove();
-                            $In('header').remove();
-                            console.log('end2',n_inside)
-
-                            $In('a').each((index, element) => {
-                                let link = $In(element),
-                                    href = decodeURI(link.attr('href'));
-
-                                if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe")) {
-                                    queriesIn = {
-                                        title: link.text(),
-                                        href: "https://google.com"+href,
-                                        html: link.html(),
-                                    };
-
-                                    if (typeof this.query_json["queriesMore"][n_inside]["inside"] === 'undefined') {
-                                        this.query_json["queriesMore"][n_inside]["inside"] = [];
-                                    }
-                                    this.query_json["queriesMore"][n_inside]["inside"].push(queriesIn);
-                                }
-                            });
-
-                            resolve();
-                        });
-                    })
-                };
+            } else if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe") && meta) {
                 queries = {
                     title: link.text(),
                     href: "https://www.google.com"+href,
                     html: link.html()
                 };
-                this.query_json["queriesMore"].push(queries);
+                // this.query_json["queriesMore"].push(queries);
+                result["queriesMore"].push(queries);
 
                 console.log('end1',n_inside);
                 // await googleParseQueries();
 
-
-
-
-
-
-
-
                  await new Promise((resolve, reject) => {
-                    needle.get("https://www.google.com"+encodeURI(href), {}, (errIn, resIn) => { // { agent: myAgent },
+                     let url = "https://www.google.com"+encodeURI(href);
+                     console.log(href, 'href',n_inside)
+                    needle.get(url, {}, (errIn, resIn) => { // { agent: myAgent },
+                        console.log('hrefStart',n_inside)
                         if (errIn) {
                             console.log(errIn,'errIn');
                             this.socket.emit('console',[errIn,'errIn']);
                             return;
                         }
-                        fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+this.query_json["queriesMore"][n_inside].title+'.html',
+                        this.parseHtml(resIn.body, {
+                            // url: this.query_json["queriesMore"][n_inside].href,
+                            url: result["queriesMore"][n_inside].href,
+                            // query: this.query_json["queriesMore"][n_inside].title,
+                            query: result[n_inside].title,
+                            n_start: 0
+                        }, null, false);
+                        // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+this.query_json["queriesMore"][n_inside].title+'.html',
+                        fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+result["queriesMore"][n_inside].title+'.html',
                             resIn.body,
                             'utf8', (w_err, w_res) => {
                                 if (w_err) {
@@ -418,36 +381,31 @@ ${i.content}
                                     html: link.html(),
                                 };
 
-                                if (typeof this.query_json["queriesMore"][n_inside]["inside"] === 'undefined') {
-                                    this.query_json["queriesMore"][n_inside]["inside"] = [];
+                                console.log('In EACH',n_inside)
+                                // if (typeof this.query_json["queriesMore"][n_inside]["inside"] === 'undefined') {
+                                if (typeof result["queriesMore"][n_inside]["inside"] === 'undefined') {
+                                    // this.query_json["queriesMore"][n_inside]["inside"] = [];
+                                    result["queriesMore"][n_inside]["inside"] = [];
                                 }
-                                this.query_json["queriesMore"][n_inside]["inside"].push(queriesIn);
+                                console.log("n_inside", n_inside);
+                                // this.query_json["queriesMore"][n_inside]["inside"].push(queriesIn);
+                                result["queriesMore"][n_inside]["inside"].push(queriesIn);
                             }
                         });
 
                         resolve();
                     });
-                });
-
-
-
-
-
-
-
-
-
-
+                }).then( resolveQuery => {console.log('end4',n_inside)});
 
                 console.log('end3',n_inside);
                 // this.query_json["queriesMore"][n_inside] = queries;
                 n_inside++;
             }
         });
-        this.googleParseMeta(); //init this.meta_q
-        this.meta_q.drain = () => {
+        var finishAndSaveJson = (meta = true) => {
             fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json',
-                JSON.stringify(this.query_json, null, 4),
+                // JSON.stringify(this.query_json, null, 4),
+                JSON.stringify(result, null, 4),
                 'utf8', (w_err, w_res) => {
                     if (w_err) {
                         this.socket.emit('console',[w_err,'w_err']);
@@ -456,11 +414,19 @@ ${i.content}
                     }
                     console.log(data.query,data.n_start, "GET");
                     this.socket.emit('console',[data.query,data.n_start, "GET"]);
-                    setTimeout(() => {
-                        callback();
-                    },1000);
+                    if (meta) {
+                        setTimeout(() => {
+                            callback();
+                        },1000);
+                    }
                 });
         };
+        if (meta) {
+            this.googleParseMeta(); //init this.meta_q
+            this.meta_q.drain = finishAndSaveJson;
+        } else {
+            finishAndSaveJson(false);
+        }
     }
     googleParseMeta () {
         this.meta_q = tress((urlMeta, callbackMeta) => {
@@ -481,7 +447,7 @@ ${i.content}
                 };
                 callbackMeta();
             });
-        },20);
+        },1);
         this.query_json["googleSearch"].forEach(site => {
             if (Object.keys(site).indexOf('meta') === -1) {
                 this.meta_q.push(site);

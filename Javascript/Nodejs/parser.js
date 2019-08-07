@@ -298,109 +298,119 @@ ${i.content}
         $('header').remove();
 
         $('a').each(async (index, element) => {
-            let link = $(element),
-                href = decodeURI(link.attr('href')),
-                domain = href.slice(
-                    href.indexOf('://')+3,
-                    href.indexOf('/', href.indexOf('://')+3));
+            await new Promise(async (resolveEach) => {
 
-            if (href.indexOf("url?q=") > -1) {
-                if (link.parent().siblings('span').find('a').length > 0 || link.text().length === 0) {
-                    return;
-                }
-                if (typeof this.sites[domain] === 'undefined') {
-                    this.sites[domain] = [];
-                }
-                sites = {
-                    title: link.text(),
-                    domain: domain,
-                    href: href.slice(href.indexOf("url?q=")+6, href.indexOf('&',href.indexOf("url?q="))),
-                    query: data.query,
-                    position: n,
-                };
-                // this.query_json["googleSearch"].push(sites);
-                result["googleSearch"].push(sites);
-                this.sites[domain].push(sites);
-                // this.sites[domain] = Object.assign(this.sites[domain], sites);
-                n++;
-            } else if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe") && meta) {
-                queries = {
-                    title: link.text(),
-                    href: "https://www.google.com"+href,
-                    html: link.html()
-                };
-                // this.query_json["queriesMore"].push(queries);
-                result["queriesMore"].push(queries);
+                let link = $(element),
+                    href = decodeURI(link.attr('href')),
+                    domain = href.slice(
+                        href.indexOf('://')+3,
+                        href.indexOf('/', href.indexOf('://')+3));
 
-                console.log('end1',n_inside);
-                // await googleParseQueries();
+                if (href.indexOf("url?q=") > -1) {
+                    if (link.parent().siblings('span').find('a').length > 0 || link.text().length === 0) {
+                        return;
+                    }
+                    if (typeof this.sites[domain] === 'undefined') {
+                        this.sites[domain] = [];
+                    }
+                    sites = {
+                        title: link.text(),
+                        domain: domain,
+                        href: href.slice(href.indexOf("url?q=")+6, href.indexOf('&',href.indexOf("url?q="))),
+                        query: data.query,
+                        position: n,
+                    };
+                    // this.query_json["googleSearch"].push(sites);
+                    result["googleSearch"].push(sites);
+                    this.sites[domain].push(sites);
+                    // this.sites[domain] = Object.assign(this.sites[domain], sites);
+                    n++;
+                    resolveEach();
+                } else if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe") && meta) {
+                    queries = {
+                        title: link.text(),
+                        href: "https://www.google.com"+href,
+                        html: link.html()
+                    };
+                    // this.query_json["queriesMore"].push(queries);
+                    result["queriesMore"].push(queries);
 
-                 await new Promise((resolve, reject) => {
-                     let url = "https://www.google.com"+encodeURI(href);
-                     console.log(href, 'href',n_inside)
-                    needle.get(url, {}, (errIn, resIn) => { // { agent: myAgent },
-                        console.log('hrefStart',n_inside)
-                        if (errIn) {
-                            console.log(errIn,'errIn');
-                            this.socket.emit('console',[errIn,'errIn']);
-                            return;
-                        }
-                        this.parseHtml(resIn.body, {
-                            // url: this.query_json["queriesMore"][n_inside].href,
-                            url: result["queriesMore"][n_inside].href,
-                            // query: this.query_json["queriesMore"][n_inside].title,
-                            query: result[n_inside].title,
-                            n_start: 0
-                        }, null, false);
-                        // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+this.query_json["queriesMore"][n_inside].title+'.html',
-                        fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+result["queriesMore"][n_inside].title+'.html',
-                            resIn.body,
-                            'utf8', (w_err, w_res) => {
-                                if (w_err) {
-                                    this.socket.emit('console',[w_err,'w_errHTML']);
-                                    console.log(w_err,'w_errHTML');
-                                    throw new w_err;
+                    console.log('end1',n_inside);
+                    // await googleParseQueries();
+
+                    // await new Promise((resolveLink, rejectLink) => {
+                        let url = "https://www.google.com"+encodeURI(href);
+                        console.log(href, 'href',n_inside)
+                        needle.get(url, {}, (errIn, resIn) => { // { agent: myAgent },
+                            console.log('hrefStart',n_inside)
+                            if (errIn) {
+                                console.log(errIn,'errIn');
+                                this.socket.emit('console',[errIn,'errIn']);
+                                return;
+                            }
+                            this.parseHtml(resIn.body, {
+                                // url: this.query_json["queriesMore"][n_inside].href,
+                                url: result["queriesMore"][n_inside].href,
+                                // query: this.query_json["queriesMore"][n_inside].title,
+                                query: result[n_inside].title,
+                                n_start: 0
+                            }, null, false);
+                            // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+this.query_json["queriesMore"][n_inside].title+'.html',
+                            fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+result["queriesMore"][n_inside].title+'.html',
+                                resIn.body,
+                                'utf8', (w_err, w_res) => {
+                                    if (w_err) {
+                                        this.socket.emit('console',[w_err,'w_errHTML']);
+                                        console.log(w_err,'w_errHTML');
+                                        throw new w_err;
+                                    }
+                                    console.log("HTML WRITE ING");
+                                });
+
+                            let $In = cheerio.load(resIn.body),
+                                queriesIn = {};
+                            $In('footer').remove();
+                            $In('header').remove();
+                            console.log('end2',n_inside)
+
+                            $In('a').each((index, element) => {
+                                let link = $In(element),
+                                    href = decodeURI(link.attr('href'));
+
+                                if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe")) {
+                                    queriesIn = {
+                                        title: link.text(),
+                                        href: "https://google.com"+href,
+                                        html: link.html(),
+                                    };
+
+                                    console.log('In EACH',n_inside)
+                                    // if (typeof this.query_json["queriesMore"][n_inside]["inside"] === 'undefined') {
+                                    if (typeof result["queriesMore"][n_inside]["inside"] === 'undefined') {
+                                        // this.query_json["queriesMore"][n_inside]["inside"] = [];
+                                        result["queriesMore"][n_inside]["inside"] = [];
+                                    }
+                                    console.log("n_inside", n_inside);
+                                    // this.query_json["queriesMore"][n_inside]["inside"].push(queriesIn);
+                                    result["queriesMore"][n_inside]["inside"].push(queriesIn);
                                 }
-                                console.log("HTML WRITE ING");
                             });
 
-                        let $In = cheerio.load(resIn.body),
-                            queriesIn = {};
-                        $In('footer').remove();
-                        $In('header').remove();
-                        console.log('end2',n_inside)
-
-                        $In('a').each((index, element) => {
-                            let link = $In(element),
-                                href = decodeURI(link.attr('href'));
-
-                            if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe")) {
-                                queriesIn = {
-                                    title: link.text(),
-                                    href: "https://google.com"+href,
-                                    html: link.html(),
-                                };
-
-                                console.log('In EACH',n_inside)
-                                // if (typeof this.query_json["queriesMore"][n_inside]["inside"] === 'undefined') {
-                                if (typeof result["queriesMore"][n_inside]["inside"] === 'undefined') {
-                                    // this.query_json["queriesMore"][n_inside]["inside"] = [];
-                                    result["queriesMore"][n_inside]["inside"] = [];
-                                }
-                                console.log("n_inside", n_inside);
-                                // this.query_json["queriesMore"][n_inside]["inside"].push(queriesIn);
-                                result["queriesMore"][n_inside]["inside"].push(queriesIn);
-                            }
+                            // resolveLink();
                         });
+                    // }).then( resolveQuery => {
+                    //     console.log('end4',n_inside)
 
-                        resolve();
-                    });
-                }).then( resolveQuery => {console.log('end4',n_inside)});
+                        console.log('end3',n_inside);
+                        // this.query_json["queriesMore"][n_inside] = queries;
+                        n_inside++;
+                        resolveEach();
+                    // });
 
-                console.log('end3',n_inside);
-                // this.query_json["queriesMore"][n_inside] = queries;
-                n_inside++;
-            }
+
+                }
+
+            })
         });
         var finishAndSaveJson = (meta = true) => {
             fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json',

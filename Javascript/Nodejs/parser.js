@@ -296,8 +296,24 @@ ${i.content}
         };
         $('footer').remove();
         $('header').remove();
-
-        $('a').each(async (index, element) => {
+//         for (let item in $('a')) {
+//              console.log(item.attr('href'), 'href test');
+//         }
+// return;
+//         async function processArray(array) {
+//             for (const item of array) {
+//                 await delayedLog(item);
+//             }
+//             console.log('Done!');
+//         }
+//         async () => {
+//             for (let item in $('a')) {
+//                 await console.log($(element).attr('href'), 'href test');
+//             }
+//         };
+        $('a').map(async (index, element) => {
+            console.log('map start')
+            // return;
             await new Promise( async (resolveEach,rejectEach) => {
 
                 let link = $(element),
@@ -402,12 +418,13 @@ ${i.content}
                             console.log('end3',n_inside);
                             // resolveEach();
                             resolveLink();
+                            console.log('map end3')
                         });
                     })
                         .then( resolveQuery => {
                         console.log('end4',n_inside)
 
-
+                            console.log('map end4')
                         // this.query_json["queriesMore"][n_inside] = queries;
                         n_inside++;
                         resolveEach();
@@ -417,6 +434,7 @@ ${i.content}
                 }
 
             })
+            console.log('map end2')
         });
         console.log('start finish')
         var finishAndSaveJson = (meta = true) => {

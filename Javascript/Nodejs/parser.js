@@ -364,13 +364,13 @@ ${i.content}
                                 this.socket.emit('console',[errIn,'errIn']);
                                 return;
                             }
-                            // this.parseHtml(resIn.body, {
-                            //     // url: this.query_json["queriesMore"][n_inside].href,
-                            //     url: result["queriesMore"][n_inside].href,
-                            //     // query: this.query_json["queriesMore"][n_inside].title,
-                            //     query: result["queriesMore"][n_inside].title,
-                            //     n_start: 0
-                            // }, null, false);
+                            this.parseHtml(resIn.body, {
+                                // url: this.query_json["queriesMore"][n_inside].href,
+                                url: result["queriesMore"][n_inside].href,
+                                // query: this.query_json["queriesMore"][n_inside].title,
+                                query: result["queriesMore"][n_inside].title,
+                                n_start: 0
+                            }, null, false);
                             // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+this.query_json["queriesMore"][n_inside].title+'.html',
                             fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+result["queriesMore"][n_inside].title+'.html',
                                 resIn.body,

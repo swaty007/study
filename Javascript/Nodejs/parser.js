@@ -242,7 +242,7 @@ ${i.content}
                         this.socket.emit('console',[err,'err']);
                         return;
                     }
-                    this.parseHtml (res.body, data, callback)
+                    this.parseHtml (res.body, data, callback, true)
                 });
                 return;
             }
@@ -267,7 +267,7 @@ ${i.content}
             callback();
         }
     }
-    parseHtml (html, data, callback, meta = true) {
+     async parseHtml (html, data, callback, meta = true) {
         let $ = cheerio.load(html),
             sites = {},
             queries = {},
@@ -277,7 +277,7 @@ ${i.content}
             },
             n = data.n_start,
             n_inside = 0;
-
+        console.log(meta,'META')
         // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.html',
         //     html,
         //     'utf8', (w_err, w_res) => {
@@ -311,7 +311,7 @@ ${i.content}
 //                 await console.log($(element).attr('href'), 'href test');
 //             }
 //         };
-        $('a').map(async (index, element) => {
+        $('a').each( async(index, element) => {
             console.log('map start')
             // return;
             await new Promise( async (resolveEach,rejectEach) => {
@@ -364,13 +364,13 @@ ${i.content}
                                 this.socket.emit('console',[errIn,'errIn']);
                                 return;
                             }
-                            this.parseHtml(resIn.body, {
-                                // url: this.query_json["queriesMore"][n_inside].href,
-                                url: result["queriesMore"][n_inside].href,
-                                // query: this.query_json["queriesMore"][n_inside].title,
-                                query: result[n_inside].title,
-                                n_start: 0
-                            }, null, false);
+                            // this.parseHtml(resIn.body, {
+                            //     // url: this.query_json["queriesMore"][n_inside].href,
+                            //     url: result["queriesMore"][n_inside].href,
+                            //     // query: this.query_json["queriesMore"][n_inside].title,
+                            //     query: result["queriesMore"][n_inside].title,
+                            //     n_start: 0
+                            // }, null, false);
                             // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+this.query_json["queriesMore"][n_inside].title+'.html',
                             fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+result["queriesMore"][n_inside].title+'.html',
                                 resIn.body,
@@ -406,7 +406,6 @@ ${i.content}
                                         // this.query_json["queriesMore"][n_inside]["inside"] = [];
                                         result["queriesMore"][n_inside]["inside"] = [];
                                     }
-                                    console.log("n_inside", n_inside);
                                     // this.query_json["queriesMore"][n_inside]["inside"].push(queriesIn);
                                     result["queriesMore"][n_inside]["inside"].push(queriesIn);
                                 }
@@ -418,13 +417,10 @@ ${i.content}
                             console.log('end3',n_inside);
                             // resolveEach();
                             resolveLink();
-                            console.log('map end3')
                         });
                     })
                         .then( resolveQuery => {
                         console.log('end4',n_inside)
-
-                            console.log('map end4')
                         // this.query_json["queriesMore"][n_inside] = queries;
                         n_inside++;
                         resolveEach();
@@ -434,10 +430,11 @@ ${i.content}
                 }
 
             })
-            console.log('map end2')
+            console.log('map end2',n_inside)
         });
-        console.log('start finish')
+        console.log('start finish', n_inside)
         var finishAndSaveJson = (meta = true) => {
+            console.log("finishAndSaveJson", n_inside);
             fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json',
                 // JSON.stringify(this.query_json, null, 4),
                 JSON.stringify(result, null, 4),
@@ -457,37 +454,49 @@ ${i.content}
                 });
         };
         if (meta) {
-            this.googleParseMeta(); //init this.meta_q
-            this.meta_q.drain = finishAndSaveJson;
+            await this.googleParseMeta(result).then(res => {
+                console.log('meta_q END')
+                finishAndSaveJson(true);
+            }); //init this.meta_q
         } else {
             finishAndSaveJson(false);
         }
     }
-    googleParseMeta () {
-        this.meta_q = tress((urlMeta, callbackMeta) => {
-            needle.get(urlMeta.href, (errMeta, resMeta) => { // { agent: myAgent },
-                if (errMeta) {
-                    console.log(errMeta,'errMeta');
-                    // this.socket.emit('console',[errMeta,'errMeta']);
+    googleParseMeta (query_json) {
+        return new Promise((resolve,reject) => {
+            console.log('googleParseMeta')
+            let meta_q = tress((urlMeta, callbackMeta) => {
+                needle.get(urlMeta.href, (errMeta, resMeta) => { // { agent: myAgent },
+                    if (errMeta) {
+                        console.log(errMeta,'errMeta');
+                        // this.socket.emit('console',[errMeta,'errMeta']);
+                        callbackMeta();
+                        return;
+                    }
+                    this.socket.emit('console',['Parsed Meta => ',urlMeta.href]);
+                    let $ = cheerio.load(resMeta.body);
+                    urlMeta.meta = {
+                        title: $("head title").text(),
+                        description: $("meta[name='description']").attr("content"),
+                        keywords: $("meta[name='keywords']").attr("content"),
+                        h1: $('h1').text()
+                    };
+                    console.log("googleParseMeta END");
                     callbackMeta();
-                    return;
+                });
+            },1);
+            console.log(query_json["googleSearch"])
+            query_json["googleSearch"].forEach(site => {
+                console.log(site)
+                if (Object.keys(site).indexOf('meta') === -1) {
+                    meta_q.push(site);
                 }
-                this.socket.emit('console',['Parsed Meta => ',urlMeta.href]);
-                let $ = cheerio.load(resMeta.body);
-                urlMeta.meta = {
-                    title: $("head title").text(),
-                    description: $("meta[name='description']").attr("content"),
-                    keywords: $("meta[name='keywords']").attr("content"),
-                    h1: $('h1').text()
-                };
-                callbackMeta();
             });
-        },1);
-        this.query_json["googleSearch"].forEach(site => {
-            if (Object.keys(site).indexOf('meta') === -1) {
-                this.meta_q.push(site);
+            meta_q.drain = () => {
+                console.log('meta_q RESOLVE')
+                resolve();
             }
-        });
+        })
     }
     getGoogle (urls) {
         if (urls.indexOf("") !== -1) {

@@ -298,7 +298,7 @@ ${i.content}
         $('header').remove();
 
         $('a').each(async (index, element) => {
-            await new Promise(async (resolveEach) => {
+            await new Promise( async (resolveEach,rejectEach) => {
 
                 let link = $(element),
                     href = decodeURI(link.attr('href')),
@@ -338,7 +338,7 @@ ${i.content}
                     console.log('end1',n_inside);
                     // await googleParseQueries();
 
-                    // await new Promise((resolveLink, rejectLink) => {
+                     await new Promise((resolveLink, rejectLink) => {
                         let url = "https://www.google.com"+encodeURI(href);
                         console.log(href, 'href',n_inside)
                         needle.get(url, {}, (errIn, resIn) => { // { agent: myAgent },
@@ -396,22 +396,29 @@ ${i.content}
                                 }
                             });
 
-                            // resolveLink();
-                        });
-                    // }).then( resolveQuery => {
-                    //     console.log('end4',n_inside)
 
-                        console.log('end3',n_inside);
+                            // console.log('end3',n_inside);
+                            // n_inside++;
+                            console.log('end3',n_inside);
+                            // resolveEach();
+                            resolveLink();
+                        });
+                    })
+                        .then( resolveQuery => {
+                        console.log('end4',n_inside)
+
+
                         // this.query_json["queriesMore"][n_inside] = queries;
                         n_inside++;
                         resolveEach();
-                    // });
+                    });
 
 
                 }
 
             })
         });
+        console.log('start finish')
         var finishAndSaveJson = (meta = true) => {
             fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json',
                 // JSON.stringify(this.query_json, null, 4),

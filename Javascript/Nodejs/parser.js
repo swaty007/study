@@ -238,6 +238,8 @@ ${i.content}
                         this.socket.emit('console',[err,'err']);
                         return;
                     }
+                    // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.html', res.body, 'utf8');
+
                     this.parseHtml (res.body, data, callback, true)
                 });
                 return;
@@ -309,7 +311,7 @@ ${i.content}
                     // this.sites[domain] = Object.assign(this.sites[domain], sites);
                     n++;
                     resolveEach();
-                } else if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe") && meta) {
+                } else if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe")) {
                     queries = {
                         title: link.text(),
                         href: "https://www.google.com"+href,
@@ -320,7 +322,7 @@ ${i.content}
                     console.log('end1',n_inside);
                     // await googleParseQueries();
                     n_inside++
-                     await this.googleParseQueries(result,href,n_inside).then( resolveQuery => {
+                     await this.googleParseQueries(result,href,n_inside, meta).then( resolveQuery => {
                          console.log('end4',n_inside);
 
                          resolveQuery.forEach((element, key) => {
@@ -367,7 +369,7 @@ ${i.content}
             finishAndSaveJson(false);
         }
     }
-    googleParseQueries (result,href,n_inside) {
+    googleParseQueries (result,href,n_inside, meta) {
         return new Promise((resolveLink, rejectLink) => {
             let url = "https://www.google.com"+encodeURI(href),
                 queries = [];
@@ -381,11 +383,13 @@ ${i.content}
                         this.socket.emit('console',[errIn,'errIn']);
                         return;
                     }
-                    this.parseHtml(resIn.body, {
-                        url: result["queriesMore"][n_inside].href,
-                        query: result["queriesMore"][n_inside].title,
-                        n_start: 0
-                    }, null, false);
+                    if (meta) {
+                        this.parseHtml(resIn.body, {
+                            url: result["queriesMore"][n_inside].href,
+                            query: result["queriesMore"][n_inside].title,
+                            n_start: 0
+                        }, null, false);
+                    }
 
                     let $In = cheerio.load(resIn.body),
                         queriesIn = {};
@@ -428,8 +432,6 @@ ${i.content}
                 resolveLink(queries);
             }
         })
-
-
 
     }
     googleParseMeta (query_json) {

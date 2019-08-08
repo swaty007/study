@@ -326,7 +326,7 @@ ${i.content}
                     if (link.parent().siblings('span').find('a').length > 0 || link.text().length === 0) {
                         return;
                     }
-                    if (typeof this.sites[domain] === 'undefined') {
+                    if (typeof this.sites[domain] === 'undefined' && meta) {
                         this.sites[domain] = [];
                     }
                     sites = {

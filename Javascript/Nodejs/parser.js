@@ -150,8 +150,8 @@ ${i.content}
             const browser = puppeteer.launch({args: ["--no-sandbox"], headless: false}).then( async browser => {
                 const page = await browser.newPage();
                 await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36');
-                // await page.goto('https://www.truecaller.com/auth/sign-in');
-                await page.goto('https://usr.minjust.gov.ua/ua/freesearch');
+                await page.goto('https://www.truecaller.com/auth/sign-in');
+                // await page.goto('https://usr.minjust.gov.ua/ua/freesearch');
                 // await page.goto('https://recaptcha-demo.appspot.com/recaptcha-v3-request-scores.php');
                 // await page.goto('https://bot.sannysoft.com/');
                 await page.solveRecaptchas();
@@ -272,7 +272,7 @@ ${i.content}
                 googleSearch: []
             },
             n = data.n_start,
-            n_inside = 0;
+            n_inside = -1;
         console.log(meta,'META');
 
         $('footer').remove();
@@ -319,72 +319,21 @@ ${i.content}
 
                     console.log('end1',n_inside);
                     // await googleParseQueries();
+                    n_inside++
+                     await this.googleParseQueries(result,href,n_inside).then( resolveQuery => {
+                         console.log('end4',n_inside);
 
-                     await new Promise((resolveLink, rejectLink) => {
-                        let url = "https://www.google.com"+encodeURI(href);
-                        console.log(href, 'href',n_inside)
-                        needle.get(url, {}, (errIn, resIn) => { // { agent: myAgent },
-                            console.log('hrefStart',n_inside)
-                            if (errIn) {
-                                console.log(errIn,'errIn');
-                                this.socket.emit('console',[errIn,'errIn']);
-                                return;
-                            }
-                            this.parseHtml(resIn.body, {
-                                url: result["queriesMore"][n_inside].href,
-                                query: result["queriesMore"][n_inside].title,
-                                n_start: 0
-                            }, null, false);
-                            // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+result["queriesMore"][n_inside].title+'.html',
-                            //     resIn.body,
-                            //     'utf8', (w_err, w_res) => {
-                            //         if (w_err) {
-                            //             this.socket.emit('console',[w_err,'w_errHTML']);
-                            //             console.log(w_err,'w_errHTML');
-                            //             throw new w_err;
-                            //         }
-                            //         console.log("HTML WRITE ING");
-                            //     });
-
-                            let $In = cheerio.load(resIn.body),
-                                queriesIn = {};
-                            $In('footer').remove();
-                            $In('header').remove();
-                            console.log('end2',n_inside)
-
-                            $In('a').each((index, element) => {
-                                let link = $In(element),
-                                    href = decodeURI(link.attr('href'));
-
-                                if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe")) {
-                                    queriesIn = {
-                                        title: link.text(),
-                                        href: "https://google.com"+href,
-                                        html: link.html(),
-                                    };
-
-                                    console.log('In EACH',n_inside)
-
-                                    if (typeof result["queriesMore"][n_inside]["inside"] === 'undefined') {
-                                        result["queriesMore"][n_inside]["inside"] = [];
-                                    }
-                                    result["queriesMore"][n_inside]["inside"].push(queriesIn);
-                                }
-                            });
+                         resolveQuery.forEach((element, key) => {
+                             if (typeof result["queriesMore"][key]["inside"] === 'undefined') {
+                                 result["queriesMore"][key]["inside"] = [];
+                             }
+                             console.log(key,element)
+                             result["queriesMore"][key]["inside"].push(element);
+                         });
 
 
-                            // console.log('end3',n_inside);
-                            // n_inside++;
-                            console.log('end3',n_inside);
-                            // resolveEach();
-                            resolveLink();
-                        });
-                    }).then( resolveQuery => {
-                        console.log('end4',n_inside)
-                        n_inside++;
-                        resolveEach();
+                         resolveEach();
                     });
-
 
                 }
 
@@ -418,7 +367,69 @@ ${i.content}
             finishAndSaveJson(false);
         }
     }
-    googleParseQueries () {
+    googleParseQueries (result,href,n_inside) {
+        return new Promise((resolveLink, rejectLink) => {
+            let url = "https://www.google.com"+encodeURI(href),
+                queries = [];
+
+            let meta_q = tress((url, callbackQueries) => {
+                console.log(href, 'href',n_inside);
+                needle.get(url, {}, (errIn, resIn) => { // { agent: myAgent },
+                    console.log('hrefStart',n_inside)
+                    if (errIn) {
+                        console.log(errIn,'errIn');
+                        this.socket.emit('console',[errIn,'errIn']);
+                        return;
+                    }
+                    this.parseHtml(resIn.body, {
+                        url: result["queriesMore"][n_inside].href,
+                        query: result["queriesMore"][n_inside].title,
+                        n_start: 0
+                    }, null, false);
+
+                    let $In = cheerio.load(resIn.body),
+                        queriesIn = {};
+                    $In('footer').remove();
+                    $In('header').remove();
+                    console.log('end2',n_inside)
+
+                    $In('a').each((index, element) => {
+                        let link = $In(element),
+                            href = decodeURI(link.attr('href'));
+
+                        if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe")) {
+                            queriesIn = {
+                                title: link.text(),
+                                href: "https://google.com"+href,
+                                html: link.html(),
+                            };
+
+                            console.log('In EACH',n_inside)
+
+                            if (typeof queries[n_inside] === 'undefined') {
+                                queries[n_inside] = [];
+                            }
+                            queries[n_inside].push(queriesIn);
+
+                        }
+                    });
+
+
+                    // console.log('end3',n_inside);
+                    // n_inside++;
+                    console.log('end3',n_inside);
+                    // resolveEach();
+                    callbackQueries();
+                });
+            },1);
+
+            meta_q.push(url);
+            meta_q.drain = () => {
+                resolveLink(queries);
+            }
+        })
+
+
 
     }
     googleParseMeta (query_json) {

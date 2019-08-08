@@ -34,10 +34,6 @@ class Parser {
         this.results = [];
         this.threads = 1;
         this.sites = {};
-        this.query_json = {
-            queriesMore: [],
-            googleSearch: []
-        };
         this.html_cache_time = 24;
         this.socket = "";
 
@@ -246,13 +242,13 @@ ${i.content}
                 });
                 return;
             }
-            fs.readFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json','utf8',  (error, contentHtml) => {
+            fs.readFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json','utf8',  (error, contentJson) => {
                 if (error) {
                     console.log(error, "error");
                     this.socket.emit('console',[error, "error"]);
                     throw new error;
                 }
-                loadHtml(contentHtml);
+                loadHtml(contentJson);
             });
         });
         var loadHtml = (json) => {
@@ -277,45 +273,13 @@ ${i.content}
             },
             n = data.n_start,
             n_inside = 0;
-        console.log(meta,'META')
-        // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.html',
-        //     html,
-        //     'utf8', (w_err, w_res) => {
-        //         if (w_err) {
-        //             this.socket.emit('console',[w_err,'w_errHTML']);
-        //             console.log(w_err,'w_errHTML');
-        //             throw new w_err;
-        //         }
-        //         console.log(data.query,data.n_start, "HTML WRITE");
-        //         this.socket.emit('console',[data.query,data.n_start, "HTML WRITE"]);
-        //     });
+        console.log(meta,'META');
 
-        this.query_json = {
-            queriesMore: [],
-            googleSearch: []
-        };
         $('footer').remove();
         $('header').remove();
-//         for (let item in $('a')) {
-//              console.log(item.attr('href'), 'href test');
-//         }
-// return;
-//         async function processArray(array) {
-//             for (const item of array) {
-//                 await delayedLog(item);
-//             }
-//             console.log('Done!');
-//         }
-//         async () => {
-//             for (let item in $('a')) {
-//                 await console.log($(element).attr('href'), 'href test');
-//             }
-//         };
         $('a').each( async(index, element) => {
-            console.log('map start')
             // return;
             await new Promise( async (resolveEach,rejectEach) => {
-
                 let link = $(element),
                     href = decodeURI(link.attr('href')),
                     domain = href.slice(
@@ -326,9 +290,7 @@ ${i.content}
                     if (link.parent().siblings('span').find('a').length > 0 || link.text().length === 0) {
                         return;
                     }
-                    if (typeof this.sites[domain] === 'undefined' && meta) {
-                        this.sites[domain] = [];
-                    }
+
                     sites = {
                         title: link.text(),
                         domain: domain,
@@ -336,9 +298,14 @@ ${i.content}
                         query: data.query,
                         position: n,
                     };
-                    // this.query_json["googleSearch"].push(sites);
                     result["googleSearch"].push(sites);
-                    this.sites[domain].push(sites);
+                    if (typeof this.sites[domain] === 'undefined' && meta) {
+                        this.sites[domain] = [];
+                    }
+                    if (meta) {
+                        this.sites[domain].push(sites);
+                    }
+
                     // this.sites[domain] = Object.assign(this.sites[domain], sites);
                     n++;
                     resolveEach();
@@ -348,7 +315,6 @@ ${i.content}
                         href: "https://www.google.com"+href,
                         html: link.html()
                     };
-                    // this.query_json["queriesMore"].push(queries);
                     result["queriesMore"].push(queries);
 
                     console.log('end1',n_inside);
@@ -365,23 +331,20 @@ ${i.content}
                                 return;
                             }
                             this.parseHtml(resIn.body, {
-                                // url: this.query_json["queriesMore"][n_inside].href,
                                 url: result["queriesMore"][n_inside].href,
-                                // query: this.query_json["queriesMore"][n_inside].title,
                                 query: result["queriesMore"][n_inside].title,
                                 n_start: 0
                             }, null, false);
-                            // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+this.query_json["queriesMore"][n_inside].title+'.html',
-                            fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+result["queriesMore"][n_inside].title+'.html',
-                                resIn.body,
-                                'utf8', (w_err, w_res) => {
-                                    if (w_err) {
-                                        this.socket.emit('console',[w_err,'w_errHTML']);
-                                        console.log(w_err,'w_errHTML');
-                                        throw new w_err;
-                                    }
-                                    console.log("HTML WRITE ING");
-                                });
+                            // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+result["queriesMore"][n_inside].title+'.html',
+                            //     resIn.body,
+                            //     'utf8', (w_err, w_res) => {
+                            //         if (w_err) {
+                            //             this.socket.emit('console',[w_err,'w_errHTML']);
+                            //             console.log(w_err,'w_errHTML');
+                            //             throw new w_err;
+                            //         }
+                            //         console.log("HTML WRITE ING");
+                            //     });
 
                             let $In = cheerio.load(resIn.body),
                                 queriesIn = {};
@@ -401,12 +364,10 @@ ${i.content}
                                     };
 
                                     console.log('In EACH',n_inside)
-                                    // if (typeof this.query_json["queriesMore"][n_inside]["inside"] === 'undefined') {
+
                                     if (typeof result["queriesMore"][n_inside]["inside"] === 'undefined') {
-                                        // this.query_json["queriesMore"][n_inside]["inside"] = [];
                                         result["queriesMore"][n_inside]["inside"] = [];
                                     }
-                                    // this.query_json["queriesMore"][n_inside]["inside"].push(queriesIn);
                                     result["queriesMore"][n_inside]["inside"].push(queriesIn);
                                 }
                             });
@@ -418,10 +379,8 @@ ${i.content}
                             // resolveEach();
                             resolveLink();
                         });
-                    })
-                        .then( resolveQuery => {
+                    }).then( resolveQuery => {
                         console.log('end4',n_inside)
-                        // this.query_json["queriesMore"][n_inside] = queries;
                         n_inside++;
                         resolveEach();
                     });
@@ -429,46 +388,46 @@ ${i.content}
 
                 }
 
-            })
-            console.log('map end2',n_inside)
+            });
         });
-        console.log('start finish', n_inside)
-        var finishAndSaveJson = (meta = true) => {
-            console.log("finishAndSaveJson", n_inside);
-            fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json',
-                // JSON.stringify(this.query_json, null, 4),
-                JSON.stringify(result, null, 4),
-                'utf8', (w_err, w_res) => {
-                    if (w_err) {
-                        this.socket.emit('console',[w_err,'w_err']);
-                        console.log(w_err,'w_err');
-                        throw new w_err;
-                    }
-                    console.log(data.query,data.n_start, "GET");
-                    this.socket.emit('console',[data.query,data.n_start, "GET"]);
-                    if (meta) {
-                        setTimeout(() => {
-                            callback();
-                        },1000);
-                    }
-                });
-        };
+         var finishAndSaveJson = (meta = true) => {
+             console.log("finishAndSaveJson", n_inside);
+             fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json',
+                 JSON.stringify(result, null, 4),
+                 'utf8', (w_err, w_res) => {
+                     if (w_err) {
+                         this.socket.emit('console',[w_err,'w_err']);
+                         console.log(w_err,'w_err');
+                         throw new w_err;
+                     }
+                     console.log(data.query,data.n_start, "GET");
+                     this.socket.emit('console',[data.query,data.n_start, "GET"]);
+                     if (meta) {
+                         setTimeout(() => {
+                             callback();
+                         },1000);
+                     }
+                 });
+         };
         if (meta) {
             await this.googleParseMeta(result).then(res => {
-                console.log('meta_q END')
+                console.log('meta_q END');
                 finishAndSaveJson(true);
             }); //init this.meta_q
         } else {
             finishAndSaveJson(false);
         }
     }
+    googleParseQueries () {
+
+    }
     googleParseMeta (query_json) {
         return new Promise((resolve,reject) => {
-            console.log('googleParseMeta')
             let meta_q = tress((urlMeta, callbackMeta) => {
                 needle.get(urlMeta.href, (errMeta, resMeta) => { // { agent: myAgent },
                     if (errMeta) {
                         console.log(errMeta,'errMeta');
+                        reject(errMeta);
                         // this.socket.emit('console',[errMeta,'errMeta']);
                         callbackMeta();
                         return;
@@ -485,15 +444,12 @@ ${i.content}
                     callbackMeta();
                 });
             },1);
-            console.log(query_json["googleSearch"])
             query_json["googleSearch"].forEach(site => {
-                console.log(site)
                 if (Object.keys(site).indexOf('meta') === -1) {
                     meta_q.push(site);
                 }
             });
             meta_q.drain = () => {
-                console.log('meta_q RESOLVE')
                 resolve();
             }
         })

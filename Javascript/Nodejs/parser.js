@@ -35,6 +35,7 @@ class Parser {
         this.threads = 1;
         this.sites = {};
         this.html_cache_time = 24;
+        this.requestPause = 1500;
         this.socket = "";
 
         io.sockets.on('connection', (socket) => {
@@ -58,18 +59,18 @@ class Parser {
             }
         });
     }
-    requestGet (data, callback, meta = true, html = null) {
+    requestGet (data, callback) {//, meta = true, html = null
         var proxy = {
             agent: myAgent,
         };
         fs.stat('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json',(error_stats, stats) => {
-            if (!meta || error_stats || (Date.now() - stats.mtimeMs)/(1000*60*60) > this.html_cache_time) {
+            if ( error_stats || (Date.now() - stats.mtimeMs)/(1000*60*60) > this.html_cache_time) { //!meta ||
                 if (error_stats != null) {
                     console.log('error_stats or cache_time',error_stats.path,error_stats.code);
                     this.socket.emit('console',['error_stats or cache_time',error_stats.path,error_stats.code]);
                 }
                 // this.socket.emit('getGoogle', { data: data, cb: callback });
-                if (meta) {
+                // if (meta) {
                     needle.get(data.url, {},(err, res) => { // { agent: myAgent },
                         if (err) {
                             console.log(err,'err');
@@ -80,9 +81,9 @@ class Parser {
 
                         this.parseHtml (res.body, data, callback, true)
                     });
-                } else {
-                    this.parseHtml(html, data, null, false);
-                }
+                // } else {
+                //     this.parseHtml(html, data, null, false);
+                // }
                 return;
             }
             fs.readFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json','utf8',  (error, contentJson) => {
@@ -162,7 +163,7 @@ class Parser {
                     console.log('end1',n_inside);
                     // await googleParseQueries();
                     n_inside++;
-                     await this.googleParseQueries(result,href,n_inside, meta).then( resolveQuery => {
+                    await this.googleParseQueries(result,href,n_inside, meta).then( resolveQuery => {
                          console.log('end4',n_inside);
 
                          resolveQuery.forEach((element, key) => {
@@ -201,7 +202,7 @@ class Parser {
                 if (callback) {
                     setTimeout(() => {
                         callback();
-                    },1000);
+                    },this.requestPause);
                 }
             });
     }
@@ -221,17 +222,17 @@ class Parser {
                     console.log('hrefStart',n_inside);
                     this.socket.emit('console',['Parsed Queries => ',url]);
                     if (meta) {
-                        // this.parseHtml(resIn.body, {
-                        //     url: result["queriesMore"][n_inside].href,
-                        //     query: result["queriesMore"][n_inside].title,
-                        //     n_start: 0
-                        // }, null, false);
-
-                        this.requestGet({
+                        this.parseHtml(resIn.body, {
                             url: result["queriesMore"][n_inside].href,
                             query: result["queriesMore"][n_inside].title,
                             n_start: 0
-                        }, null, false, resIn.body);
+                        }, null, false);
+
+                        // this.requestGet({
+                        //     url: result["queriesMore"][n_inside].href,
+                        //     query: result["queriesMore"][n_inside].title,
+                        //     n_start: 0
+                        // }, null, false, resIn.body);
                     }
 
                     let $In = cheerio.load(resIn.body),
@@ -262,9 +263,11 @@ class Parser {
                     });
 
                     console.log('end3',n_inside);
-                    callbackQueries();
+                    setTimeout(()=> {
+                        callbackQueries();
+                    },this.requestPause);
                 });
-            },1);
+            },this.threads);
 
             meta_q.push(url);
             meta_q.drain = () => {
@@ -295,7 +298,7 @@ class Parser {
                     console.log("googleParseMeta END");
                     callbackMeta();
                 });
-            },1);
+            },5);
             query_json["googleSearch"].forEach(site => {
                 if (Object.keys(site).indexOf('meta') === -1) {
                     meta_q.push(site);

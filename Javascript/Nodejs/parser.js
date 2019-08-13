@@ -116,7 +116,6 @@ class Parser {
             },
             n = data.n_start,
             n_inside = -1;
-        console.log(meta,'META');
 
         $('footer').remove();
         $('header').remove();
@@ -197,8 +196,8 @@ class Parser {
                     console.log(w_err,'w_err');
                     throw new w_err;
                 }
-                console.log(data.query,data.n_start, "GET");
-                this.socket.emit('console',[data.query,data.n_start, "GET"]);
+                console.log(data.query,data.n_start, "JSON SAVE");
+                this.socket.emit('console',[data.query,data.n_start, "JSON SAVE"]);
                 if (callback) {
                     setTimeout(() => {
                         callback();
@@ -206,7 +205,7 @@ class Parser {
                 }
             });
     }
-    googleParseQueries (result,href,n_inside, meta) {
+    googleParseQueries (result, href, n_inside, meta) {
         return new Promise((resolveLink, rejectLink) => {
             let url = "https://www.google.com"+encodeURI(href),
                 queries = [];
@@ -214,12 +213,13 @@ class Parser {
             let meta_q = tress((url, callbackQueries) => {
                 console.log(href, 'href',n_inside);
                 needle.get(url, {}, (errIn, resIn) => { // { agent: myAgent },
-                    console.log('hrefStart',n_inside)
                     if (errIn) {
                         console.log(errIn,'errIn');
                         this.socket.emit('console',[errIn,'errIn']);
                         return;
                     }
+                    console.log('hrefStart',n_inside);
+                    this.socket.emit('console',['Parsed Queries => ',url]);
                     if (meta) {
                         // this.parseHtml(resIn.body, {
                         //     url: result["queriesMore"][n_inside].href,

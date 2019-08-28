@@ -32,6 +32,7 @@ puppeteer.use(
 class Parser {
     constructor() {
         this.results = [];
+        this.totalRequest = 0;
         this.threads = 1;
         this.sites = {};
         this.html_cache_time = 24;
@@ -50,12 +51,18 @@ class Parser {
     initGoogle() {
         this.size = 1; //x10
         this.sites = {};
+        this.queries = [];
         this.promise = new Promise((resolve, reject) => {
             this.q = tress((data, callback) => {
                 this.requestGet(data,callback);
             }, this.threads);
             this.q.drain = () => {
-                resolve(this.sites);
+                console.log('Total Request = ',this.totalRequest);
+                this.socket.emit('console',['Total Request = ', this.totalRequest]);
+                resolve({
+                    sites: this.sites,
+                    queries: this.queries
+                });
             }
         });
     }
@@ -78,7 +85,7 @@ class Parser {
                             return;
                         }
                         // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.html', res.body, 'utf8');
-
+                        this.totalRequest += 1;
                         this.parseHtml (res.body, data, callback, true)
                     });
                 // } else {
@@ -86,28 +93,31 @@ class Parser {
                 // }
                 return;
             }
-            fs.readFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json','utf8',  (error, contentJson) => {
+            fs.readFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json','utf8',  async (error, contentJson) => {
                 if (error) {
                     console.log(error, "error");
                     this.socket.emit('console',[error, "error"]);
                     throw new error;
                 }
-                loadHtml(contentJson);
+                await this.loadHtml(contentJson);
+                console.log(data.query, data.n_start, "JSON LOAD");
+                this.socket.emit('console',[data.query, data.n_start, "JSON LOAD"]);
+                callback();
             });
         });
-        var loadHtml = (json) => {
-            JSON.parse(json)["googleSearch"].forEach( site => {
-                if (typeof this.sites[site.domain] === 'undefined') {
-                    this.sites[site.domain] = [];
-                }
-                this.sites[site.domain].push(site);
-            });
-            console.log(data.query, data.n_start, "JSON LOAD");
-            this.socket.emit('console',[data.query, data.n_start, "JSON LOAD"]);
-            callback();
-        }
     }
-     async parseHtml (html, data, callback, meta = true) {
+    loadHtml (json) {
+        JSON.parse(json)["googleSearch"].forEach( site => {
+            if (typeof this.sites[site.domain] === 'undefined') {
+                this.sites[site.domain] = [];
+            }
+            this.sites[site.domain].push(site);
+        });
+        JSON.parse(json)["queriesMore"].forEach( queries => {
+            this.queries.push(queries);
+        });
+    }
+    async parseHtml (html, data, callback, meta = true) {
         let $ = cheerio.load(html),
             sites = {},
             queries = {},
@@ -120,73 +130,88 @@ class Parser {
 
         $('footer').remove();
         $('header').remove();
-        $('a').each( async(index, element) => {
-            // return;
-            await new Promise( async (resolveEach,rejectEach) => {
-                let link = $(element),
-                    href = decodeURI(link.attr('href')),
-                    domain = href.slice(
-                        href.indexOf('://')+3,
-                        href.indexOf('/', href.indexOf('://')+3));
+        await new Promise( async (resolveA, rejectA) => {
+            let total = $('a').length - 1;
+            $('a').each( async (index, element) => {
+                // return;
+                await new Promise( async (resolveEach,rejectEach) => {
+                    let link = $(element),
+                        href = decodeURI(link.attr('href')),
+                        domain = href.slice(
+                            href.indexOf('://')+3,
+                            href.indexOf('/', href.indexOf('://')+3));
 
-                if (href.indexOf("url?q=") > -1) {
-                    if (link.parent().siblings('span').find('a').length > 0 || link.text().length === 0) {
-                        return;
+                    if (href.indexOf("url?q=") > -1) {
+                        if (link.parent().siblings('span').find('a').length > 0 || link.text().length === 0) {
+                            return;
+                        }
+
+                        sites = {
+                            title: link.text(),
+                            domain: domain,
+                            href: href.slice(href.indexOf("url?q=")+6, href.indexOf('&',href.indexOf("url?q="))),
+                            query: data.query,
+                            position: n,
+                        };
+                        result["googleSearch"].push(sites);
+                        if (typeof this.sites[domain] === 'undefined' && meta) {
+                            this.sites[domain] = [];
+                        }
+                        if (meta) {
+                            this.sites[domain].push(sites);
+                        }
+
+                        // this.sites[domain] = Object.assign(this.sites[domain], sites);
+                        n++;
+                        resolveEach();
+                        if (index === total - 1) {
+                            setTimeout(()=>{
+                                resolveA();
+                                }, this.requestPause)
+                        }
+                    } else if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe")) {
+                        queries = {
+                            title: link.text(),
+                            name: link.text(),
+                            href: "https://www.google.com"+href,
+                            parent: "null",
+                            html: link.html()
+                        };
+                        result["queriesMore"].push(queries);
+
+                        console.log('end1',n_inside);
+                        // await googleParseQueries();
+                        n_inside++;
+                        await this.googleParseQueries(result,href,n_inside, meta).then( resolveQuery => {
+                            console.log('end4',n_inside);
+
+                            resolveQuery.forEach((element, key) => {
+                                // if (typeof result["queriesMore"][key]["children"] === 'undefined') {
+                                //     result["queriesMore"][key]["children"] = [];
+                                // }
+                                // result["queriesMore"][key]["children"].push(element);
+                                result["queriesMore"][key]["children"] = element;
+                            });
+                            resolveEach();
+                            if (index === total - 1) {
+                                resolveA();
+                            }
+                        });
+
                     }
-
-                    sites = {
-                        title: link.text(),
-                        domain: domain,
-                        href: href.slice(href.indexOf("url?q=")+6, href.indexOf('&',href.indexOf("url?q="))),
-                        query: data.query,
-                        position: n,
-                    };
-                    result["googleSearch"].push(sites);
-                    if (typeof this.sites[domain] === 'undefined' && meta) {
-                        this.sites[domain] = [];
-                    }
-                    if (meta) {
-                        this.sites[domain].push(sites);
-                    }
-
-                    // this.sites[domain] = Object.assign(this.sites[domain], sites);
-                    n++;
-                    resolveEach();
-                } else if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe")) {
-                    queries = {
-                        title: link.text(),
-                        href: "https://www.google.com"+href,
-                        html: link.html()
-                    };
-                    result["queriesMore"].push(queries);
-
-                    console.log('end1',n_inside);
-                    // await googleParseQueries();
-                    n_inside++;
-                    await this.googleParseQueries(result,href,n_inside, meta).then( resolveQuery => {
-                         console.log('end4',n_inside);
-
-                         resolveQuery.forEach((element, key) => {
-                             if (typeof result["queriesMore"][key]["inside"] === 'undefined') {
-                                 result["queriesMore"][key]["inside"] = [];
-                             }
-                             result["queriesMore"][key]["inside"].push(element);
-                         });
-                         resolveEach();
-                    });
-
-                }
-
+                });
             });
+        }).then(async (resA) => {
+            if (meta) {
+                await this.googleParseMeta(result).then(res => {
+                    console.log('meta_q END');
+                    this.queries = result["queriesMore"];
+                    this.finishAndSaveJson(result, data, callback);
+                }); //init this.meta_q
+            } else {
+                this.finishAndSaveJson(result, data);
+            }
         });
-        if (meta) {
-            await this.googleParseMeta(result).then(res => {
-                console.log('meta_q END');
-                this.finishAndSaveJson(result, data, callback);
-            }); //init this.meta_q
-        } else {
-            this.finishAndSaveJson(result, data);
-        }
     }
     finishAndSaveJson (result, data, callback) {
         fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json',
@@ -219,8 +244,9 @@ class Parser {
                         this.socket.emit('console',[errIn,'errIn']);
                         return;
                     }
+                    this.totalRequest += 1;
                     console.log('hrefStart',n_inside);
-                    this.socket.emit('console',['Parsed Queries => ',url]);
+                    this.socket.emit('console',['Parsed Queries => ', url]);
                     if (meta) {
                         this.parseHtml(resIn.body, {
                             url: result["queriesMore"][n_inside].href,
@@ -248,6 +274,8 @@ class Parser {
                         if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe")) {
                             queriesIn = {
                                 title: link.text(),
+                                name: link.text(),
+                                parent: result["queriesMore"][n_inside].title,
                                 href: "https://google.com"+href,
                                 html: link.html(),
                             };
@@ -287,6 +315,7 @@ class Parser {
                         callbackMeta();
                         return;
                     }
+                    this.totalRequest += 1;
                     this.socket.emit('console',['Parsed Meta => ',urlMeta.href]);
                     let $ = cheerio.load(resMeta.body);
                     urlMeta.meta = {

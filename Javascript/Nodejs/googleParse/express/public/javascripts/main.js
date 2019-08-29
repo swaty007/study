@@ -92,20 +92,21 @@ $(document).ready(function() {
 
 
     function queriesThree(data) {
-        let treeData = [{
-            "name": "Top Level",
+        let treeData1 = [{
+            "name": "1st Level",
             "parent": "null",
             "children": [
 
             ]
         }];
-        console.log(treeData,"treeData")
-        console.log(data,"data")
-        data.map((value, index) => {
-            value.parent = "Top Level";
-            treeData[0].children.push(value);
-        });
-
+        console.log(treeData1,"treeData")
+        console.log(data,"data");
+        // data.map((value, index) => {
+        //     value.parent = "Top Level";
+        //     treeData[0].children.push(value);
+        // });
+        throw new Error("test");
+        treeData[0].children = data[0];
         // ************** Generate the tree diagram	 *****************
         var margin = {top: 20, right: 120, bottom: 20, left: 120},
             width = 960 - margin.right - margin.left,

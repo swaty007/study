@@ -70,7 +70,7 @@ class Parser {
             }
         });
     }
-    requestGet (data, callback, meta = true) {
+    requestGet (data, callback, meta = true, parent) {
         var proxy = {
             agent: myAgent,
         };
@@ -89,7 +89,7 @@ class Parser {
                         }
                         // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.html', res.body, 'utf8');
                         this.totalRequest.google += 1;
-                        this.parseHtml (res.body, data, callback, meta);
+                        this.parseHtml (res.body, data, callback, meta, parent);
                     });
                 return;
             }
@@ -99,7 +99,7 @@ class Parser {
                     this.socket.emit('console',[error, "error"]);
                     throw new error;
                 }
-                await this.loadHtml(contentJson);
+                await this.loadHtml(contentJson, meta);
                 console.log(data.query, data.n_start, "JSON LOAD");
                 this.socket.emit('console',[data.query, data.n_start, "JSON LOAD"]);
                 if (meta) {
@@ -110,32 +110,46 @@ class Parser {
             });
         });
     }
-    loadHtml (json) {
-        JSON.parse(json)["googleSearch"].forEach( site => {
-            if (typeof this.sites[site.domain] === 'undefined') {
-                this.sites[site.domain] = [];
-            }
-            this.sites[site.domain].push(site);
-        });
-        JSON.parse(json)["queriesMore"].forEach( queries => {
-            this.queries.push(queries);
+    loadHtml (json, meta) {
+        return new Promise(async (resolve, reject) => {
+            JSON.parse(json)["googleSearch"].forEach( site => {
+                if (typeof this.sites[site.domain] === 'undefined') {
+                    this.sites[site.domain] = [];
+                }
+                this.sites[site.domain].push(site);
+            });
+            JSON.parse(json)["queriesMore"].forEach( (queries, index) => {
+                this.queries.push(queries);
+            });
+            resolve();
         });
     }
-    async parseHtml (html, data, callback, meta = true) {
+    async parseHtml (html, data, callback, meta = true, parent) {
         let $ = cheerio.load(html),
             sites = {},
             queries = {},
+            queriesParent = [], //тут вся соль
             result = {
                 queriesMore: [],
                 googleSearch: []
             },
             n = data.n_start,
             n_inside = -1;
+        console.log(typeof parent, "V0");
+        if (parent !== undefined) {
+            if (typeof parent["children"] === 'undefined') {
+                parent["children"] = [];
+            }
+            parent["children"] = queriesParent; //тут вся соль
+        } else {
+            this.queries.push(queriesParent); //тут вся соль
+        }
 
         $('footer').remove();
         $('header').remove();
         await new Promise( async (resolveAeach, rejectAeach) => {
             let total = $('a').length - 1;
+
             $('a').each( async (index, element) => {
                 // return;
                 await new Promise( async (resolveEach,rejectEach) => {
@@ -182,13 +196,21 @@ class Parser {
                             html: link.html()
                         };
                         result["queriesMore"].push(queries);
+                        let copyResult = Object.assign({},queries);
+
+                        if (parent !== undefined) {
+                            copyResult.parent = parent.name;
+                        } else {
+                            copyResult.parent = "1st Level";
+                        }
+                        queriesParent.push(copyResult);
 
                         console.log('end1',n_inside);
 
                         // await googleParseQueries();
                         n_inside++;
                         if (meta) {
-                            await this.googleParseQueries(result,n_inside).then(resolveQuery => {
+                            await this.googleParseQueries(result,n_inside,queriesParent).then(resolveQuery => { //тут передается родитель самая основа
                                // JSON.parse(resolveQuery)["queriesMore"].forEach((element, key) => {
                                //     // if (typeof result["queriesMore"][key]["children"] === 'undefined') {
                                //     //     result["queriesMore"][key]["children"] = [];
@@ -217,7 +239,7 @@ class Parser {
                 await this.googleParseMeta(result); //init this.meta_q
                 // await this.googleParseQueries()
                 console.log('meta_q END');
-                this.queries = result["queriesMore"];
+                // this.queries = result["queriesMore"];
                 this.finishAndSaveJson(result, data, callback, meta);
             } else {
                 this.finishAndSaveJson(result, data, callback, meta);
@@ -246,14 +268,16 @@ class Parser {
                 }
             });
     }
-    googleParseQueries (result, n_inside) {
+    googleParseQueries (result, n_inside, parent) {
+        console.log(typeof parent,"v1");
         return new Promise(async (resolve, reject) => {
-            new Promise((resolveLink, rejectLink) => {
+            await new Promise((resolveLink, rejectLink) => {
+                console.log(typeof parent,"v2");
                 this.requestGet({
                     url: encodeURI(result["queriesMore"][n_inside].href),
                     query: result["queriesMore"][n_inside].title,
                     n_start: 0
-                }, resolveLink, false);
+                }, resolveLink, false, parent);
             }).then( resLink => {
                 console.log("PARSE QUERIES N INSIDE", n_inside);
                 resolve(resLink);

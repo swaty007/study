@@ -32,7 +32,10 @@ puppeteer.use(
 class Parser {
     constructor() {
         this.results = [];
-        this.totalRequest = 0;
+        this.totalRequest = {
+            google: 0,
+            sites: 0
+        };
         this.threads = 1;
         this.sites = {};
         this.queries = [];
@@ -55,7 +58,7 @@ class Parser {
         this.queries = [];
         this.promise = new Promise((resolve, reject) => {
             this.q = tress((data, callback) => {
-                this.requestGet(data,callback);
+                this.requestGet(data, callback);
             }, this.threads);
             this.q.drain = () => {
                 console.log('Total Request = ',this.totalRequest);
@@ -67,7 +70,7 @@ class Parser {
             }
         });
     }
-    requestGet (data, callback, meta = true) {//, meta = true, html = null
+    requestGet (data, callback, meta = true) {
         var proxy = {
             agent: myAgent,
         };
@@ -85,8 +88,8 @@ class Parser {
                             return;
                         }
                         // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.html', res.body, 'utf8');
-                        this.totalRequest += 1;
-                        this.parseHtml (res.body, data, callback, meta)
+                        this.totalRequest.google += 1;
+                        this.parseHtml (res.body, data, callback, meta);
                     });
                 return;
             }
@@ -99,7 +102,11 @@ class Parser {
                 await this.loadHtml(contentJson);
                 console.log(data.query, data.n_start, "JSON LOAD");
                 this.socket.emit('console',[data.query, data.n_start, "JSON LOAD"]);
-                callback();
+                if (meta) {
+                    callback();
+                } else {
+                    callback(contentJson);
+                }
             });
         });
     }
@@ -127,7 +134,7 @@ class Parser {
 
         $('footer').remove();
         $('header').remove();
-        await new Promise( async (resolveA, rejectA) => {
+        await new Promise( async (resolveAeach, rejectAeach) => {
             let total = $('a').length - 1;
             $('a').each( async (index, element) => {
                 // return;
@@ -163,7 +170,7 @@ class Parser {
                         resolveEach();
                         if (index === total - 1) {
                             setTimeout(()=>{
-                                resolveA();
+                                resolveAeach();
                                 }, this.requestPause)
                         }
                     } else if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe")) {
@@ -171,7 +178,7 @@ class Parser {
                             title: link.text(),
                             name: link.text(),
                             href: "https://www.google.com"+href,
-                            parent: "null",
+                            // parent: "null",
                             html: link.html()
                         };
                         result["queriesMore"].push(queries);
@@ -181,58 +188,43 @@ class Parser {
                         // await googleParseQueries();
                         n_inside++;
                         if (meta) {
-                           await new Promise((resolveLink, rejectLink) => {
-
-                                this.requestGet({
-                                    url: encodeURI(result["queriesMore"][n_inside].href),
-                                    query: result["queriesMore"][n_inside].title,
-                                    n_start: 0
-                                }, resolveLink, false);
-                            }).then(resolveQuery => {
+                            await this.googleParseQueries(result,n_inside).then(resolveQuery => {
+                               // JSON.parse(resolveQuery)["queriesMore"].forEach((element, key) => {
+                               //     // if (typeof result["queriesMore"][key]["children"] === 'undefined') {
+                               //     //     result["queriesMore"][key]["children"] = [];
+                               //     // }
+                               //     // result["queriesMore"][key]["children"].push(element);
+                               //     result["queriesMore"][key]["children"] = element;
+                               // });
+                                console.log("PARSE QUERIES N", n_inside);
                                    resolveEach();
                                    if (index === total - 1) {
-                                       resolveA();
+                                       resolveAeach();
                                    }
-                           })
-
-                            // await this.googleParseQueries(result,href,n_inside, meta).then( resolveQuery => {
-                            //     console.log('end4',n_inside);
-                            //
-                            //     resolveQuery.forEach((element, key) => {
-                            //         // if (typeof result["queriesMore"][key]["children"] === 'undefined') {
-                            //         //     result["queriesMore"][key]["children"] = [];
-                            //         // }
-                            //         // result["queriesMore"][key]["children"].push(element);
-                            //         result["queriesMore"][key]["children"] = element;
-                            //     });
-                            //     resolveEach();
-                            //     if (index === total - 1) {
-                            //         resolveA();
-                            //     }
-                            // });
+                           });
                         } else {
                             resolveEach();
                             if (index === total - 1) {
-                                resolveA();
+                                resolveAeach();
                             }
                         }
 
                     }
                 });
             });
-        }).then(async (resA) => {
+        }).then(async (resAeach) => {
             if (meta) {
-                await this.googleParseMeta(result).then(res => {
-                    console.log('meta_q END');
-                    this.queries = result["queriesMore"];
-                    this.finishAndSaveJson(result, data, callback);
-                }); //init this.meta_q
+                await this.googleParseMeta(result); //init this.meta_q
+                // await this.googleParseQueries()
+                console.log('meta_q END');
+                this.queries = result["queriesMore"];
+                this.finishAndSaveJson(result, data, callback, meta);
             } else {
-                this.finishAndSaveJson(result, data, callback);
+                this.finishAndSaveJson(result, data, callback, meta);
             }
         });
     }
-    finishAndSaveJson (result, data, callback) {
+    finishAndSaveJson (result, data, callback, meta = true) {
         fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json',
             JSON.stringify(result, null, 4),
             'utf8', (w_err, w_res) => {
@@ -245,83 +237,27 @@ class Parser {
                 this.socket.emit('console',[data.query,data.n_start, "JSON SAVE"]);
                 if (callback) {
                     setTimeout(() => {
-                        callback();
+                        if (meta) {
+                            callback();
+                        } else {
+                            callback(result);
+                        }
                     },this.requestPause);
                 }
             });
     }
-    googleParseQueries (result, href, n_inside, meta) {
-        return new Promise((resolveLink, rejectLink) => {
-            let url = "https://www.google.com"+encodeURI(href),
-                queries = [];
-
-            let meta_q = tress((url, callbackQueries) => {
-                console.log(href, 'href',n_inside);
-
-                needle.get(url, {}, (errIn, resIn) => { // { agent: myAgent },
-                    if (errIn) {
-                        console.log(errIn,'errIn');
-                        this.socket.emit('console',[errIn,'errIn']);
-                        return;
-                    }
-                    this.totalRequest += 1;
-                    console.log('hrefStart',n_inside);
-                    this.socket.emit('console',['Parsed Queries => ', url]);
-                    if (meta) {
-                        this.parseHtml(resIn.body, {
-                            url: result["queriesMore"][n_inside].href,
-                            query: result["queriesMore"][n_inside].title,
-                            n_start: 0
-                        }, null, false);
-
-                        // this.requestGet({
-                        //     url: result["queriesMore"][n_inside].href,
-                        //     query: result["queriesMore"][n_inside].title,
-                        //     n_start: 0
-                        // }, null, false, resIn.body);
-                    }
-
-                    let $In = cheerio.load(resIn.body),
-                        queriesIn = {};
-                    $In('footer').remove();
-                    $In('header').remove();
-                    console.log('end2',n_inside)
-
-                    $In('a').each((index, element) => {
-                        let link = $In(element),
-                            href = decodeURI(link.attr('href'));
-
-                        if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe")) {
-                            queriesIn = {
-                                title: link.text(),
-                                name: link.text(),
-                                parent: result["queriesMore"][n_inside].title,
-                                href: "https://google.com"+href,
-                                html: link.html(),
-                            };
-
-                            console.log('In EACH',n_inside)
-
-                            if (typeof queries[n_inside] === 'undefined') {
-                                queries[n_inside] = [];
-                            }
-                            queries[n_inside].push(queriesIn);
-
-                        }
-                    });
-
-                    console.log('end3',n_inside);
-                    setTimeout(()=> {
-                        callbackQueries();
-                    },this.requestPause);
-                });
-
-            },this.threads);
-
-            meta_q.push(url);
-            meta_q.drain = () => {
-                resolveLink(queries);
-            }
+    googleParseQueries (result, n_inside) {
+        return new Promise(async (resolve, reject) => {
+            new Promise((resolveLink, rejectLink) => {
+                this.requestGet({
+                    url: encodeURI(result["queriesMore"][n_inside].href),
+                    query: result["queriesMore"][n_inside].title,
+                    n_start: 0
+                }, resolveLink, false);
+            }).then( resLink => {
+                console.log("PARSE QUERIES N INSIDE", n_inside);
+                resolve(resLink);
+            })
         })
     }
     googleParseMeta (query_json) {
@@ -335,7 +271,7 @@ class Parser {
                         callbackMeta();
                         return;
                     }
-                    // this.totalRequest += 1;
+                    this.totalRequest.sites += 1;
                     this.socket.emit('console',['Parsed Meta => ',urlMeta.href]);
                     let $ = cheerio.load(resMeta.body);
                     urlMeta.meta = {

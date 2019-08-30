@@ -34,7 +34,8 @@ class Parser {
         this.results = [];
         this.totalRequest = {
             google: 0,
-            sites: 0
+            sites: 0,
+            cached: 0
         };
         this.threads = 1;
         this.sites = {};
@@ -110,9 +111,10 @@ class Parser {
                     return;
                     // throw new error;
                 }
-                await this.loadHtml(contentJson, data, meta, parent).then(()=>{
+                await this.loadHtml(contentJson, data, meta, parent).then(() => {
                     console.log(data.query, data.n_start, "JSON LOAD");
                     this.socket.emit('console',[data.query, data.n_start, "JSON LOAD"]);
+                    this.totalRequest.cached += 1;
                     if (meta) {
                         callback();
                     } else {
@@ -159,7 +161,7 @@ class Parser {
                     copyResult.parent = data.query;
                     queriesParent.children.push(copyResult);
                     if (meta) {
-                        this.googleParseQueries(parsedJson, index, copyResult).then(resolveQuery => { //тут передается родитель самая основа
+                        this.googleParseQueries(parsedJson, index, copyResult).then(resolveQuery => {
                             // JSON.parse(resolveQuery)["queriesMore"].forEach((element, key) => {
                             //     // if (typeof result["queriesMore"][key]["children"] === 'undefined') {
                             //     //     result["queriesMore"][key]["children"] = [];

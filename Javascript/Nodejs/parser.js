@@ -97,7 +97,8 @@ class Parser {
                 if (error) {
                     console.log(error, "error");
                     this.socket.emit('console',[error, "error"]);
-                    throw new error;
+                    return;
+                    // throw new error;
                 }
                 await this.loadHtml(contentJson, data, meta, parent).then(()=>{
                     console.log(data.query, data.n_start, "JSON LOAD");
@@ -132,7 +133,6 @@ class Parser {
             let parsedJson = JSON.parse(json),
              total = parsedJson["queriesMore"].length - 1;
             JSON.parse(json)["queriesMore"].forEach((queries, index) => {
-                console.log("total = ",total, "index = ", index);
                 let copyResult = Object.assign({}, queries);
                 if (parent !== undefined) {
                     if (typeof parent["children"] === 'undefined') {
@@ -200,7 +200,6 @@ class Parser {
             let total = $('a').length - 1;
 
             $('a').each( async (index, element) => {
-                console.log("totalGet = ",total, "indexGet = ", index);
                 // return;
                 await new Promise( async (resolveEach,rejectEach) => {
                     let link = $(element),
@@ -312,7 +311,8 @@ class Parser {
                 if (w_err) {
                     this.socket.emit('console',[w_err,'w_err']);
                     console.log(w_err,'w_err');
-                    throw new w_err;
+                    return;
+                    // throw new w_err;
                 }
                 console.log(data.query,data.n_start, "JSON SAVE");
                 this.socket.emit('console',[data.query,data.n_start, "JSON SAVE"]);

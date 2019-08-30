@@ -43,6 +43,7 @@ $(document).ready(function() {
                 sites: sites.val()
             },
             success: function (data) {
+                console.log(data,"data")
                 var DTdata = [];
                 $.each( data.sites,  (i, domain) => {
                     domain.forEach( site => {
@@ -92,25 +93,26 @@ $(document).ready(function() {
 
 
     function queriesThree(data) {
-        let treeData1 = [{
+        let treeData = [{
             "name": "1st Level",
             "parent": "null",
             "children": [
 
             ]
         }];
-        console.log(treeData1,"treeData")
-        console.log(data,"data");
+        // console.log(treeData,"treeData")
+        // console.log(data,"data");
         // data.map((value, index) => {
         //     value.parent = "Top Level";
         //     treeData[0].children.push(value);
         // });
-        throw new Error("test");
-        treeData[0].children = data[0];
+        throw new Error();
+        treeData[0].children = data;
+
         // ************** Generate the tree diagram	 *****************
         var margin = {top: 20, right: 120, bottom: 20, left: 120},
             width = 960 - margin.right - margin.left,
-            height = 500 - margin.top - margin.bottom;
+            height = (1250 * data.length) - margin.top - margin.bottom;
 
         var i = 0,
             duration = 750,

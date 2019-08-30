@@ -70,7 +70,7 @@ class Parser {
             }
         });
     }
-    requestGet (data, callback, meta = true, parent) {
+    requestGet (data, callback, meta = true, parent = undefined) {
         var proxy = {
             agent: myAgent,
         };
@@ -124,25 +124,24 @@ class Parser {
             resolve();
         });
     }
-    async parseHtml (html, data, callback, meta = true, parent) {
+    async parseHtml (html, data, callback, meta = true, parent = undefined) {
         let $ = cheerio.load(html),
             sites = {},
             queries = {},
-            queriesParent = [], //тут вся соль
+            queriesParent = {
+            parent: "1st Level",
+                name: data.query,
+                children: []
+            },
             result = {
                 queriesMore: [],
                 googleSearch: []
             },
             n = data.n_start,
             n_inside = -1;
-        console.log(typeof parent, "V0");
-        if (parent !== undefined) {
-            if (typeof parent["children"] === 'undefined') {
-                parent["children"] = [];
-            }
-            parent["children"] = queriesParent; //тут вся соль
-        } else {
-            this.queries.push(queriesParent); //тут вся соль
+
+        if (parent === undefined) {
+            this.queries.push(queriesParent);
         }
 
         $('footer').remove();
@@ -196,21 +195,30 @@ class Parser {
                             html: link.html()
                         };
                         result["queriesMore"].push(queries);
-                        let copyResult = Object.assign({},queries);
+                        let copyResult = Object.assign({}, queries);
 
                         if (parent !== undefined) {
+                            if (typeof parent["children"] === 'undefined') {
+                                parent["children"] = [];
+                            }
                             copyResult.parent = parent.name;
+                            parent["children"].push(copyResult);
                         } else {
-                            copyResult.parent = "1st Level";
+                            // copyResult.parent = "1st Level";
+                            copyResult.parent = data.query;
+
+                            queriesParent.children.push(copyResult);
+
+                            // queriesParent.push(copyResult);
                         }
-                        queriesParent.push(copyResult);
+
 
                         console.log('end1',n_inside);
 
                         // await googleParseQueries();
                         n_inside++;
                         if (meta) {
-                            await this.googleParseQueries(result,n_inside,queriesParent).then(resolveQuery => { //тут передается родитель самая основа
+                            await this.googleParseQueries(result,n_inside,copyResult).then(resolveQuery => { //тут передается родитель самая основа
                                // JSON.parse(resolveQuery)["queriesMore"].forEach((element, key) => {
                                //     // if (typeof result["queriesMore"][key]["children"] === 'undefined') {
                                //     //     result["queriesMore"][key]["children"] = [];
@@ -218,7 +226,7 @@ class Parser {
                                //     // result["queriesMore"][key]["children"].push(element);
                                //     result["queriesMore"][key]["children"] = element;
                                // });
-                                console.log("PARSE QUERIES N", n_inside);
+                               //  console.log("PARSE QUERIES N", n_inside);
                                    resolveEach();
                                    if (index === total - 1) {
                                        resolveAeach();
@@ -268,18 +276,17 @@ class Parser {
                 }
             });
     }
-    googleParseQueries (result, n_inside, parent) {
-        console.log(typeof parent,"v1");
+    googleParseQueries (result, n_inside, parent = undefined) {
         return new Promise(async (resolve, reject) => {
             await new Promise((resolveLink, rejectLink) => {
-                console.log(typeof parent,"v2");
+
                 this.requestGet({
                     url: encodeURI(result["queriesMore"][n_inside].href),
                     query: result["queriesMore"][n_inside].title,
                     n_start: 0
                 }, resolveLink, false, parent);
             }).then( resLink => {
-                console.log("PARSE QUERIES N INSIDE", n_inside);
+                // console.log("PARSE QUERIES N INSIDE", n_inside);
                 resolve(resLink);
             })
         })

@@ -310,15 +310,15 @@ class Parser {
                 });
             });
         }).then(async (resAeach) => {
-            if (meta) {
+            // if (meta) {
                 await this.googleParseMeta(result); //init this.meta_q
                 // await this.googleParseQueries()
                 console.log('meta_q END');
                 // this.queries = result["queriesMore"];
                 this.finishAndSaveJson(result, data, callback, meta);
-            } else {
-                this.finishAndSaveJson(result, data, callback, meta);
-            }
+            // } else {
+            //     this.finishAndSaveJson(result, data, callback, meta);
+            // }
         });
     }
     finishAndSaveJson (result, data, callback, meta = true) {

@@ -112,7 +112,7 @@ $(document).ready(function() {
         // ************** Generate the tree diagram	 *****************
         var margin = {top: 20, right: 120, bottom: 20, left: 120},
             width = 960 - margin.right - margin.left,
-            height = (1250 * data.length) - margin.top - margin.bottom;
+            height = (500 * data.length) - margin.top - margin.bottom;
 
         var i = 0,
             duration = 750,

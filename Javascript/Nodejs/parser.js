@@ -79,12 +79,22 @@ class Parser {
                 if (error_stats != null) {
                     console.log('error_stats or cache_time',error_stats.path,error_stats.code);
                     this.socket.emit('console',['error_stats or cache_time',error_stats.path,error_stats.code]);
+                    if (error_stats.code == "ENAMETOOLONG") {
+                        console.log("EXIT FROM ERROR")
+                        if (callback) {
+                            callback();
+                        }
+                        return;
+                    }
                 }
                 // this.socket.emit('getGoogle', { data: data, cb: callback });
                     needle.get(data.url, {},(err, res) => { // { agent: myAgent },
                         if (err) {
-                            console.log(err,'err');
+                            console.log(err,'err', data.url);
                             this.socket.emit('console',[err,'err']);
+                            if (callback) {
+                                callback();
+                            }
                             return;
                         }
                         // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.html', res.body, 'utf8');
@@ -230,17 +240,17 @@ class Parser {
 
                         // this.sites[domain] = Object.assign(this.sites[domain], sites);
                         n++;
-                        resolveEach();
                         if (index === total) {
                             setTimeout(()=>{
                                 resolveAeach();
-                                }, this.requestPause);
+                            }, this.requestPause);
                         }
+                        resolveEach();
                     } else if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe")) {
                         queries = {
                             title: link.text(),
                             name: link.text(),
-                            href: "https://www.google.com"+href,
+                            href: href.indexOf("https://www.google.com") > -1 ? href : "https://www.google.com"+href,
                             // parent: "null",
                             html: link.html()
                         };
@@ -275,20 +285,27 @@ class Parser {
                                //     result["queriesMore"][key]["children"] = element;
                                // });
                                //  console.log("PARSE QUERIES N", n_inside);
-                                   resolveEach();
                                    if (index === total) {
                                        resolveAeach();
                                    }
+                                resolveEach();
                            });
                         } else {
-                            resolveEach();
                             if (index === total) {
                                 setTimeout(()=>{
                                     resolveAeach();
                                 }, this.requestPause);
                             }
+                            resolveEach();
                         }
 
+                    } else {
+                        if (index === total) {
+                            setTimeout(()=>{
+                                resolveAeach();
+                            }, this.requestPause);
+                        }
+                        resolveEach();
                     }
                 });
             });
@@ -311,7 +328,7 @@ class Parser {
                 if (w_err) {
                     this.socket.emit('console',[w_err,'w_err']);
                     console.log(w_err,'w_err');
-                    return;
+                    // return;
                     // throw new w_err;
                 }
                 console.log(data.query,data.n_start, "JSON SAVE");

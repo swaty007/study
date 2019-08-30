@@ -99,29 +99,79 @@ class Parser {
                     this.socket.emit('console',[error, "error"]);
                     throw new error;
                 }
-                await this.loadHtml(contentJson, meta);
-                console.log(data.query, data.n_start, "JSON LOAD");
-                this.socket.emit('console',[data.query, data.n_start, "JSON LOAD"]);
-                if (meta) {
-                    callback();
-                } else {
-                    callback(contentJson);
-                }
+                await this.loadHtml(contentJson, data, meta, parent).then(()=>{
+                    console.log(data.query, data.n_start, "JSON LOAD");
+                    this.socket.emit('console',[data.query, data.n_start, "JSON LOAD"]);
+                    if (meta) {
+                        callback();
+                    } else {
+                        callback(contentJson);
+                    }
+                });
             });
         });
     }
-    loadHtml (json, meta) {
+    loadHtml (json, data, meta = true, parent = undefined) {
         return new Promise(async (resolve, reject) => {
             JSON.parse(json)["googleSearch"].forEach( site => {
-                if (typeof this.sites[site.domain] === 'undefined') {
-                    this.sites[site.domain] = [];
+                if (meta) {
+                    if (typeof this.sites[site.domain] === 'undefined') {
+                        this.sites[site.domain] = [];
+                    }
+                    this.sites[site.domain].push(site);
                 }
-                this.sites[site.domain].push(site);
             });
-            JSON.parse(json)["queriesMore"].forEach( (queries, index) => {
-                this.queries.push(queries);
+            let queriesParent = {
+                parent: "1st Level",
+                name: data.query,
+                children: []
+            };
+            if (parent === undefined) {
+                this.queries.push(queriesParent);
+            }
+            let parsedJson = JSON.parse(json),
+             total = parsedJson["queriesMore"].length - 1;
+            JSON.parse(json)["queriesMore"].forEach((queries, index) => {
+                console.log("total = ",total, "index = ", index);
+                let copyResult = Object.assign({}, queries);
+                if (parent !== undefined) {
+                    if (typeof parent["children"] === 'undefined') {
+                        parent["children"] = [];
+                    }
+                    copyResult.parent = parent.name;
+                    parent["children"].push(copyResult);
+                    if (index === total) {
+                        setTimeout(()=>{
+                            resolve();
+                        }, this.requestPause);
+                    }
+                } else {
+                    copyResult.parent = data.query;
+                    queriesParent.children.push(copyResult);
+                    if (meta) {
+                        this.googleParseQueries(parsedJson, index, copyResult).then(resolveQuery => { //тут передается родитель самая основа
+                            // JSON.parse(resolveQuery)["queriesMore"].forEach((element, key) => {
+                            //     // if (typeof result["queriesMore"][key]["children"] === 'undefined') {
+                            //     //     result["queriesMore"][key]["children"] = [];
+                            //     // }
+                            //     // result["queriesMore"][key]["children"].push(element);
+                            //     result["queriesMore"][key]["children"] = element;
+                            // });
+                            //  console.log("PARSE QUERIES N", n_inside);
+                             if (index === total) {
+                                 resolve();
+                             }
+                        });
+                    } else {
+                        if (index === total) {
+                            setTimeout(()=>{
+                                resolve();
+                            }, this.requestPause);
+                        }
+                    }
+                }
             });
-            resolve();
+
         });
     }
     async parseHtml (html, data, callback, meta = true, parent = undefined) {
@@ -150,6 +200,7 @@ class Parser {
             let total = $('a').length - 1;
 
             $('a').each( async (index, element) => {
+                console.log("totalGet = ",total, "indexGet = ", index);
                 // return;
                 await new Promise( async (resolveEach,rejectEach) => {
                     let link = $(element),
@@ -181,10 +232,10 @@ class Parser {
                         // this.sites[domain] = Object.assign(this.sites[domain], sites);
                         n++;
                         resolveEach();
-                        if (index === total - 1) {
+                        if (index === total) {
                             setTimeout(()=>{
                                 resolveAeach();
-                                }, this.requestPause)
+                                }, this.requestPause);
                         }
                     } else if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe")) {
                         queries = {
@@ -206,9 +257,7 @@ class Parser {
                         } else {
                             // copyResult.parent = "1st Level";
                             copyResult.parent = data.query;
-
                             queriesParent.children.push(copyResult);
-
                             // queriesParent.push(copyResult);
                         }
 
@@ -228,14 +277,16 @@ class Parser {
                                // });
                                //  console.log("PARSE QUERIES N", n_inside);
                                    resolveEach();
-                                   if (index === total - 1) {
+                                   if (index === total) {
                                        resolveAeach();
                                    }
                            });
                         } else {
                             resolveEach();
-                            if (index === total - 1) {
-                                resolveAeach();
+                            if (index === total) {
+                                setTimeout(()=>{
+                                    resolveAeach();
+                                }, this.requestPause);
                             }
                         }
 
@@ -288,7 +339,7 @@ class Parser {
             }).then( resLink => {
                 // console.log("PARSE QUERIES N INSIDE", n_inside);
                 resolve(resLink);
-            })
+            });
         })
     }
     googleParseMeta (query_json) {

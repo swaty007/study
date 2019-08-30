@@ -220,8 +220,8 @@ $(document).ready(function () {
     //     value.parent = "Top Level";
     //     treeData[0].children.push(value);
     // });
+    // throw new Error();
 
-    throw new Error();
     treeData[0].children = data; // ************** Generate the tree diagram	 *****************
 
     var margin = {

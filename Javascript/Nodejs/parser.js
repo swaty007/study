@@ -25,6 +25,20 @@ puppeteer.use(
     })
 );
 
+var mysql      = require('mysql');
+var connection = mysql.createConnection({
+    host     : 'swaty.mysql.tools',
+    database : 'swaty_googlepars',
+    user     : 'swaty_googlepars',
+    password : 'o5a_KsA9_1',
+});
+// var pool = mysql.createPool({
+//     host     : 'swaty.mysql.tools',
+//     database : 'swaty_googlepars',
+//     user     : 'swaty_googlepars',
+//     password : 'o5a_KsA9_1',
+// });
+
 
 // sockets
 // const app = require('express')(),
@@ -98,6 +112,46 @@ class Parser {
         var proxy = {
             agent: myAgent,
         };
+
+        connection.query(`SELECT * FROM swaty_googlepars.sites WHERE name = ?`,
+            [data.query+data.n_start],
+            async (mysql_find_error, result, fields) => {
+                if (mysql_find_error) {
+                    console.log(mysql_find_error,'mysql_find_error');
+                    this.socket.emit('console',[mysql_find_error,'mysql_find_error']);
+                    throw mysql_find_error;
+                }
+                if (result.length > 0 && this.html_cache_time > (Date.now() - result[0].timestamp)/(1000*60*60)) {
+                    await this.loadHtml(JSON.stringify({queriesMore: JSON.parse(result[0].queries), googleSearch: JSON.parse(result[0].search)}), data, meta, parent).then(() => {
+                        console.log(data.query, data.n_start, "JSON LOAD");
+                        this.socket.emit('console',[data.query, data.n_start, "JSON LOAD"]);
+                        this.totalRequest.cached += 1;
+                        if (meta) {
+                            callback();
+                        } else {
+                            callback({queriesMore:result[0].queries, googleSearch: result[0].search});
+                        }
+                    });
+                } else {
+                    console.log('error_stats or cache_time',data.query+data.n_start);
+                    this.socket.emit('console',['error_stats or cache_time',data.query+data.n_start]);
+                    needle.get(data.url, {},(err, res) => { // { agent: myAgent },
+                        this.totalRequest.google += 1;
+                        if (err) {
+                            console.log(err,'err', data.url);
+                            this.socket.emit('console',[err,'err']);
+                            if (callback) {
+                                callback();
+                            }
+                            return;
+                        }
+                        // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.html', res.body, 'utf8');
+                        this.parseHtml (res.body, data, callback, meta, parent);
+                    });
+
+                }
+            });
+        return;
         fs.stat('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json',(error_stats, stats) => {
             if ( error_stats || (Date.now() - stats.mtimeMs)/(1000*60*60) > this.html_cache_time) { //!meta ||
                 if (error_stats != null) {
@@ -347,6 +401,30 @@ class Parser {
         });
     }
     finishAndSaveJson (result, data, callback, meta = true) {
+        connection.query(`REPLACE INTO swaty_googlepars.sites SET ?`,
+            {name: data.query+data.n_start, queries: JSON.stringify(result.queriesMore), search: JSON.stringify(result.googleSearch), timestamp: Date.now()},
+             (mysql_save_error, results, fields) => {
+            if (mysql_save_error) {
+                console.log(mysql_save_error,'mysql_save_error');
+                this.socket.emit('console',[mysql_save_error,'mysql_save_error']);
+                // throw mysql_save_error;
+            }
+            // console.log("resultsSave = ", results);
+            // console.log("fieldsSave = ", fields);
+
+                console.log(data.query,data.n_start, "JSON SAVE");
+                this.socket.emit('console',[data.query,data.n_start, "JSON SAVE"]);
+                if (callback) {
+                    setTimeout(() => {
+                        if (meta) {
+                            callback();
+                        } else {
+                            callback(result);
+                        }
+                    },this.requestPause);
+                }
+        });
+        return;
         fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.json',
             JSON.stringify(result, null, 4),
             'utf8', (w_err, w_res) => {
@@ -388,6 +466,7 @@ class Parser {
         return new Promise((resolve,reject) => {
             let meta_q = tress((urlMeta, callbackMeta) => {
                 needle.get(urlMeta.href, (errMeta, resMeta) => { // { agent: myAgent },
+                    this.totalRequest.sites += 1;
                     if (errMeta) {
                         console.log(errMeta,'errMeta');
                         // reject(errMeta);
@@ -395,8 +474,7 @@ class Parser {
                         callbackMeta();
                         return;
                     }
-                    this.totalRequest.sites += 1;
-                    this.socket.emit('console',['Parsed Meta => ',urlMeta.href]);
+                    // this.socket.emit('console',['Parsed Meta => ',urlMeta.href]);
                     let $ = cheerio.load(resMeta.body);
                     urlMeta.meta = {
                         title: $("head title").text(),
@@ -407,13 +485,14 @@ class Parser {
                     console.log("googleParseMeta END");
                     callbackMeta();
                 });
-            },10);
+            },5);
             query_json["googleSearch"].forEach(site => {
                 if (Object.keys(site).indexOf('meta') === -1) {
                     meta_q.push(site);
                 }
             });
             meta_q.drain = () => {
+                this.socket.emit('console',['Parsed Meta END => ', query_json["googleSearch"]]);
                 resolve();
             }
         })

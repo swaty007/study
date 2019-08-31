@@ -10,10 +10,7 @@ var myAgent = tunnel.httpsOverHttp({
         port: 80, // Defaults to 443
     }
 });
-const app = require('express')(),
-    server = require('http').Server(app),
-    io = require('socket.io')(server);
-server.listen(3038);
+
 const puppeteer = require('puppeteer-extra');
 // add stealth plugin and use defaults (all evasion techniques)
 const pluginStealth = require("puppeteer-extra-plugin-stealth");
@@ -28,6 +25,12 @@ puppeteer.use(
     })
 );
 
+
+// sockets
+const app = require('express')(),
+    server = require('http').Server(app),
+    io = require('socket.io')(server);
+server.listen(3038);
 
 class Parser {
     constructor() {
@@ -50,6 +53,19 @@ class Parser {
             this.socket.on('getGoogle', (result) => {
                 console.log(result,'result getGoogle Back');
                 this.parseHtml(result.res.body, result.data, result.cb);
+            });
+        });
+    }
+    setSocket (io) {
+        return new Promise( (resolve, reject) => {
+            io.on('connection', (socket) => {
+                this.socket = socket;
+                console.log('connect');
+                resolve();
+                this.socket.on('getGoogle', (result) => {
+                    console.log(result,'result getGoogle Back');
+                    this.parseHtml(result.res.body, result.data, result.cb);
+                });
             });
         });
     }

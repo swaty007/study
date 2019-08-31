@@ -43,7 +43,7 @@ $(document).ready(function() {
                 sites: sites.val()
             },
             success: function (data) {
-                console.log(data,"data")
+                // console.log(data,"data")
                 var DTdata = [];
                 $.each( data.sites,  (i, domain) => {
                     domain.forEach( site => {

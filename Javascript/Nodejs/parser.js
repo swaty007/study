@@ -76,6 +76,13 @@ class Parser {
                 this.socket = socket;
                 this.socket.emit('console',["TEST CONNECT"]);
                 console.log('connect');
+                socket.on('disconnect', () => {
+                    console.log('disconnect');
+                    connection.end((err) => {
+                        // The connection is terminated now
+                        console.log("MySQL connect end ", err);
+                    });
+                });
                 resolve();
                 // this.socket.on('getGoogle', (result) => {
                     // console.log(result,'result getGoogle Back');

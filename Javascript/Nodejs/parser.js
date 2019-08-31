@@ -459,7 +459,6 @@ class Parser {
     googleParseQueries (result, n_inside, parent = undefined) {
         return new Promise(async (resolve, reject) => {
             await new Promise((resolveLink, rejectLink) => {
-
                 this.requestGet({
                     url: encodeURI(result["queriesMore"][n_inside].href),
                     query: result["queriesMore"][n_inside].title,

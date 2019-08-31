@@ -27,10 +27,10 @@ puppeteer.use(
 
 
 // sockets
-const app = require('express')(),
-    server = require('http').Server(app),
-    io = require('socket.io')(server);
-server.listen(3038);
+// const app = require('express')(),
+//     server = require('http').Server(app),
+//     io = require('socket.io')(server);
+// server.listen(3038);
 
 class Parser {
     constructor() {
@@ -47,32 +47,39 @@ class Parser {
         this.requestPause = 1500;
         this.socket = "";
 
-        io.sockets.on('connection', (socket) => {
-            this.socket = socket;
-            console.log('connect');
-            this.socket.on('getGoogle', (result) => {
-                console.log(result,'result getGoogle Back');
-                this.parseHtml(result.res.body, result.data, result.cb);
-            });
-        });
+        // io.sockets.on('connection', (socket) => {
+        //     this.socket = socket;
+        //     console.log('connect');
+        //     this.socket.on('getGoogle', (result) => {
+        //         console.log(result,'result getGoogle Back');
+        //         this.parseHtml(result.res.body, result.data, result.cb);
+        //     });
+        // });
     }
-    setSocket (io) {
+    setSocket (socket) {
         return new Promise( (resolve, reject) => {
-            io.on('connection', (socket) => {
+            // io.on('connection', (socket) => {
                 this.socket = socket;
+                this.socket.emit('console',["TEST CONNECT"]);
                 console.log('connect');
                 resolve();
-                this.socket.on('getGoogle', (result) => {
-                    console.log(result,'result getGoogle Back');
-                    this.parseHtml(result.res.body, result.data, result.cb);
-                });
-            });
+                // this.socket.on('getGoogle', (result) => {
+                    // console.log(result,'result getGoogle Back');
+                    // this.parseHtml(result.res.body, result.data, result.cb);
+                // });
+            // });
         });
     }
     initGoogle() {
         this.size = 1; //x10
         this.sites = {};
         this.queries = [];
+        this.totalRequest = {
+            google: 0,
+            sites: 0,
+            cached: 0
+        };
+
         this.promise = new Promise((resolve, reject) => {
             this.q = tress((data, callback) => {
                 this.requestGet(data, callback);
@@ -106,6 +113,7 @@ class Parser {
                 }
                 // this.socket.emit('getGoogle', { data: data, cb: callback });
                     needle.get(data.url, {},(err, res) => { // { agent: myAgent },
+                        this.totalRequest.google += 1;
                         if (err) {
                             console.log(err,'err', data.url);
                             this.socket.emit('console',[err,'err']);
@@ -115,7 +123,6 @@ class Parser {
                             return;
                         }
                         // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.html', res.body, 'utf8');
-                        this.totalRequest.google += 1;
                         this.parseHtml (res.body, data, callback, meta, parent);
                     });
                 return;
@@ -400,7 +407,7 @@ class Parser {
                     console.log("googleParseMeta END");
                     callbackMeta();
                 });
-            },5);
+            },10);
             query_json["googleSearch"].forEach(site => {
                 if (Object.keys(site).indexOf('meta') === -1) {
                     meta_q.push(site);

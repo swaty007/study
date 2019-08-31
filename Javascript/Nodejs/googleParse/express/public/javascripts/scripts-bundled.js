@@ -123,7 +123,7 @@ var ConsoleLogHTML = __webpack_require__(/*! console-log-html */ "./node_modules
 
 $(document).ready(function () {
   ConsoleLogHTML.connect(document.getElementById("myULContainer"));
-  var socket = io.connect('http://localhost:3038/', {// 'reconnectionDelay': 10 // defaults to 500
+  var socket = io.connect(location.hostname + ':3038/', {// 'reconnectionDelay': 10 // defaults to 500
   });
   socket.on('getGoogle', function (data) {
     queriesThree(data.queries);

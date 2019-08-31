@@ -230,6 +230,7 @@ class Parser {
              total = parsedJson["queriesMore"].length - 1;
             JSON.parse(json)["queriesMore"].forEach((queries, index) => {
                 let copyResult = Object.assign({}, queries);
+                copyResult.name = copyResult.title;
                 if (parent !== undefined) {
                     if (typeof parent["children"] === 'undefined') {
                         parent["children"] = [];
@@ -335,10 +336,10 @@ class Parser {
                     } else if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe")) {
                         queries = {
                             title: link.text(),
-                            name: link.text(),
+                            // name: link.text(),
                             href: href.indexOf("https://www.google.com") > -1 ? href : "https://www.google.com"+href,
                             // parent: "null",
-                            html: link.html()
+                            // html: link.html()
                         };
                         result["queriesMore"].push(queries);
                         let copyResult = Object.assign({}, queries);
@@ -352,6 +353,7 @@ class Parser {
                         } else {
                             // copyResult.parent = "1st Level";
                             copyResult.parent = data.query;
+                            copyResult.name = copyResult.title;
                             queriesParent.children.push(copyResult);
                             // queriesParent.push(copyResult);
                         }

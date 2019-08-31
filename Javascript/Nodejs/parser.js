@@ -78,10 +78,10 @@ class Parser {
                 console.log('connect');
                 socket.on('disconnect', () => {
                     console.log('disconnect');
-                    connection.end((err) => {
+                    // connection.end((err) => {
                         // The connection is terminated now
-                        console.log("MySQL connect end ", err);
-                    });
+                    //     console.log("MySQL connect end ", err);
+                    // });
                 });
                 resolve();
                 // this.socket.on('getGoogle', (result) => {
@@ -343,6 +343,7 @@ class Parser {
                         };
                         result["queriesMore"].push(queries);
                         let copyResult = Object.assign({}, queries);
+                        copyResult.name = copyResult.title;
 
                         if (parent !== undefined) {
                             if (typeof parent["children"] === 'undefined') {
@@ -353,7 +354,6 @@ class Parser {
                         } else {
                             // copyResult.parent = "1st Level";
                             copyResult.parent = data.query;
-                            copyResult.name = copyResult.title;
                             queriesParent.children.push(copyResult);
                             // queriesParent.push(copyResult);
                         }

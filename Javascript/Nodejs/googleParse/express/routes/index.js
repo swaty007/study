@@ -13,25 +13,23 @@ server.listen(3038);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-
-  io.on('connection', (socket) => {
-    var parse = new Parser();
-    parse.setSocket(socket).then(res => {
-      socket.on('getGoogle', value => {
-        console.log("value = ", value);
-        let values = value.sites.split(',').map(site => site.trim());
-        parse.getGoogle(values).then( result => {
-          socket.emit('getGoogle', result);
-          // response.json(result);
-        });
-      });
-
-    });
-  });
-
   res.render('index', { title: 'Express' });
 });
 
+io.on('connection', (socket) => {
+  var parse = new Parser();
+  parse.setSocket(socket).then(res => {
+    socket.on('getGoogle', value => {
+      console.log("value = ", value);
+      let values = value.sites.split(',').map(site => site.trim());
+      parse.getGoogle(values).then( result => {
+        socket.emit('getGoogle', result);
+        // response.json(result);
+      });
+    });
+
+  });
+});
 
 
 

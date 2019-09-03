@@ -37,14 +37,16 @@ $(document).ready(function() {
     });
     $("#form_google").on('submit', function (e) {
         e.preventDefault();
-        let sites = $("#form_google input[name='sites']");
+        let sites = $("#form_google input[name='sites']"),
+            size = $("#form_google select[name='size']");
 
-        socket.emit('getGoogle', {sites: sites.val()} );
+        socket.emit('getGoogle', {sites: sites.val(), size: size.val()} );
         // $.ajax({
         //     type: "POST",
         //     url: "/calc" ,
         //     data: {
-        //         sites: sites.val()
+        //         sites: sites.val(),
+        //         size: size.val()
         //     },
         //     success: function (data) {
         //         // console.log(data,"data")

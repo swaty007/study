@@ -19,10 +19,13 @@ router.get('/', function(req, res, next) {
 io.on('connection', (socket) => {
   var parse = new Parser();
   parse.setSocket(socket).then(res => {
-    socket.on('getGoogle', value => {
-      console.log("value = ", value);
-      let values = value.sites.split(',').map(site => site.trim());
-      parse.getGoogle(values).then( result => {
+    socket.on('getGoogle', data => {
+      console.log("data = ", data);
+      let value = {
+        sites: data.sites,
+        size: data.size
+      };
+      parse.getGoogle(value).then( result => {
         socket.emit('getGoogle', result);
         // response.json(result);
       });

@@ -91,8 +91,8 @@ class Parser {
             // });
         });
     }
-    initGoogle() {
-        this.size = 1; //x10
+    initGoogle(data) {
+        this.size = data.size; //1x10
         this.sites = {};
         this.queries = [];
         this.totalRequest = {
@@ -218,56 +218,62 @@ class Parser {
                     this.sites[site.domain].push(site);
                 }
             });
-            let queriesParent = {
-                parent: "1st Level",
-                name: data.query,
-                children: []
-            };
-            if (parent === undefined) {
-                this.queries.push(queriesParent);
-            }
-            let parsedJson = JSON.parse(json),
-             total = parsedJson["queriesMore"].length - 1;
-            JSON.parse(json)["queriesMore"].forEach((queries, index) => {
-                let copyResult = Object.assign({}, queries);
-                copyResult.name = copyResult.title;
-                if (parent !== undefined) {
-                    if (typeof parent["children"] === 'undefined') {
-                        parent["children"] = [];
-                    }
-                    copyResult.parent = parent.name;
-                    parent["children"].push(copyResult);
-                    if (index === total) {
-                        setTimeout(()=>{
-                            resolve();
-                        }, this.requestPause);
-                    }
-                } else {
-                    copyResult.parent = data.query;
-                    queriesParent.children.push(copyResult);
-                    if (meta) {
-                        this.googleParseQueries(parsedJson, index, copyResult).then(resolveQuery => {
-                            // JSON.parse(resolveQuery)["queriesMore"].forEach((element, key) => {
-                            //     // if (typeof result["queriesMore"][key]["children"] === 'undefined') {
-                            //     //     result["queriesMore"][key]["children"] = [];
-                            //     // }
-                            //     // result["queriesMore"][key]["children"].push(element);
-                            //     result["queriesMore"][key]["children"] = element;
-                            // });
-                            //  console.log("PARSE QUERIES N", n_inside);
-                             if (index === total) {
-                                 resolve();
-                             }
-                        });
-                    } else {
+            if (data.n_start === 0) {
+                let queriesParent = {
+                    parent: "1st Level",
+                    name: data.query,
+                    children: []
+                };
+                if (parent === undefined) {
+                    this.queries.push(queriesParent);
+                }
+                let parsedJson = JSON.parse(json),
+                    total = parsedJson["queriesMore"].length - 1;
+
+                JSON.parse(json)["queriesMore"].forEach((queries, index) => {
+                    let copyResult = Object.assign({}, queries);
+                    copyResult.name = copyResult.title;
+                    if (parent !== undefined) {
+                        if (typeof parent["children"] === 'undefined') {
+                            parent["children"] = [];
+                        }
+                        copyResult.parent = parent.name;
+                        parent["children"].push(copyResult);
                         if (index === total) {
                             setTimeout(()=>{
                                 resolve();
                             }, this.requestPause);
                         }
+                    } else {
+                        copyResult.parent = data.query;
+                        queriesParent.children.push(copyResult);
+                        if (meta) {
+                            this.googleParseQueries(parsedJson, index, copyResult).then(resolveQuery => {
+                                // JSON.parse(resolveQuery)["queriesMore"].forEach((element, key) => {
+                                //     // if (typeof result["queriesMore"][key]["children"] === 'undefined') {
+                                //     //     result["queriesMore"][key]["children"] = [];
+                                //     // }
+                                //     // result["queriesMore"][key]["children"].push(element);
+                                //     result["queriesMore"][key]["children"] = element;
+                                // });
+                                //  console.log("PARSE QUERIES N", n_inside);
+                                if (index === total) {
+                                    resolve();
+                                }
+                            });
+                        } else {
+                            if (index === total) {
+                                setTimeout(()=>{
+                                    resolve();
+                                }, this.requestPause);
+                            }
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                resolve();
+            }
+
 
         });
     }
@@ -287,13 +293,13 @@ class Parser {
             n = data.n_start,
             n_inside = -1;
 
-        if (parent === undefined) {
+        if (parent === undefined && data.n_start === 0) {
             this.queries.push(queriesParent);
         }
 
         $('footer').remove();
         $('header').remove();
-        await new Promise( async (resolveAeach, rejectAeach) => {
+        await new Promise( async (resolveA_Each, rejectAeach) => {
             let total = $('a').length - 1;
 
             $('a').each( async (index, element) => {
@@ -329,11 +335,11 @@ class Parser {
                         n++;
                         if (index === total) {
                             setTimeout(()=>{
-                                resolveAeach();
+                                resolveA_Each();
                             }, this.requestPause);
                         }
                         resolveEach();
-                    } else if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe")) {
+                    } else if (href.indexOf("/search?") > -1 && link.hasClass("tHmfQe") && data.n_start === 0) {
                         queries = {
                             title: link.text(),
                             // name: link.text(),
@@ -374,14 +380,14 @@ class Parser {
                                // });
                                //  console.log("PARSE QUERIES N", n_inside);
                                    if (index === total) {
-                                       resolveAeach();
+                                       resolveA_Each();
                                    }
                                 resolveEach();
                            });
                         } else {
                             if (index === total) {
                                 setTimeout(()=>{
-                                    resolveAeach();
+                                    resolveA_Each();
                                 }, this.requestPause);
                             }
                             resolveEach();
@@ -390,7 +396,7 @@ class Parser {
                     } else {
                         if (index === total) {
                             setTimeout(()=>{
-                                resolveAeach();
+                                resolveA_Each();
                             }, this.requestPause);
                         }
                         resolveEach();
@@ -505,14 +511,15 @@ class Parser {
             }
         })
     }
-    getGoogle (urls) {
-        if (urls.indexOf("") !== -1) {
+    getGoogle (data) {
+        let sites = data.sites.split(',').map(site => site.trim());
+        if (sites.indexOf("") !== -1 || data.size > 5 || data.size < 1) {
             console.log('return');
             this.socket.emit('console',['return']);
             return;
         }
-        this.initGoogle();
-        urls.forEach(i => {
+        this.initGoogle(data);
+        sites.forEach(i => {
             for (let n = 0; n < this.size; n++) {
                 let url = encodeURI(`https://www.google.com.ua/search?hl=ru&source=hp&q=${i}&oq=${i}`);
                 if (n > 0) {

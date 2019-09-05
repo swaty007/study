@@ -229,7 +229,10 @@ class Parser {
                 }
                 let parsedJson = JSON.parse(json),
                     total = parsedJson["queriesMore"].length - 1;
-
+                if (JSON.parse(json)["queriesMore"].length === 0) {
+                    resolve();
+                    return;
+                }
                 JSON.parse(json)["queriesMore"].forEach((queries, index) => {
                     let copyResult = Object.assign({}, queries);
                     copyResult.name = copyResult.title;

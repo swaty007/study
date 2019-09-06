@@ -491,7 +491,7 @@ class Parser {
                         callbackMeta();
                         return;
                     }
-                    // this.socket.emit('console',['Parsed Meta => ',urlMeta.href]);
+                    this.socket.emit('console',['Parsed Meta => ',urlMeta.href]);
                     let $ = cheerio.load(resMeta.body);
                     urlMeta.meta = {
                         title: $("head title").text(),
@@ -509,13 +509,13 @@ class Parser {
                 }
             });
             meta_q.drain = () => {
-                this.socket.emit('console',['Parsed Meta END => ', query_json["googleSearch"]]);
+                // this.socket.emit('console',['Parsed Meta END => ', query_json["googleSearch"]]);
                 resolve();
             }
         })
     }
     getGoogle (data) {
-        let sites = data.sites.split(',').map(site => site.trim());
+        let sites = data.sites.split(/,|\n/).map(site => site.trim());
         if (sites.indexOf("") !== -1 || data.size > 5 || data.size < 1) {
             console.log('return');
             this.socket.emit('console',['return']);

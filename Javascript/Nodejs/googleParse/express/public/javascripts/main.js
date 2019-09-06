@@ -10,6 +10,7 @@ require( 'datatables.net-buttons/js/buttons.html5.js' );
 require( 'datatables.net-buttons/js/buttons.print.js' );
 require( 'datatables.net-fixedheader-bs' );
 require( 'datatables.net-responsive-bs' );
+require('bootstrap/dist/js/bootstrap.bundle.min.js');
 
 var io = require('socket.io-client/dist/socket.io.js');
 var ConsoleLogHTML = require('console-log-html');
@@ -21,10 +22,12 @@ $(document).ready(function() {
             // 'reconnectionDelay': 10 // defaults to 500
     });
     socket.on('getGoogle', (data) => {
-        queriesThree(data.queries);
-        googleTable(data.sites);
+        console.log(data);
+        sortDomains(Object.assign({}, data.sites));
+        queriesThree([...data.queries]);
+        googleTable(Object.assign({}, data.sites));
 
-        let sites = $("#form_google input[name='sites']");
+        let sites = $("#form_google [name='sites']");
         sites.val('');
 
         // console.log(result,'result get Google Front');
@@ -33,11 +36,15 @@ $(document).ready(function() {
         // });
     });
     socket.on('console', (result) => {
-        console.log(result,' NodeJs');
+        if (typeof result === 'string') {
+            console.log(decodeURI(result),' NodeJs');
+        } else {
+            console.log(JSON.stringify(result),' NodeJs');
+        }
     });
     $("#form_google").on('submit', function (e) {
         e.preventDefault();
-        let sites = $("#form_google input[name='sites']"),
+        let sites = $("#form_google [name='sites']"),
             size = $("#form_google select[name='size']");
 
         socket.emit('getGoogle', {sites: sites.val(), size: size.val()} );
@@ -56,6 +63,76 @@ $(document).ready(function() {
         // });
     })
 
+    function sortDomains(data) {
+        console.log(data,'copy');
+        let sortDomainsArray = Object.entries(data).sort((a, b) => {
+            // console.log('A = ', a, '  B =',b);
+            // console.log('A.l = ', a[1].length, '  B.l =',b[1].length);
+            return b[1].length - a[1].length;
+        });
+        console.log(sortDomainsArray,'sortDomainsArray');
+        let sortDomains = Object.fromEntries(sortDomainsArray);
+        console.log(sortDomains,'sortDomains ');
+        console.log(data,'data ');
+        let n = 0;
+        for (domain in sortDomains) {
+            // console.log(variable,sortDomains[variable].length,"sortDomains.var.length");
+            $("#accordionDomain").append(`
+<div class="card-header" id="heading${n}">
+        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse${n}" aria-expanded="true" aria-controls="collapse${n}">
+          ${domain} Запросов: ${sortDomains[domain].length} 
+          Запросов Топ3: <span id="top3_${n}">0</span> 
+          Запросов Топ5: <span id="top5_${n}">0</span>
+          Запросов Топ10: <span id="top10_${n}">0</span>
+        </button>
+    </div>
+    <div id="collapse${n}" class="collapse" aria-labelledby="heading${n}" data-parent="#accordionDomain" style="">
+      <div class="card-body" >
+        <table class="table table-striped table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>Position</th>
+                                        <th>query</th>
+                                        <th>titleGoogle</th>
+                                        <th>href</th>
+<!--                                        <th>meta</th>-->
+                                    </tr>
+                                    </thead>
+                                    <tbody id="domain${n}">
+                                    </tbody>
+                                </table>
+</div>
+    </div>
+            `);
+            let top3 = 0,
+                top5 = 0,
+                top10 = 0;
+            sortDomains[domain].forEach((item) => {
+                switch (item.position) {
+                    case (<10 && >=5):
+                        top10 += 1;
+                        break;
+                    case (<5 && >=3):
+                        top5 += 1;
+                        break;
+                    case (<3 && >=0):
+                        top3 += 1;
+                        break;
+                }
+                $("#domain"+n).append(`<tr>
+<td>${item.position}</td>
+<td>${item.query}</td>
+<td>${item.title}</td>
+<td>${item.href}</td>
+<!--<td>${item.meta}</td>-->
+</tr>`);
+            });
+            $("#top3_"+n).text(top3);
+            $("#top5_"+n).text(top5);
+            $("#top10_"+n).text(top10);
+            n++;
+        }
+    }
     function googleTable (data) {
         var DTdata = [];
 

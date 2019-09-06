@@ -80,11 +80,12 @@ $(document).ready(function() {
             $("#accordionDomain").append(`
 <div class="card-header" id="heading${n}">
         <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse${n}" aria-expanded="true" aria-controls="collapse${n}">
-          ${domain} Запросов: ${sortDomains[domain].length} 
-          Запросов Топ3: <span id="top3_${n}">0</span> 
-          Запросов Топ5: <span id="top5_${n}">0</span>
-          Запросов Топ10: <span id="top10_${n}">0</span>
+          ${domain} 
         </button>
+        <span>Запросов: ${sortDomains[domain].length}</span>
+          <span>Запросов Топ3: <strong id="top3_${n}">0</strong> </span>
+          <span>Запросов Топ5: <strong id="top5_${n}">0</strong> </span>
+          <span>Запросов Топ10: <strong id="top10_${n}">0</strong></span>
     </div>
     <div id="collapse${n}" class="collapse" aria-labelledby="heading${n}" data-parent="#accordionDomain" style="">
       <div class="card-body" >
@@ -95,7 +96,7 @@ $(document).ready(function() {
                                         <th>query</th>
                                         <th>titleGoogle</th>
                                         <th>href</th>
-<!--                                        <th>meta</th>-->
+
                                     </tr>
                                     </thead>
                                     <tbody id="domain${n}">
@@ -107,31 +108,31 @@ $(document).ready(function() {
             let top3 = 0,
                 top5 = 0,
                 top10 = 0;
-            sortDomains[domain].forEach((item) => {
-                switch (item.position) {
-                    case (<10 && >=5):
+            console.log(sortDomains[domain]);
+            sortDomains[domain].forEach(function(item) {
+                switch (true) {
+                    case (item.position<10 && item.position>=5):
                         top10 += 1;
                         break;
-                    case (<5 && >=3):
+                    case (item.position<5 && item.position>=3):
                         top5 += 1;
                         break;
-                    case (<3 && >=0):
+                    case (item.position<3 && item.position>=0):
                         top3 += 1;
                         break;
-                }
+                };
                 $("#domain"+n).append(`<tr>
 <td>${item.position}</td>
 <td>${item.query}</td>
 <td>${item.title}</td>
 <td>${item.href}</td>
-<!--<td>${item.meta}</td>-->
 </tr>`);
             });
             $("#top3_"+n).text(top3);
             $("#top5_"+n).text(top5);
             $("#top10_"+n).text(top10);
             n++;
-        }
+        };
     }
     function googleTable (data) {
         var DTdata = [];

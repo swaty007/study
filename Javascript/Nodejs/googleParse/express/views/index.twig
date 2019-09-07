@@ -99,31 +99,53 @@
                             </div>
 
                             <div id="tab-2" class="tab-pane fade">
-                                <div class="form-group">
-                                    <label>Сортировка</label>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="topRadio" value="0" checked>
-                                        <label class="form-check-label">
-                                            All
-                                        </label>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>По каким позициям сорт</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="topDomainRadio" value="0" checked>
+                                                <label class="form-check-label">
+                                                    All
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="topDomainRadio" value="3" >
+                                                <label class="form-check-label">
+                                                    Top 3
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="topDomainRadio" value="5">
+                                                <label class="form-check-label">
+                                                    Top 5
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="topDomainRadio" value="10" >
+                                                <label class="form-check-label">
+                                                    Top 10
+                                                </label>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="topRadio" value="3" >
-                                        <label class="form-check-label">
-                                            Top 3
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="topRadio" value="5">
-                                        <label class="form-check-label">
-                                            Top 5
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="topRadio" value="10" >
-                                        <label class="form-check-label">
-                                            Top 10
-                                        </label>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>Сортировка</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="topSortRadio" value="DESC" checked>
+                                                <label class="form-check-label">
+                                                    По убыванию
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="radio" name="topSortRadio" value="ASC">
+                                                <label class="form-check-label">
+                                                    По возрастанию
+                                                </label>
+                                            </div>
+                                        </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div id="accordionDomain" class="accordion">

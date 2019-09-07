@@ -136,7 +136,7 @@ $(document).ready(function () {
   var socket = io.connect(location.hostname + ':3038/', {// 'reconnectionDelay': 10 // defaults to 500
   });
   socket.on('getGoogle', function (data) {
-    console.log(data);
+    // console.log(data);
     sortDomains(Object.assign({}, data.sites));
     queriesThree(_toConsumableArray(data.queries));
     googleTable(Object.assign({}, data.sites));
@@ -183,7 +183,7 @@ $(document).ready(function () {
     // console.log(sortDomainsArray,'sortDomainsArray');
     // let sortDomains = Object.fromEntries(sortDomainsArray);
     // console.log(sortDomains,'sortDomains ');
-    console.log(data, 'data ');
+    // console.log(data,'data ');
     var n = 0;
 
     for (domain in data) {
@@ -222,12 +222,24 @@ $(document).ready(function () {
     }
 
     ;
+    filterDomain();
   }
 
-  $(document).on('change', "input[name='topRadio']", function () {
+  function filterDomain() {
     var data_sort = 'top';
+    var sortDirection = -1;
 
-    switch (Number($(this).val())) {
+    switch ($("input[name='topSortRadio']:checked").val()) {
+      case "DESC":
+        sortDirection = -1;
+        break;
+
+      case "ASC":
+        sortDirection = 1;
+        break;
+    }
+
+    switch (Number($("input[name='topDomainRadio']:checked").val())) {
       case 10:
         data_sort = 'top10';
         break;
@@ -246,9 +258,11 @@ $(document).ready(function () {
     }
 
     $("#accordionDomain .card-header").sort(function (a, b) {
-      return b.dataset[data_sort] - a.dataset[data_sort];
+      return (a.dataset[data_sort] - b.dataset[data_sort]) * sortDirection;
     }).appendTo("#accordionDomain");
-  });
+  }
+
+  $(document).on('change', "input[name='topDomainRadio'], input[name='topSortRadio']", filterDomain);
 
   function googleTable(data) {
     var DTdata = [];

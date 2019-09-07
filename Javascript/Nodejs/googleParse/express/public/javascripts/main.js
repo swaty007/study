@@ -22,7 +22,7 @@ $(document).ready(function() {
             // 'reconnectionDelay': 10 // defaults to 500
     });
     socket.on('getGoogle', (data) => {
-        console.log(data);
+        // console.log(data);
         sortDomains(Object.assign({}, data.sites));
         queriesThree([...data.queries]);
         googleTable(Object.assign({}, data.sites));
@@ -71,7 +71,7 @@ $(document).ready(function() {
         // console.log(sortDomainsArray,'sortDomainsArray');
         // let sortDomains = Object.fromEntries(sortDomainsArray);
         // console.log(sortDomains,'sortDomains ');
-        console.log(data,'data ');
+        // console.log(data,'data ');
         let n = 0;
         for (domain in data) {//sortDomains
             // console.log(variable,sortDomains[variable].length,"sortDomains.var.length");
@@ -134,10 +134,21 @@ $(document).ready(function() {
             $("#top10_"+n).text(top10);
             n++;
         };
+        filterDomain();
     }
-    $(document).on('change',"input[name='topRadio']", function () {
+    function filterDomain() {
         let data_sort = 'top';
-        switch ( Number($(this).val()) ) {
+        let sortDirection = -1;
+
+        switch ($("input[name='topSortRadio']:checked").val()) {
+            case "DESC":
+                sortDirection = -1;
+                break;
+            case "ASC":
+                sortDirection = 1;
+                break;
+        }
+        switch ( Number($("input[name='topDomainRadio']:checked").val()) ) {
             case 10:
                 data_sort = 'top10';
                 break;
@@ -152,9 +163,10 @@ $(document).ready(function() {
                 break;
         }
         $("#accordionDomain .card-header").sort(function (a,b) {
-            return b.dataset[data_sort] - a.dataset[data_sort];
+            return (a.dataset[data_sort] - b.dataset[data_sort])*sortDirection;
         }).appendTo("#accordionDomain");
-    });
+    }
+    $(document).on('change',"input[name='topDomainRadio'], input[name='topSortRadio']", filterDomain);
     function googleTable (data) {
         var DTdata = [];
 

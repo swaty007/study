@@ -1,25 +1,25 @@
-var $ = require( 'jquery' );
-require( 'jszip' );
-require( 'pdfmake' );
-require( 'datatables.net' );
-require( 'datatables.net-bs' );
-require( 'datatables.net-buttons-bs' );
-require( 'datatables.net-buttons/js/buttons.colVis.js' );
-require( 'datatables.net-buttons/js/buttons.flash.js' );
-require( 'datatables.net-buttons/js/buttons.html5.js' );
-require( 'datatables.net-buttons/js/buttons.print.js' );
-require( 'datatables.net-fixedheader-bs' );
-require( 'datatables.net-responsive-bs' );
+var $ = require('jquery');
+require('jszip');
+require('pdfmake');
+require('datatables.net');
+require('datatables.net-bs');
+require('datatables.net-buttons-bs');
+require('datatables.net-buttons/js/buttons.colVis.js');
+require('datatables.net-buttons/js/buttons.flash.js');
+require('datatables.net-buttons/js/buttons.html5.js');
+require('datatables.net-buttons/js/buttons.print.js');
+require('datatables.net-fixedheader-bs');
+require('datatables.net-responsive-bs');
 require('bootstrap/dist/js/bootstrap.bundle.min.js');
 
 var io = require('socket.io-client/dist/socket.io.js');
 var ConsoleLogHTML = require('console-log-html');
 
-$(document).ready(function() {
+$(document).ready(function () {
     ConsoleLogHTML.connect(document.getElementById("myULContainer"));
 
-    var socket = io.connect(location.hostname+':3038/', {
-            // 'reconnectionDelay': 10 // defaults to 500
+    var socket = io.connect(location.hostname + ':3038/', {
+        // 'reconnectionDelay': 10 // defaults to 500
     });
     socket.on('getGoogle', (data) => {
         // console.log(data);
@@ -37,9 +37,9 @@ $(document).ready(function() {
     });
     socket.on('console', (result) => {
         if (typeof result === 'string') {
-            console.log(decodeURI(result),' NodeJs');
+            console.log(decodeURI(result), ' NodeJs');
         } else {
-            console.log(JSON.stringify(result),' NodeJs');
+            console.log(JSON.stringify(result), ' NodeJs');
         }
     });
     $("#form_google").on('submit', function (e) {
@@ -47,7 +47,7 @@ $(document).ready(function() {
         let sites = $("#form_google [name='sites']"),
             size = $("#form_google select[name='size']");
 
-        socket.emit('getGoogle', {sites: sites.val(), size: size.val()} );
+        socket.emit('getGoogle', {sites: sites.val(), size: size.val()});
         // $.ajax({
         //     type: "POST",
         //     url: "/calc" ,
@@ -76,7 +76,8 @@ $(document).ready(function() {
         for (domain in data) {//sortDomains
             // console.log(variable,sortDomains[variable].length,"sortDomains.var.length");
             $("#accordionDomain").append(`
-<div class="card-header" id="heading${n}" data-top="${data[domain].length}">
+<div class="card" id="heading${n}" data-top="${data[domain].length}">
+    <div class="card-header">
         <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse${n}" aria-expanded="true" aria-controls="collapse${n}">
           ${domain} 
         </button>
@@ -86,8 +87,8 @@ $(document).ready(function() {
           <span>Топ10: <strong id="top10_${n}">0</strong></span>
     </div>
     <div id="collapse${n}" class="collapse" aria-labelledby="heading${n}" data-parent="#accordionDomain" style="">
-      <div class="card-body" >
-        <table class="table table-striped table-bordered">
+        <div class="card-body" >
+            <table class="table table-striped table-bordered">
                                     <thead>
                                     <tr>
                                         <th>Position</th>
@@ -99,43 +100,47 @@ $(document).ready(function() {
                                     </thead>
                                     <tbody id="domain${n}">
                                     </tbody>
-                                </table>
-</div>
+            </table>
+        </div>
     </div>
-            `);
+</div>
+`);
             let top3 = 0,
                 top5 = 0,
                 top10 = 0;
             // console.log(sortDomains[domain]);
-            data[domain].forEach(function(item) {
+            data[domain].forEach(function (item) {
                 switch (true) {
-                    case (item.position<10 && item.position>=5):
+                    case (item.position < 10 && item.position >= 5):
                         top10 += 1;
                         break;
-                    case (item.position<5 && item.position>=3):
+                    case (item.position < 5 && item.position >= 3):
                         top5 += 1;
                         break;
-                    case (item.position<3 && item.position>=0):
+                    case (item.position < 3 && item.position >= 0):
                         top3 += 1;
                         break;
-                };
-                $("#domain"+n).append(`<tr>
+                }
+                ;
+                $("#domain" + n).append(`<tr>
 <td>${item.position}</td>
 <td>${item.query}</td>
 <td>${item.title}</td>
 <td>${item.href}</td>
 </tr>`);
             });
-            $("#heading"+n).attr('data-top3',top3);
-            $("#heading"+n).attr('data-top5',top5);
-            $("#heading"+n).attr('data-top10',top10);
-            $("#top3_"+n).text(top3);
-            $("#top5_"+n).text(top5);
-            $("#top10_"+n).text(top10);
+            $("#heading" + n).attr('data-top3', top3);
+            $("#heading" + n).attr('data-top5', top5);
+            $("#heading" + n).attr('data-top10', top10);
+            $("#top3_" + n).text(top3);
+            $("#top5_" + n).text(top5);
+            $("#top10_" + n).text(top10);
             n++;
-        };
+        }
+        ;
         filterDomain();
     }
+
     function filterDomain() {
         let data_sort = 'top';
         let sortDirection = -1;
@@ -148,7 +153,7 @@ $(document).ready(function() {
                 sortDirection = 1;
                 break;
         }
-        switch ( Number($("input[name='topDomainRadio']:checked").val()) ) {
+        switch (Number($("input[name='topDomainRadio']:checked").val())) {
             case 10:
                 data_sort = 'top10';
                 break;
@@ -162,16 +167,18 @@ $(document).ready(function() {
                 data_sort = 'top';
                 break;
         }
-        $("#accordionDomain .card-header").sort(function (a,b) {
-            return (a.dataset[data_sort] - b.dataset[data_sort])*sortDirection;
+        $("#accordionDomain .card").sort(function (a, b) {
+            return (a.dataset[data_sort] - b.dataset[data_sort]) * sortDirection;
         }).appendTo("#accordionDomain");
     }
-    $(document).on('change',"input[name='topDomainRadio'], input[name='topSortRadio']", filterDomain);
-    function googleTable (data) {
+
+    $(document).on('change', "input[name='topDomainRadio'], input[name='topSortRadio']", filterDomain);
+
+    function googleTable(data) {
         var DTdata = [];
 
-        $.each( data,  (i, domain) => {
-            domain.forEach( site => {
+        $.each(data, (i, domain) => {
+            domain.forEach(site => {
                 if (site["meta"] === undefined) {
                     site["meta"] = {title: ""};
                 }
@@ -179,7 +186,7 @@ $(document).ready(function() {
             })
         });
 
-        $('#table_id').DataTable( {
+        $('#table_id').DataTable({
             lengthMenu: [[10, 100, 300, -1], [10, 100, 300, "All"]],
             dom: 'Bfrtip',
             data: DTdata,
@@ -188,20 +195,20 @@ $(document).ready(function() {
             // serverSide: true,
             // ordering: true,
             columns: [
-                { "data": "domain" },
-                { "data": "position" },
-                { "data": "query" },
-                { "data": "title" },
-                { "data": "href" },
-                { "data": "meta"}
+                {"data": "domain"},
+                {"data": "position"},
+                {"data": "query"},
+                {"data": "title"},
+                {"data": "href"},
+                {"data": "meta"}
             ],
             "columnDefs": [{
                 "targets": 5,
                 "data": "meta",
-                "render": function ( data1, type, row, meta ) {
+                "render": function (data1, type, row, meta) {
                     let html = "";
                     for (let key in data1) {
-                        html+=`<p><strong>${key}</strong><span>${data1[key]}</span></p>`;
+                        html += `<p><strong>${key}</strong><span>${data1[key]}</span></p>`;
                     }
                     return html;
                 }
@@ -212,13 +219,12 @@ $(document).ready(function() {
         });
         $("#table_id_wrapper").removeClass("form-inline");
     }
+
     function queriesThree(data) {
         let treeData = [{
             "name": "1st Level",
             "parent": "null",
-            "children": [
-
-            ]
+            "children": []
         }];
         // console.log(treeData,"treeData")
         // console.log(data,"data");
@@ -242,7 +248,9 @@ $(document).ready(function() {
             .size([height, width]);
 
         var diagonal = d3.svg.diagonal()
-            .projection(function(d) { return [d.y, d.x]; });
+            .projection(function (d) {
+                return [d.y, d.x];
+            });
 
         var svg = d3.select("queries_three").append("svg")
             .attr("width", width + margin.right + margin.left)
@@ -265,37 +273,55 @@ $(document).ready(function() {
                 links = tree.links(nodes);
 
             // Normalize for fixed-depth.
-            nodes.forEach(function(d) { d.y = d.depth * 180; });
+            nodes.forEach(function (d) {
+                d.y = d.depth * 180;
+            });
 
             // Update the nodes…
             var node = svg.selectAll("g.node")
-                .data(nodes, function(d) { return d.id || (d.id = ++i); });
+                .data(nodes, function (d) {
+                    return d.id || (d.id = ++i);
+                });
 
             // Enter any new nodes at the parent's previous position.
             var nodeEnter = node.enter().append("g")
                 .attr("class", "node")
-                .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
+                .attr("transform", function (d) {
+                    return "translate(" + source.y0 + "," + source.x0 + ")";
+                })
                 .on("click", click);
 
             nodeEnter.append("circle")
                 .attr("r", 1e-6)
-                .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+                .style("fill", function (d) {
+                    return d._children ? "lightsteelblue" : "#fff";
+                });
 
             nodeEnter.append("text")
-                .attr("x", function(d) { return d.children || d._children ? -13 : 13; })
+                .attr("x", function (d) {
+                    return d.children || d._children ? -13 : 13;
+                })
                 .attr("dy", ".35em")
-                .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
-                .text(function(d) { return d.name; })
+                .attr("text-anchor", function (d) {
+                    return d.children || d._children ? "end" : "start";
+                })
+                .text(function (d) {
+                    return d.name;
+                })
                 .style("fill-opacity", 1e-6);
 
             // Transition nodes to their new position.
             var nodeUpdate = node.transition()
                 .duration(duration)
-                .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+                .attr("transform", function (d) {
+                    return "translate(" + d.y + "," + d.x + ")";
+                });
 
             nodeUpdate.select("circle")
                 .attr("r", 10)
-                .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+                .style("fill", function (d) {
+                    return d._children ? "lightsteelblue" : "#fff";
+                });
 
             nodeUpdate.select("text")
                 .style("fill-opacity", 1);
@@ -303,7 +329,9 @@ $(document).ready(function() {
             // Transition exiting nodes to the parent's new position.
             var nodeExit = node.exit().transition()
                 .duration(duration)
-                .attr("transform", function(d) { return "translate(" + source.y + "," + source.x + ")"; })
+                .attr("transform", function (d) {
+                    return "translate(" + source.y + "," + source.x + ")";
+                })
                 .remove();
 
             nodeExit.select("circle")
@@ -314,12 +342,14 @@ $(document).ready(function() {
 
             // Update the links…
             var link = svg.selectAll("path.link")
-                .data(links, function(d) { return d.target.id; });
+                .data(links, function (d) {
+                    return d.target.id;
+                });
 
             // Enter any new links at the parent's previous position.
             link.enter().insert("path", "g")
                 .attr("class", "link")
-                .attr("d", function(d) {
+                .attr("d", function (d) {
                     var o = {x: source.x0, y: source.y0};
                     return diagonal({source: o, target: o});
                 });
@@ -332,14 +362,14 @@ $(document).ready(function() {
             // Transition exiting nodes to the parent's new position.
             link.exit().transition()
                 .duration(duration)
-                .attr("d", function(d) {
+                .attr("d", function (d) {
                     var o = {x: source.x, y: source.y};
                     return diagonal({source: o, target: o});
                 })
                 .remove();
 
             // Stash the old positions for transition.
-            nodes.forEach(function(d) {
+            nodes.forEach(function (d) {
                 d.x0 = d.x;
                 d.y0 = d.y;
             });

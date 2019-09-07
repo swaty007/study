@@ -176,26 +176,25 @@ $(document).ready(function () {
   });
 
   function sortDomains(data) {
-    console.log(data, 'copy');
-    var sortDomainsArray = Object.entries(data).sort(function (a, b) {
-      // console.log('A = ', a, '  B =',b);
-      // console.log('A.l = ', a[1].length, '  B.l =',b[1].length);
-      return b[1].length - a[1].length;
-    });
-    console.log(sortDomainsArray, 'sortDomainsArray');
-    var sortDomains = Object.fromEntries(sortDomainsArray);
-    console.log(sortDomains, 'sortDomains ');
+    // console.log(data,'copy');
+    // let sortDomainsArray = Object.entries(data).sort((a, b) => {
+    //     return b[1].length - a[1].length;
+    // });
+    // console.log(sortDomainsArray,'sortDomainsArray');
+    // let sortDomains = Object.fromEntries(sortDomainsArray);
+    // console.log(sortDomains,'sortDomains ');
     console.log(data, 'data ');
     var n = 0;
 
-    for (domain in sortDomains) {
+    for (domain in data) {
+      //sortDomains
       // console.log(variable,sortDomains[variable].length,"sortDomains.var.length");
-      $("#accordionDomain").append("\n<div class=\"card-header\" id=\"heading".concat(n, "\">\n        <button class=\"btn btn-link\" type=\"button\" data-toggle=\"collapse\" data-target=\"#collapse").concat(n, "\" aria-expanded=\"true\" aria-controls=\"collapse").concat(n, "\">\n          ").concat(domain, " \n        </button>\n        <span>\u0417\u0430\u043F\u0440\u043E\u0441\u043E\u0432: ").concat(sortDomains[domain].length, "</span>\n          <span>\u0417\u0430\u043F\u0440\u043E\u0441\u043E\u0432 \u0422\u043E\u043F3: <strong id=\"top3_").concat(n, "\">0</strong> </span>\n          <span>\u0417\u0430\u043F\u0440\u043E\u0441\u043E\u0432 \u0422\u043E\u043F5: <strong id=\"top5_").concat(n, "\">0</strong> </span>\n          <span>\u0417\u0430\u043F\u0440\u043E\u0441\u043E\u0432 \u0422\u043E\u043F10: <strong id=\"top10_").concat(n, "\">0</strong></span>\n    </div>\n    <div id=\"collapse").concat(n, "\" class=\"collapse\" aria-labelledby=\"heading").concat(n, "\" data-parent=\"#accordionDomain\" style=\"\">\n      <div class=\"card-body\" >\n        <table class=\"table table-striped table-bordered\">\n                                    <thead>\n                                    <tr>\n                                        <th>Position</th>\n                                        <th>query</th>\n                                        <th>titleGoogle</th>\n                                        <th>href</th>\n\n                                    </tr>\n                                    </thead>\n                                    <tbody id=\"domain").concat(n, "\">\n                                    </tbody>\n                                </table>\n</div>\n    </div>\n            "));
+      $("#accordionDomain").append("\n<div class=\"card-header\" id=\"heading".concat(n, "\" data-top=\"").concat(data[domain].length, "\">\n        <button class=\"btn btn-link\" type=\"button\" data-toggle=\"collapse\" data-target=\"#collapse").concat(n, "\" aria-expanded=\"true\" aria-controls=\"collapse").concat(n, "\">\n          ").concat(domain, " \n        </button>\n        <span>\u0417\u0430\u043F\u0440\u043E\u0441\u043E\u0432: <strong>").concat(data[domain].length, "</strong></span>\n          <span>\u0422\u043E\u043F3: <strong id=\"top3_").concat(n, "\">0</strong> </span>\n          <span>\u0422\u043E\u043F5: <strong id=\"top5_").concat(n, "\">0</strong> </span>\n          <span>\u0422\u043E\u043F10: <strong id=\"top10_").concat(n, "\">0</strong></span>\n    </div>\n    <div id=\"collapse").concat(n, "\" class=\"collapse\" aria-labelledby=\"heading").concat(n, "\" data-parent=\"#accordionDomain\" style=\"\">\n      <div class=\"card-body\" >\n        <table class=\"table table-striped table-bordered\">\n                                    <thead>\n                                    <tr>\n                                        <th>Position</th>\n                                        <th>query</th>\n                                        <th>titleGoogle</th>\n                                        <th>href</th>\n\n                                    </tr>\n                                    </thead>\n                                    <tbody id=\"domain").concat(n, "\">\n                                    </tbody>\n                                </table>\n</div>\n    </div>\n            "));
       var top3 = 0,
           top5 = 0,
-          top10 = 0;
-      console.log(sortDomains[domain]);
-      sortDomains[domain].forEach(function (item) {
+          top10 = 0; // console.log(sortDomains[domain]);
+
+      data[domain].forEach(function (item) {
         switch (true) {
           case item.position < 10 && item.position >= 5:
             top10 += 1;
@@ -213,6 +212,9 @@ $(document).ready(function () {
         ;
         $("#domain" + n).append("<tr>\n<td>".concat(item.position, "</td>\n<td>").concat(item.query, "</td>\n<td>").concat(item.title, "</td>\n<td>").concat(item.href, "</td>\n</tr>"));
       });
+      $("#heading" + n).attr('data-top3', top3);
+      $("#heading" + n).attr('data-top5', top5);
+      $("#heading" + n).attr('data-top10', top10);
       $("#top3_" + n).text(top3);
       $("#top5_" + n).text(top5);
       $("#top10_" + n).text(top10);
@@ -221,6 +223,32 @@ $(document).ready(function () {
 
     ;
   }
+
+  $(document).on('change', "input[name='topRadio']", function () {
+    var data_sort = 'top';
+
+    switch (Number($(this).val())) {
+      case 10:
+        data_sort = 'top10';
+        break;
+
+      case 5:
+        data_sort = 'top5';
+        break;
+
+      case 3:
+        data_sort = 'top3';
+        break;
+
+      default:
+        data_sort = 'top';
+        break;
+    }
+
+    $("#accordionDomain .card-header").sort(function (a, b) {
+      return b.dataset[data_sort] - a.dataset[data_sort];
+    }).appendTo("#accordionDomain");
+  });
 
   function googleTable(data) {
     var DTdata = [];

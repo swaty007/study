@@ -12,8 +12,8 @@ puppeteer.use(pluginStealth());
 puppeteer.use(recaptchaPlugin);
 
 class Ads {
-    initAds () {
-        this.browser = puppeteer.launch({args: ["--no-sandbox"], headless: false}).then( async browser => {
+    async initAds () {
+         this.browser = puppeteer.launch({args: ["--no-sandbox"], headless: false}).then( async browser => {
             const page = this.page = await browser.newPage();
             await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36');
             await page.goto('https://ads.google.com/intl/ru_UA/home/');
@@ -63,6 +63,7 @@ class Ads {
     async parseKeyword (keyword) {
         console.log('start out',keyword);
         await this.browser.then(async () => {
+            console.time('time'+keyword);
             console.log('start inside',keyword);
             const page = this.page;
             await page.goto('https://ads.google.com/aw/keywordplanner/home');
@@ -113,6 +114,7 @@ class Ads {
             // await page.evaluate(element => { element.setAttribute('value', 7); }, element);
 
             await page.screenshot({ path: "./Javascript/Nodejs/googleParse/photos/"+keyword+".png", fullPage: true });
+            console.timeEnd('time'+keyword);
             console.log('end inside',keyword);
         });
     }

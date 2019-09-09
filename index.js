@@ -1,5 +1,5 @@
 // содежимое index.js
-const {Parser}  = require('./Javascript/Nodejs/parser'),
+const {Parser}  = require('./Javascript/Nodejs/googleParse/parserCore/parser'),
     fs = require('fs');
 
 console.log(__dirname);

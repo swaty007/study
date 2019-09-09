@@ -2,29 +2,15 @@ const tress = require('tress'),
     needle = require('needle'),
     cheerio = require('cheerio'),
     // resolve = require('url').resolve,
-    fs = require('fs');
-var tunnel = require('tunnel');
+    fs = require('fs'),
+    tunnel = require('tunnel');
+
 var myAgent = tunnel.httpsOverHttp({
     proxy: {
         host: '95.38.209.126',
         port: 80, // Defaults to 443
     }
 });
-
-const puppeteer = require('puppeteer-extra');
-// add stealth plugin and use defaults (all evasion techniques)
-const pluginStealth = require("puppeteer-extra-plugin-stealth");
-// add recaptcha plugin and provide it your 2captcha token
-// 2captcha is the builtin solution provider but others work as well.
-const RecaptchaPlugin = require('puppeteer-extra-plugin-recaptcha');
-puppeteer.use(pluginStealth());
-puppeteer.use(
-    RecaptchaPlugin({
-        provider: { id: '2captcha', token: 'XXXXXXX' },
-        visualFeedback: true // colorize reCAPTCHAs (violet = detected, green = solved)
-    })
-);
-
 var mysql      = require('mysql');
 var connection = mysql.createConnection({
     host     : 'swaty.mysql.tools',

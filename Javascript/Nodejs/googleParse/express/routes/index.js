@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const {Parser}  = require('../../../../../Javascript/Nodejs/parser'),
+const {Parser}  = require('../../parserCore/parser'),
     fs = require('fs');
 
 console.log(__dirname);

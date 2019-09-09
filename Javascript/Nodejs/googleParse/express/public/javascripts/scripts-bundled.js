@@ -201,10 +201,13 @@ $(document).ready(function () {
             break;
 
           case item.position < 5 && item.position >= 3:
+            top10 += 1;
             top5 += 1;
             break;
 
           case item.position < 3 && item.position >= 0:
+            top10 += 1;
+            top5 += 1;
             top3 += 1;
             break;
         }

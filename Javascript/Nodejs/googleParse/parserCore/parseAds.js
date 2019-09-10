@@ -1,3 +1,5 @@
+const cheerio = require('cheerio');
+
 const puppeteer = require('puppeteer-extra');
 // add stealth plugin and use defaults (all evasion techniques)
 const pluginStealth = require("puppeteer-extra-plugin-stealth");
@@ -5,15 +7,17 @@ const pluginStealth = require("puppeteer-extra-plugin-stealth");
 // 2captcha is the builtin solution provider but others work as well.
 const RecaptchaPlugin = require('puppeteer-extra-plugin-recaptcha'); ///dist/index
 const recaptchaPlugin = RecaptchaPlugin({
-    provider: { id: '2captcha', token: 'XXXXXXX' },
+    provider: {id: '2captcha', token: 'XXXXXXX'},
     visualFeedback: true
 });
 puppeteer.use(pluginStealth());
 puppeteer.use(recaptchaPlugin);
 
+
 class Ads {
-    async initAds () {
-         this.browser = puppeteer.launch({args: ["--no-sandbox"], headless: false}).then( async browser => {
+    async initAds() {
+        this.browser = puppeteer.launch({args: ["--no-sandbox"], headless: false}).then(async browser => {
+            console.time('init Ads');
             const page = this.page = await browser.newPage();
             await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36');
             await page.goto('https://ads.google.com/intl/ru_UA/home/');
@@ -42,6 +46,7 @@ class Ads {
             // await page.waitFor(3000);
             await page.waitForNavigation();
             await page.waitFor(1000);
+            console.timeEnd('init Ads');
         });
 
 
@@ -60,11 +65,12 @@ class Ads {
         // console.log('Dimensions:', dimensions);
         // await browser.close();
     }
-    async parseKeyword (keyword) {
-        console.log('start out',keyword);
+
+    async parseKeyword(keyword) {
+        console.log('start out', keyword);
         await this.browser.then(async () => {
-            console.time('time'+keyword);
-            console.log('start inside',keyword);
+            console.time('time' + keyword);
+            console.log('start inside', keyword);
             const page = this.page;
             await page.goto('https://ads.google.com/aw/keywordplanner/home');
             // await page.waitForNavigation();
@@ -72,8 +78,9 @@ class Ads {
             await page.$('splash-cards');
 
             let element = await page.$('splash-cards>div>div:nth-child(1)');
-            let position = await page.evaluate(element => {return {x:element.getBoundingClientRect().x,y:element.getBoundingClientRect().y}}, element);
-            console.log(position);
+            let position = await page.evaluate(el => {
+                return {x: el.getBoundingClientRect().x, y: el.getBoundingClientRect().y}
+            }, element);
 
             const mouse = page.mouse;
             await mouse.move(parseFloat(position.x), parseFloat(position.y));
@@ -88,21 +95,20 @@ class Ads {
             await page.waitFor(200);
 
             element = await page.$('splash-cards .get-results-button-container material-button');
-            position = await page.evaluate(element => { return {x:element.getBoundingClientRect().x,y:element.getBoundingClientRect().y}}, element);
-            console.log(position);
+            position = await page.evaluate(el => {
+                return {x: el.getBoundingClientRect().x, y: el.getBoundingClientRect().y}
+            }, element);
 
             await mouse.move(parseFloat(position.x), parseFloat(position.y));
-            console.log('start click');
             await mouse.click(parseFloat(position.x), parseFloat(position.y), {
                 "button": "left",
                 "clickCount": 1,
                 "delay": 0
             });
-            console.log('finish click');
 
             // await Promise.all([
-                // page.waitForNavigation(), // The promise resolves after navigation has finished
-                // Clicking the link will indirectly cause a navigation
+            // page.waitForNavigation(), // The promise resolves after navigation has finished
+            // Clicking the link will indirectly cause a navigation
             // ]);
 
             await page.waitForNavigation();
@@ -110,21 +116,43 @@ class Ads {
             await page.waitFor(1000);
 
             // For HTML attributes:
-            // const element = await page.$("#april");
-            // await page.evaluate(element => { element.setAttribute('value', 7); }, element);
+            element = await page.$("ess-particle-table");
+            let html = await page.evaluate(el => {console.log(el.innerHTML); return el.innerHTML;  }, element);
+            await this.parseHtml(html);
 
-            await page.screenshot({ path: "./Javascript/Nodejs/googleParse/photos/"+keyword+".png", fullPage: true });
-            console.timeEnd('time'+keyword);
-            console.log('end inside',keyword);
+            // await page.screenshot({path: "./Javascript/Nodejs/googleParse/photos/" + keyword + ".png", fullPage: true});
+            console.timeEnd('time' + keyword);
+            console.log('end inside', keyword);
+        });
+    }
+    async parseHtml(html) {
+        return new Promise((resolve, reject) => {
+            let $ = cheerio.load(html);
+            $("keyword-text").each((index, element) => {
+                let el = $(element),
+                    text = el.text().trim(),
+                    bid_min = el.parent("ess-cell").siblings("[essfield=bid_min]").text().trim(),
+                    bid_max = el.parent("ess-cell").siblings("[essfield=bid_max]").text().trim(),
+                    search_volume = el.parent("ess-cell").siblings("[essfield=search_volume]").text().trim();
+                console.log(text,"max=",bid_max,"min=",bid_min,search_volume);
+
+            });
+            resolve();
         });
     }
 }
 
-(async function (){
-    let ads = new Ads();
-    await ads.initAds();
-    await ads.parseKeyword("Новости");
-    await ads.parseKeyword("Новости Украина");
+
+(async function () {
+    try {
+        let ads = new Ads();
+        await ads.initAds();
+        await ads.parseKeyword("Новости, Новости Украина");
+        // await ads.parseKeyword("Новости Украина");
+    } catch (e) {
+        console.log(e);
+    }
+
 })();
 
 // export default Parser;

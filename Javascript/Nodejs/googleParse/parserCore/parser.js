@@ -87,11 +87,13 @@ class Parser {
             cached: 0
         };
 
-        this.promise = new Promise((resolve, reject) => {
+        let Google = new Promise((resolve, reject) => {
+            console.time("Google Work");
             this.q = tress((data, callback) => {
                 this.requestGet(data, callback);
             }, this.threads);
             this.q.drain = () => {
+                console.timeEnd("Google Work");
                 console.log('Total Request = ',this.totalRequest);
                 this.socket.emit('console',['Total Request = ', this.totalRequest]);
                 resolve({
@@ -100,6 +102,10 @@ class Parser {
                 });
             }
         });
+        let Ads = new Promise((resolve, reject) => {
+            resolve();
+        });
+        this.promise = Promise.all([Google, Ads])
     }
     requestGet (data, callback, meta = true, parent = undefined) {
         var proxy = {
@@ -354,7 +360,7 @@ class Parser {
                         }
 
 
-                        console.log('end1',n_inside);
+                        // console.log('end1',n_inside);
 
                         // await googleParseQueries();
                         n_inside++;
@@ -396,7 +402,7 @@ class Parser {
             // if (meta) {
                 await this.googleParseMeta(result); //init this.meta_q
                 // await this.googleParseQueries()
-                console.log('meta_q END');
+                // console.log('meta_q END');
                 // this.queries = result["queriesMore"];
                 this.finishAndSaveJson(result, data, callback, meta);
             // } else {
@@ -485,7 +491,7 @@ class Parser {
                         keywords: $("meta[name='keywords']").attr("content"),
                         h1: $('h1').text()
                     };
-                    console.log("googleParseMeta END");
+                    // console.log("googleParseMeta END");
                     callbackMeta();
                 });
             },5);
@@ -501,6 +507,7 @@ class Parser {
         })
     }
     getGoogle (data) {
+
         let sites = data.sites.split(/,|\n/).map(site => site.trim());
         if (sites.indexOf("") !== -1 || data.size > 5 || data.size < 1) {
             console.log('return');

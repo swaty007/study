@@ -1,4 +1,5 @@
-const cheerio = require('cheerio');
+const cheerio = require('cheerio'),
+    fs = require('fs');
 
 const puppeteer = require('puppeteer-extra');
 // add stealth plugin and use defaults (all evasion techniques)
@@ -10,62 +11,72 @@ const recaptchaPlugin = RecaptchaPlugin({
     provider: {id: '2captcha', token: 'XXXXXXX'},
     visualFeedback: true
 });
-puppeteer.use(pluginStealth());
+// puppeteer.use(pluginStealth());
 puppeteer.use(recaptchaPlugin);
 
 
 class Ads {
-    async initAds() {
-        this.browser = puppeteer.launch({args: ["--no-sandbox"], headless: false}).then(async browser => {
-            console.time('init Ads');
-            const page = this.page = await browser.newPage();
-            await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36');
-            await page.goto('https://ads.google.com/intl/ru_UA/home/');
-            await page.solveRecaptchas();
-            // await page.addScriptTag({url: 'https://code.jquery.com/jquery-3.2.1.min.js'});
+    loginAds(cookieName) {
+        return new Promise(async (resolve, reject) => {
+            this.browser.then(async () => {
+                console.time('login Ads');
+                const page = this.page;
+                await page.setViewport({ width: 1280, height: 800 });
+                await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36');
+                await page.goto('https://ads.google.com/intl/ru_UA/home/');
+                await page.solveRecaptchas();
+                // await page.addScriptTag({url: 'https://code.jquery.com/jquery-3.2.1.min.js'});
 
-            await page.$('ul.h-c-header__cta-list>li:nth-child(2) a');
-            await page.click('ul.h-c-header__cta-list>li:nth-child(2) a');
-            await page.waitForNavigation();
+                await page.waitForSelector('ul.h-c-header__cta-list>li:nth-child(2) a', { visible: true });
+                await page.click('ul.h-c-header__cta-list>li:nth-child(2) a');
+                await page.waitForNavigation();
 
-            // await page.type('input#query', '3081600974', {delay: 20});
-            // const listHandle =
-            //     await page.$('main>div>a:nth-child(3)');
-            // const hndle = listHandle.asElement();
-            // await page.$('main>div>a:nth-child(3)');
-            // await page.click('main>div>a:nth-child(3)');
-            // await page.waitFor(1000);
-            await page.$('input[type=email]');
-            await page.type('input[type=email]', 'zubgniloy@gmail.com', {delay: 20});
-            await page.click('#identifierNext');
-            await page.waitFor(3000);
-            // await page.waitForNavigation();
-            await page.$('input[type=password]');
-            await page.type('input[type=password]', 'teST67maNey', {delay: 20});
-            await page.click('#passwordNext');
-            // await page.waitFor(3000);
-            await page.waitForNavigation();
-            await page.waitFor(1000);
-            console.timeEnd('init Ads');
+                await page.$('input[type=email]');
+                await page.type('input[type=email]', 'zubgniloy@gmail.com', {delay: 20});
+                // await page.type('input[type=email]', 'swaty0007@gmail.com', {delay: 20});
+                await page.click('#identifierNext');
+                await page.waitForSelector('input[type=password]', { visible: true });
+                // await page.type('input[type=password]', 'Newlife007', {delay: 20});
+                await page.type('input[type=password]', 'teST67maNey1', {delay: 20});
+                await page.click('#passwordNext');
+                // await page.waitFor(3000);
+                await page.waitForNavigation({waitUntil: 'networkidle0'});
+                const cookiesObject = await page.cookies();
+                // console.log("COOKIE =  ",cookiesObject);
+                fs.writeFileSync('./Javascript/Nodejs/googleParse/parserCore/puppeteer/'+cookieName, JSON.stringify(cookiesObject));
+                console.timeEnd('login Ads');
+                resolve();
+            });
         });
-
-
-        // const dimensions = await page.evaluate(() => {
-        //     const $ = window.$;
-        //         var login_btn = $('main>div>a:nth-child(3)');
-        //         console.log(login_btn);
-        //         login_btn.click();
-        //         console.log('test');
-        //         return {
-        //             width: document.documentElement.clientWidth,
-        //             height: document.documentElement.clientHeight,
-        //             deviceScaleFactor: window.devicePixelRatio
-        //         };
-        // });
-        // console.log('Dimensions:', dimensions);
-        // await browser.close();
     }
+    async loadCookie(cookieName) {
+        return new Promise(async (resolve, reject) => {
+            this.browser = puppeteer.launch({args: ["--no-sandbox"], headless: false}).then(async browser => {
+                console.time('init Ads');
+                const page = this.page = await browser.newPage();
+                await page.setViewport({width: 1280, height: 800});
+                await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36');
 
+                const previousSession = fs.existsSync('./Javascript/Nodejs/googleParse/parserCore/puppeteer/'+cookieName);
+                if (previousSession) {
+                    const content = fs.readFileSync('./Javascript/Nodejs/googleParse/parserCore/puppeteer/'+cookieName);
+                    const cookiesArr = JSON.parse(content);
+                    if (cookiesArr.length !== 0) {
+                        for (let cookie of cookiesArr) {
+                            await page.setCookie(cookie);
+                            resolve();
+                        }
+                        console.log('Session has been loaded in the browser');
+                    }
+                } else {
+                    console.log('Session not been loaded in the browser, try to login');
+                    this.loginAds(cookieName).then(()=> {
+                        resolve();
+                    });
+                }
+            });
+        });
+    }
     async parseKeyword(keyword) {
         console.log('start out', keyword);
         await this.browser.then(async () => {
@@ -74,8 +85,7 @@ class Ads {
             const page = this.page;
             await page.goto('https://ads.google.com/aw/keywordplanner/home');
             // await page.waitForNavigation();
-            await page.waitFor(3000);
-            await page.$('splash-cards');
+            await page.waitForSelector('splash-cards', { visible: true });
 
             let element = await page.$('splash-cards>div>div:nth-child(1)');
             let position = await page.evaluate(el => {
@@ -90,7 +100,7 @@ class Ads {
                 "delay": 0
             });
 
-            await page.$('splash-cards input.search-input');
+            await page.waitForSelector('splash-cards input.search-input', { visible: true });
             await page.type('splash-cards input.search-input', keyword, {delay: 20});
             await page.waitFor(200);
 
@@ -146,7 +156,7 @@ class Ads {
 (async function () {
     try {
         let ads = new Ads();
-        await ads.initAds();
+        await ads.loadCookie('zubgniloy');
         await ads.parseKeyword("Новости, Новости Украина");
         // await ads.parseKeyword("Новости Украина");
     } catch (e) {

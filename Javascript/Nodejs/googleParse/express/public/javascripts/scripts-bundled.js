@@ -133,12 +133,14 @@ var ConsoleLogHTML = __webpack_require__(/*! console-log-html */ "./node_modules
 
 $(document).ready(function () {
   ConsoleLogHTML.connect(document.getElementById("myULContainer"));
-  var socket = io.connect(location.hostname + ':3038/', {// 'reconnectionDelay': 10 // defaults to 500
+  var socket = io.connect(location.hostname + ':3038/', {//8081
+    // 'reconnectionDelay': 10 // defaults to 500
   });
   socket.on('getGoogle', function (data) {
     // console.log(data);
     sortDomains(Object.assign({}, data.sites));
     queriesThree(_toConsumableArray(data.queries));
+    queriesTable(_toConsumableArray(data.queries));
     googleTable(Object.assign({}, data.sites));
     var sites = $("#form_google [name='sites']");
     sites.val(''); // console.log(result,'result get Google Front');
@@ -277,10 +279,11 @@ $(document).ready(function () {
           };
         }
 
+        site.position++;
         DTdata.push(site);
       });
     });
-    $('#table_id').DataTable({
+    $('#table_all').DataTable({
       lengthMenu: [[10, 100, 300, -1], [10, 100, 300, "All"]],
       dom: 'Bfrtip',
       data: DTdata,
@@ -317,10 +320,79 @@ $(document).ready(function () {
       buttons: ['copy', 'csv', 'excel', 'pageLength' // 'pdf', 'print'
       ]
     });
-    $("#table_id_wrapper").removeClass("form-inline");
+    $("#table_all_wrapper").removeClass("form-inline");
   }
 
-  function queriesThree(data) {
+  function queriesTable(dataArr) {
+    // let data = [].concat(dataArr);
+    var data = JSON.parse(JSON.stringify(dataArr));
+    var DTdata = [];
+    data.forEach(function (site) {
+      loop(site);
+    });
+
+    function loop(query) {
+      if (query["children"] !== undefined && query["children"].length > 0) {
+        query["children"].forEach(function (site) {
+          loop(site);
+        });
+      }
+
+      var find_element = DTdata.find(function (el, index, array) {
+        if (el.name == query.name) {
+          el.count++;
+          el.parent.push(query.parent);
+          return true;
+        }
+
+        return false;
+      });
+
+      if (find_element === undefined) {
+        DTdata.push({
+          name: query.name,
+          parent: [query.parent],
+          href: query.href,
+          count: 1
+        });
+      }
+    }
+
+    $('#table_queries').DataTable({
+      lengthMenu: [[10, 100, 300, -1], [10, 100, 300, "All"]],
+      dom: 'Bfrtip',
+      data: DTdata,
+      // processing: true,
+      // lengthChange: true,
+      // serverSide: true,
+      // ordering: true,
+      columns: [{
+        "data": "name"
+      }, {
+        "data": "count"
+      }, {
+        "data": "parent"
+      }],
+      "columnDefs": [{
+        "targets": 2,
+        "data": "parent",
+        "render": function render(data1, type, row, meta) {
+          var html = "";
+          data1.forEach(function (parent) {
+            html += "<p><span>".concat(parent, "</span></p>");
+          });
+          return html;
+        }
+      }],
+      buttons: ['copy', 'csv', 'excel', 'pageLength' // 'pdf', 'print'
+      ]
+    });
+    $("#table_queries_wrapper").removeClass("form-inline");
+  }
+
+  function queriesThree(dataArr) {
+    // let data = [].concat(dataArr);
+    var data = JSON.parse(JSON.stringify(dataArr));
     var treeData = [{
       "name": "1st Level",
       "parent": "null",

@@ -18,13 +18,14 @@ var ConsoleLogHTML = require('console-log-html');
 $(document).ready(function () {
     ConsoleLogHTML.connect(document.getElementById("myULContainer"));
 
-    var socket = io.connect(location.hostname + ':3038/', {
+    var socket = io.connect(location.hostname + ':3038/', {//8081
         // 'reconnectionDelay': 10 // defaults to 500
     });
     socket.on('getGoogle', (data) => {
         // console.log(data);
         sortDomains(Object.assign({}, data.sites));
         queriesThree([...data.queries]);
+        queriesTable([...data.queries]);
         googleTable(Object.assign({}, data.sites));
 
         let sites = $("#form_google [name='sites']");
@@ -185,11 +186,12 @@ $(document).ready(function () {
                 if (site["meta"] === undefined) {
                     site["meta"] = {title: ""};
                 }
+                site.position++;
                 DTdata.push(site);
             })
         });
 
-        $('#table_id').DataTable({
+        $('#table_all').DataTable({
             lengthMenu: [[10, 100, 300, -1], [10, 100, 300, "All"]],
             dom: 'Bfrtip',
             data: DTdata,
@@ -220,10 +222,77 @@ $(document).ready(function () {
                 'copy', 'csv', 'excel', 'pageLength'// 'pdf', 'print'
             ]
         });
-        $("#table_id_wrapper").removeClass("form-inline");
+        $("#table_all_wrapper").removeClass("form-inline");
     }
 
-    function queriesThree(data) {
+
+    function queriesTable(dataArr) {
+        // let data = [].concat(dataArr);
+        let data = JSON.parse(JSON.stringify(dataArr));
+        let DTdata = [];
+
+        data.forEach(site => {
+            loop(site);
+        });
+        function loop (query) {
+            if (query["children"] !== undefined && query["children"].length > 0) {
+                query["children"].forEach(site => {
+                    loop(site);
+                });
+            }
+            let find_element = DTdata.find((el, index, array) => {
+                if (el.name == query.name) {
+                    el.count++;
+                    el.parent.push(query.parent);
+                    return true;
+                }
+                return false;
+            });
+
+            if (find_element === undefined) {
+                DTdata.push({
+                    name: query.name,
+                    parent: [query.parent],
+                    href: query.href,
+                    count: 1,
+                });
+            }
+        }
+
+        $('#table_queries').DataTable({
+            lengthMenu: [[10, 100, 300, -1], [10, 100, 300, "All"]],
+            dom: 'Bfrtip',
+            data: DTdata,
+            // processing: true,
+            // lengthChange: true,
+            // serverSide: true,
+            // ordering: true,
+            columns: [
+                {"data": "name"},
+                {"data": "count"},
+                {"data": "parent"},
+            ],
+
+            "columnDefs": [{
+                "targets": 2,
+                "data": "parent",
+                "render": function (data1, type, row, meta) {
+                    let html = "";
+                    data1.forEach(parent => {
+                        html += `<p><span>${parent}</span></p>`;
+                    });
+                    return html;
+                }
+            }],
+            buttons: [
+                'copy', 'csv', 'excel', 'pageLength'// 'pdf', 'print'
+            ]
+        });
+        $("#table_queries_wrapper").removeClass("form-inline");
+    }
+    function queriesThree(dataArr) {
+        // let data = [].concat(dataArr);
+        let data = JSON.parse(JSON.stringify(dataArr));
         let treeData = [{
             "name": "1st Level",
             "parent": "null",

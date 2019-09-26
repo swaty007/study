@@ -79,7 +79,7 @@ $(document).ready(function () {
             $("#accordionDomain").append(`
 <div class="card" id="heading${n}" data-top="${data[domain].length}">
     <div class="card-header">
-        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse${n}" aria-expanded="true" aria-controls="collapse${n}">
+        <button class="btn btn-link dropdown-toggle" type="button" data-toggle="collapse" data-target="#collapse${n}" aria-expanded="true" aria-controls="collapse${n}">
           ${domain} 
         </button>
         <span>Запросов: <strong>${data[domain].length}</strong></span>

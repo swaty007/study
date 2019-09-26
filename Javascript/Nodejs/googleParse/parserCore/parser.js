@@ -85,24 +85,38 @@ class Parser {
         this.totalRequest = {
             google: 0,
             sites: 0,
-            cached: 0
+            cached: 0,
+            time: 0,
         };
-
-        console.log(performance.now());
 
         let Google = new Promise((resolve, reject) => {
             console.time("Google Work");
-            this.timerGoogle = performance.now();
+            this.totalRequest.time = performance.now();
             this.q = tress((data, callback) => {
                 this.requestGetSql(data, callback);
                 // this.requestGetJson(data, callback);
             }, this.threads);
             this.q.drain = () => {
                 console.timeEnd("Google Work");
-                console.log('Time Work Google = ', performance.now() - this.timerGoogle);
+                this.totalRequest.time = performance.now() - this.totalRequest.time;
                 console.log('Total Request = ', this.totalRequest);
                 this.socket.emit('console',['Total Request = ', this.totalRequest]);
-                this.socket.emit('console',['Time Work Google = ', performance.now() - this.timerGoogle]);
+
+                for (var request in this.totalRequest) {
+                    if( this.totalRequest.hasOwnProperty( request ) ) {
+                        connection.query(`UPDATE swaty_googlepars.admin_settings SET value = value + ? WHERE name = ?`,
+                            [ this.totalRequest[request], request],
+                            (mysql_error, results, fields) => {
+                                if (mysql_error) {
+                                    console.log(mysql_error,'mysql_save_error');
+                                    this.socket.emit('console',[mysql_error,'mysql_error']);
+                                    // throw mysql_save_error;
+                                }
+                            });
+                    }
+                }
+
+
                 resolve({
                     sites: this.sites,
                     queries: this.queries
@@ -129,8 +143,8 @@ class Parser {
                 }
                 if (result.length > 0 && this.html_cache_time > (Date.now() - result[0].timestamp)/(1000*60*60)) {
                     await this.loadHtml(JSON.stringify({queriesMore: JSON.parse(result[0].queries), googleSearch: JSON.parse(result[0].search)}), data).then(() => {
-                        console.log(data.query, data.n_start, "JSON LOAD");
-                        this.socket.emit('console',[data.query, data.n_start, "JSON LOAD"]);
+                        console.log(data.query, data.n_start, "SQL LOAD");
+                        this.socket.emit('console',[data.query, data.n_start, "SQL LOAD"]);
                         this.totalRequest.cached += 1;
                         if (callback) {
                             if (data.meta) {
@@ -519,8 +533,8 @@ class Parser {
                 // console.log("resultsSave = ", results);
                 // console.log("fieldsSave = ", fields);
 
-                console.log(data.query,data.n_start, "JSON SAVE");
-                this.socket.emit('console',[data.query,data.n_start, "JSON SAVE"]);
+                console.log(data.query,data.n_start, "SQL SAVE");
+                this.socket.emit('console',[data.query,data.n_start, "SQL SAVE"]);
                 if (callback) {
                     setTimeout(() => {
                         if (data.meta) {

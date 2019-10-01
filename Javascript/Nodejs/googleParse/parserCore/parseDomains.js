@@ -44,7 +44,7 @@ class Domains {
                     return;
                 }
 
-                await page.waitFor(2000);
+                await page.waitFor(3500);
 
                 await page.waitForSelector('#domain_check_order_list>tbody>tr>td img', { visible: true });
                 let element = await page.$("#domain_check_order_list");

@@ -91,6 +91,7 @@ class Parser {
             cached: 0,
             time: 0,
             timeDomain: 0,
+            domains: 0,
         };
 
         let Google = new Promise((resolve, reject) => {
@@ -559,14 +560,22 @@ class Parser {
                     console.log(domain, "SQL DOMAIN LOAD");
                     this.socket.emit('console',[domain, "SQL DOMAIN LOAD"]);
                     this.totalRequest.cached += 1;
-                    cb();
+                    if (this.d.length() <= this.threads) {
+                        setTimeout(()=>{
+                            cb();
+                        },2000);
+                    } else {
+                        cb();
+                    }
+
                 } else {
                     console.log('error_stats or cache_time Domain', domain);
                     this.socket.emit('console',['error_stats or cache_time Domain', domain]);
 
                     await this.domainsParser.parse(domain).then(status => {
+                        this.totalRequest.domains += 1;
                         this.domains[domain] = status;
-                        let sql = {}
+                        let sql = {};
                         if (status) {
                             sql = {domain: domain, available: status.available ? 1 : 0, price: status.price, timestamp: Date.now()};
                         } else {
@@ -583,7 +592,13 @@ class Parser {
 
                                     console.log(domain, "SQL DOMAIN SAVE");
                                     this.socket.emit('console',[domain, "SQL DOMAIN SAVE"]);
-                                    cb();
+                                    if (this.d.length() <= this.threads) {
+                                        setTimeout(()=>{
+                                            cb();
+                                        },2000);
+                                    } else {
+                                        cb();
+                                    }
                                 });
 
                     });

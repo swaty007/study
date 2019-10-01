@@ -367,6 +367,10 @@ class Parser {
 
                     if (href.indexOf("url?q=") > -1) {
                         if (link.parent().siblings('span').find('a').length > 0 || link.text().length === 0) {
+                            if (index === total) {
+                                resolveA_Each();
+                            }
+                            resolveEach();
                             return;
                         }
 

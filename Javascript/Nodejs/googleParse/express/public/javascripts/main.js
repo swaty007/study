@@ -18,12 +18,12 @@ var ConsoleLogHTML = require('console-log-html');
 $(document).ready(function () {
     ConsoleLogHTML.connect(document.getElementById("myULContainer"));
 
-    var socket = io.connect(location.hostname + ':3038/', {//8081
+    var socket = io.connect(location.hostname + ':8081/', {//8081
         // 'reconnectionDelay': 10 // defaults to 500
     });
-    socket.on('getGoogle', (data) => {
-        // console.log(data);
-        sortDomains(Object.assign({}, data.sites));
+    socket.on('getGoogle', (dataJson) => {
+        let data = JSON.parse(dataJson);
+        sortDomains(Object.assign({}, data.sites),Object.assign({}, data.domains));
         queriesThree([...data.queries]);
         queriesTable([...data.queries]);
         googleTable(Object.assign({}, data.sites));
@@ -64,7 +64,7 @@ $(document).ready(function () {
         // });
     })
 
-    function sortDomains(data) {
+    function sortDomains(data, domains) {
         // console.log(data,'copy');
         // let sortDomainsArray = Object.entries(data).sort((a, b) => {
         //     return b[1].length - a[1].length;
@@ -86,6 +86,8 @@ $(document).ready(function () {
           <span>Топ3: <strong id="top3_${n}">0</strong> </span>
           <span>Топ5: <strong id="top5_${n}">0</strong> </span>
           <span>Топ10: <strong id="top10_${n}">0</strong></span>
+          <span>Доступен: <strong>${domains[domain] ? domains[domain].status?"Можно купить":"Куплен" : "Ошибка"}</strong></span>
+          <span>Цена: <strong>${domains[domain] ? domains[domain].price : ""}</strong></span>
     </div>
     <div id="collapse${n}" class="collapse" aria-labelledby="heading${n}" data-parent="#accordionDomain" style="">
         <div class="card-body" >

@@ -28,7 +28,8 @@ io.on('connection', (socket) => {
       console.time("Parser Work");
       parse.getGoogle(value).then( result => {
         console.timeEnd("Parser Work");
-        socket.emit('getGoogle', result[0]);
+        console.log(result);
+        socket.emit('getGoogle', JSON.stringify(result));
         // response.json(result);
       });
     });

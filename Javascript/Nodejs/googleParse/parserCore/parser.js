@@ -4,7 +4,8 @@ const tress = require('tress'),
     // resolve = require('url').resolve,
     fs = require('fs'),
     tunnel = require('tunnel'),
-    {performance} = require('perf_hooks');
+    {performance} = require('perf_hooks'),
+    {Domains}  = require('./parseDomains');
 
 var myAgent = tunnel.httpsOverHttp({
     proxy: {
@@ -47,6 +48,7 @@ class Parser {
         this.html_cache_time = 24;
         this.requestPause = 100;
         this.socket = "";
+        this.domainsParser = new Domains();
 
         // io.sockets.on('connection', (socket) => {
         //     this.socket = socket;
@@ -82,11 +84,13 @@ class Parser {
         this.size = data.size; //1x10
         this.sites = {};
         this.queries = [];
+        this.domains = {};
         this.totalRequest = {
             google: 0,
             sites: 0,
             cached: 0,
             time: 0,
+            timeDomain: 0,
         };
 
         let Google = new Promise((resolve, reject) => {
@@ -99,8 +103,27 @@ class Parser {
             this.q.drain = () => {
                 console.timeEnd("Google Work");
                 this.totalRequest.time = performance.now() - this.totalRequest.time;
-                console.log('Total Request = ', this.totalRequest);
-                this.socket.emit('console',['Total Request = ', this.totalRequest]);
+
+                resolve();
+            }
+        });
+        let Ads = new Promise((resolve, reject) => {
+            resolve();
+        });
+        let Domain = new Promise((resolve,reject) => {
+            console.time("Domain Work");
+            this.totalRequest.timeDomain = performance.now();
+            this.d = tress((data, callback) => {
+                this.getDomain(data, callback);
+            }, this.threads);
+            this.d.drain = () => {
+                console.timeEnd("Domain Work");
+                this.totalRequest.timeDomain = performance.now() - this.totalRequest.timeDomain;
+                resolve();
+            }
+        });
+        this.promise = new Promise((resolve,reject) => {
+            Promise.all([Google, Ads, Domain]).then( res => {
 
                 for (var request in this.totalRequest) {
                     if( this.totalRequest.hasOwnProperty( request ) ) {
@@ -116,17 +139,16 @@ class Parser {
                     }
                 }
 
+                console.log('Total Request = ', this.totalRequest);
+                this.socket.emit('console',['Total Request = ', this.totalRequest]);
 
                 resolve({
                     sites: this.sites,
-                    queries: this.queries
+                    queries: this.queries,
+                    domains: this.domains,
                 });
-            }
+            });
         });
-        let Ads = new Promise((resolve, reject) => {
-            resolve();
-        });
-        this.promise = Promise.all([Google, Ads])
     }
     requestGetSql (data, callback) {
         var proxy = {
@@ -242,10 +264,11 @@ class Parser {
     }
     loadHtml (json, data) {
         return new Promise(async (resolve, reject) => {
-            JSON.parse(json)["googleSearch"].forEach( site => {
+            JSON.parse(json)["googleSearch"].forEach(async site => {
                 if (data.meta) {
                     if (typeof this.sites[site.domain] === 'undefined') {
                         this.sites[site.domain] = [];
+                        this.d.push(site.domain);
                     }
                     this.sites[site.domain].push(site);
                 }
@@ -357,6 +380,7 @@ class Parser {
                         result["googleSearch"].push(sites);
                         if (typeof this.sites[domain] === 'undefined' && data.meta) {
                             this.sites[domain] = [];
+                            this.d.push(domain);
                         }
                         if (data.meta) {
                             this.sites[domain].push(sites);
@@ -507,6 +531,60 @@ class Parser {
                 resolve();
             }
         })
+    }
+    async getDomain(domain, cb) {
+
+        connection.query(`SELECT * FROM swaty_googlepars.domains WHERE domain = ?`,
+            [domain],
+            async (mysql_find_error, result, fields) => {
+                if (mysql_find_error) {
+                    console.log(mysql_find_error,'mysql_find_error');
+                    this.socket.emit('console',[mysql_find_error,'mysql_find_error']);
+                    throw mysql_find_error;
+                }
+                if (result.length > 0 && this.html_cache_time > (Date.now() - result[0].timestamp)/(1000*60*60)) {
+                    let available = result[0].available;
+                    if (available === -1) {
+                        this.domains[domain] = false;
+                    } else {
+                        this.domains[domain] = {
+                            status: !!result[0].available,
+                            price: result[0].price
+                        }
+                    }
+                    console.log(domain, "SQL DOMAIN LOAD");
+                    this.socket.emit('console',[domain, "SQL DOMAIN LOAD"]);
+                    this.totalRequest.cached += 1;
+                    cb();
+                } else {
+                    console.log('error_stats or cache_time Domain', domain);
+                    this.socket.emit('console',['error_stats or cache_time Domain', domain]);
+
+                    await this.domainsParser.parse(domain).then(status => {
+                        this.domains[domain] = status;
+                        if (status) {
+                            connection.query(`REPLACE INTO swaty_googlepars.domains SET ?`,
+                                {domain: domain, available: status.available ? 1 : 0, price: status.price, timestamp: Date.now()},
+                                (mysql_save_error, results, fields) => {
+                                    if (mysql_save_error) {
+                                        console.log(mysql_save_error,'mysql_save_error');
+                                        this.socket.emit('console',[mysql_save_error,'mysql_save_error']);
+                                        // throw mysql_save_error;
+                                    }
+
+                                    console.log(domain, "SQL DOMAIN SAVE");
+                                    this.socket.emit('console',[domain, "SQL DOMAIN SAVE"]);
+                                    cb();
+                                });
+                        } else {
+                            cb();
+                        }
+
+                    });
+
+                }
+            });
+
     }
     finishAndSaveSql (result, data, callback) {
         if (result.queriesMore.length === 0 && result.googleSearch.length === 0) {

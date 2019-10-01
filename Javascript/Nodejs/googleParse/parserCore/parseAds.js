@@ -11,7 +11,7 @@ const recaptchaPlugin = RecaptchaPlugin({
     provider: {id: '2captcha', token: 'XXXXXXX'},
     visualFeedback: true
 });
-// puppeteer.use(pluginStealth());
+puppeteer.use(pluginStealth());
 puppeteer.use(recaptchaPlugin);
 
 

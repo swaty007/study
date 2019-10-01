@@ -9,7 +9,8 @@
     "build": "rm -rf ./Javascript/Nodejs/googleParse/express/public/javascripts/scripts-bundled.js && webpack --mode development && rm -rf ./dist",
     "buildWin": "webpack --mode development",
     "start": "node ./Javascript/Nodejs/googleParse/express/bin/www",
-    "startAds": "node ./Javascript/Nodejs/googleParse/parserCore/parseAds.js"
+    "startAds": "node ./Javascript/Nodejs/googleParse/parserCore/parseAds.js",
+    "startDomains": "node ./Javascript/Nodejs/googleParse/parserCore/parseDomains.js"
   },
   "repository": {
     "type": "git",

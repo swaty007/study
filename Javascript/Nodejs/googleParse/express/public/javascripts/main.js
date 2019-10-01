@@ -18,7 +18,7 @@ var ConsoleLogHTML = require('console-log-html');
 $(document).ready(function () {
     ConsoleLogHTML.connect(document.getElementById("myULContainer"));
 
-    var socket = io.connect(location.hostname + ':8081/', {//8081
+    var socket = io.connect(location.hostname + ':3038/', {//8081
         // 'reconnectionDelay': 10 // defaults to 500
     });
     socket.on('getGoogle', (dataJson) => {

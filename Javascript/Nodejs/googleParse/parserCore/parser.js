@@ -562,9 +562,14 @@ class Parser {
 
                     await this.domainsParser.parse(domain).then(status => {
                         this.domains[domain] = status;
+                        let sql = {}
                         if (status) {
+                            sql = {domain: domain, available: status.available ? 1 : 0, price: status.price, timestamp: Date.now()};
+                        } else {
+                            sql = {domain: domain, available: -1, price: " ", timestamp: Date.now()};
+                        }
                             connection.query(`REPLACE INTO swaty_googlepars.domains SET ?`,
-                                {domain: domain, available: status.available ? 1 : 0, price: status.price, timestamp: Date.now()},
+                                sql,
                                 (mysql_save_error, results, fields) => {
                                     if (mysql_save_error) {
                                         console.log(mysql_save_error,'mysql_save_error');
@@ -576,9 +581,6 @@ class Parser {
                                     this.socket.emit('console',[domain, "SQL DOMAIN SAVE"]);
                                     cb();
                                 });
-                        } else {
-                            cb();
-                        }
 
                     });
 

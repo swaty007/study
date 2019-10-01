@@ -24,7 +24,7 @@ class Domains {
     }
     async parseUkraine(domain) {
         return new Promise(async (resolve, reject) => {
-            this.browser = puppeteer.launch({args: ["--no-sandbox", '--disable-setuid-sandbox'], headless: false}).then(async browser => {
+            this.browser = puppeteer.launch({args: ["--no-sandbox", '--disable-setuid-sandbox'], headless: true}).then(async browser => {
                 const page = this.page = await browser.newPage();
                 await page.setViewport({width: 1280, height: 800});
                 // await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36');

@@ -4,6 +4,7 @@ const nodeExternals = require('webpack-node-externals');
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 
 module.exports = {
@@ -20,6 +21,10 @@ module.exports = {
     devtool: 'source-map',
     module: {
         rules: [
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader'
+            },
             {
                 // Transpiles ES6-8 into ES5
                 test: /\.js$/,
@@ -87,6 +92,7 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: "../stylesheets/style-bundled.css"
         }),
+        new VueLoaderPlugin()
         // new ExtractTextPlugin('./Javascript/Nodejs/googleParse/express/public/stylesheets/style.css')
         // new HtmlWebPackPlugin({
         //     template: "./index.html",

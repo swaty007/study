@@ -59,7 +59,10 @@
     "tunnel-agent": "^0.6.0",
     "twig": "~1.13.3",
     "url": "^0.11.0",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "vue-datatables-net": "^1.2.4",
+    "vue-loader": "^15.7.1",
+    "vue-template-compiler": "^2.6.10"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",

@@ -34,31 +34,7 @@
                         <div class="tab-content">
                             <div id="tab-1" class="tab-pane fade active show">
                                 <vue-google-table :sites="data.sites"></vue-google-table>
-                                <table id="table_all" class="table table-striped table-bordered">
-                                    <thead>
-                                    <tr>
-                                        <th>Domain</th>
-                                        <th>Position</th>
-                                        <th>query</th>
-                                        <th>titleGoogle</th>
-                                        <th>href</th>
-                                        <th>meta</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
 
-                                    </tbody>
-                                    <tfoot>
-                                    <tr>
-                                        <th>Domain</th>
-                                        <th>Position</th>
-                                        <th>query</th>
-                                        <th>titleGoogle</th>
-                                        <th>href</th>
-                                        <th>meta</th>
-                                    </tr>
-                                    </tfoot>
-                                </table>
                             </div>
 
                             <div id="tab-2" class="tab-pane fade">
@@ -66,28 +42,7 @@
                             </div>
 
                             <div id="tab-3" class="tab-pane fade">
-                                <table id="table_queries" class="table table-striped table-bordered">
-                                    <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Count</th>
-                                        <th>Parent</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    </tbody>
-                                    <tfoot>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Count</th>
-                                        <th>Parent</th>
-                                    </tr>
-                                    </tfoot>
-                                </table>
-                                <queries_three id="queries_three" class="queries_three">
-
-                                </queries_three>
+                                <vue-queries :queries="data.queries"></vue-queries>
                             </div>
                         </div>
                     </div>
@@ -136,8 +91,6 @@
                 // queriesThree([...data.queries]);
                 // queriesTable([...data.queries]);
                 // googleTable(Object.assign({}, data.sites));
-
-                this.sites = null;
             });
             this.socket.on('console', (result) => {
                 if (typeof result === 'string') {

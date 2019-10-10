@@ -1,67 +1,39 @@
 <template>
-    <div :is="this.sites">
-        <vdtnet-table
-                ref="table"
-                :fields="fields"
-                :opts="options"
-                :select-checkbox="1"
-                :details="details"
-        >
-        </vdtnet-table>
-    </div>
+        <table id="table_all" class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                        <th>Domain</th>
+                        <th>Position</th>
+                        <th>query</th>
+                        <th>titleGoogle</th>
+                        <th>href</th>
+                        <th>meta</th>
+                </tr>
+                </thead>
+                <tbody>
 
+                </tbody>
+                <tfoot>
+                <tr>
+                        <th>Domain</th>
+                        <th>Position</th>
+                        <th>query</th>
+                        <th>titleGoogle</th>
+                        <th>href</th>
+                        <th>meta</th>
+                </tr>
+                </tfoot>
+        </table>
 </template>
 
 <script>
 
-    import VdtnetTable from 'vue-datatables-net'
-    import('jszip');
-    import('pdfmake');
-    import('datatables.net');
-    import('datatables.net-bs');
-    import('datatables.net-buttons-bs');
-    import('datatables.net-fixedheader-bs');
-    import('datatables.net-responsive-bs');
-    import('bootstrap/dist/js/bootstrap.bundle.min.js');
     export default {
         props: ['sites'],
-        components: { VdtnetTable },
+        components: {  },
         data() {
             return {
-                options: {
-                    data: this.dataArr,
-                    buttons: ['copy', 'csv', 'print'],
-                    /*eslint-disable */
-                    dom: "Btr<'row vdtnet-footer'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'pl>>",
-                    /*eslint-enable */
-                    responsive: false,
-                    processing: true,
-                    searching: true,
-                    searchDelay: 1500,
-                    destroy: true,
-                    ordering: true,
-                    lengthChange: true,
-                    serverSide: true,
-                    fixedHeader: true,
-                    saveState: true
-                },
-                fields: {
-                    Domain: { label: 'Domain', sortable: true, data: 'domain'},
-                    Position: { label: 'Position', sortable: true, searchable: true, defaultOrder: 'desc', data: 'position' },
-                    query: { label: 'query', sortable: false, searchable: true, data: 'query'  },
-                    titleGoogle: { label: 'titleGoogle', data: 'title' },
-                    href: {
-                        label: 'href',
-                        data: 'href'
-                    },
-                    meta: {
-                        label: 'meta',
-                        data: 'meta',
-                        template: '<p><strong>data</strong><span>data</span></p>'
-                    },
-                },
-                quickSearch: '',
-                details: {}
+
             }
         },
         methods: {
@@ -74,7 +46,6 @@
         },
         computed: {
             dataArr: function () {
-                this.$refs.table.reload();
                 var DTdata = [];
 
                 $.each(this.sites, (i, domain) => {
@@ -86,8 +57,44 @@
                         DTdata.push(site);
                     })
                 });
-                return DTdata;
+
+                    $('#table_all').DataTable({
+                            lengthMenu: [[10, 100, 300, -1], [10, 100, 300, "All"]],
+                            dom: 'Bfrtip',
+                            data: DTdata,
+                            // processing: true,
+                            // lengthChange: true,
+                            // serverSide: true,
+                            // ordering: true,
+                            columns: [
+                                    {"data": "domain"},
+                                    {"data": "position"},
+                                    {"data": "query"},
+                                    {"data": "title"},
+                                    {"data": "href"},
+                                    {"data": "meta"}
+                            ],
+                            "columnDefs": [{
+                                    "targets": 5,
+                                    "data": "meta",
+                                    "render": function (data1, type, row, meta) {
+                                            let html = "";
+                                            for (let key in data1) {
+                                                    html += `<p><strong>${key}</strong><span>${data1[key]}</span></p>`;
+                                            }
+                                            return html;
+                                    }
+                            }],
+                            buttons: [
+                                    'copy', 'csv', 'excel', 'pageLength'// 'pdf', 'print'
+                            ]
+                    });
+                    $("#table_all_wrapper").removeClass("form-inline");
+                    return DTdata;
             }
+        },
+        watch: {
+
         },
         mounted() {
 

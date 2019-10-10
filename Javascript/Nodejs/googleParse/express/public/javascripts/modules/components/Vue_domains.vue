@@ -54,9 +54,14 @@
                 </div>
             </div>
         </div>
-<!--        <div id="accordionDomain" class="accordion" :is="sites">-->
-
-            <div class="card" :data-top="sites[domain].length" :id="'heading'+index" v-for="(val, domain, index) in sites">
+        <div id="accordionDomain" class="accordion">
+            <div class="card"
+                 :data-top="sites[domain].length"
+                 :id="'heading'+index"
+                 :data-top3="3"
+                 :data-top5="5"
+                 :data-top10="10"
+                 v-for="(val, domain, index) in sites">
                 <div class="card-header" @click="selected === domain ? selected = null : selected = domain">
                     <button class="btn btn-link dropdown-toggle">
                         {{domain}}
@@ -92,13 +97,11 @@
                 </div>
             </div>
 
-<!--        </div>-->
+        </div>
     </section>
 </template>
 
 <script>
-
-
     export default {
         props: ['sites', 'domains'],
         data() {
@@ -114,6 +117,36 @@
                 //     sites: this.sites,
                 //     size: this.size,
                 // });
+            },
+            filterDomain() {
+                let data_sort = 'top';
+                let sortDirection = -1;
+
+                switch (this.topSortRadio) {
+                    case "desc":
+                        sortDirection = -1;
+                        break;
+                    case "asc":
+                        sortDirection = 1;
+                        break;
+                }
+                switch (this.topDomainRadio) {
+                    case 10:
+                        data_sort = 'top10';
+                        break;
+                    case 5:
+                        data_sort = 'top5';
+                        break;
+                    case 3:
+                        data_sort = 'top3';
+                        break;
+                    default:
+                        data_sort = 'top';
+                        break;
+                }
+                $("#accordionDomain .card").sort(function (a, b) {
+                    return (a.dataset[data_sort] - b.dataset[data_sort]) * sortDirection;
+                }).appendTo("#accordionDomain");
             }
         },
         computed: {

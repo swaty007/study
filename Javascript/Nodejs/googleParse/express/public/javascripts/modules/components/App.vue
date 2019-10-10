@@ -33,7 +33,7 @@
 
                         <div class="tab-content">
                             <div id="tab-1" class="tab-pane fade active show">
-                                <vue-google-table :sites="data.sites"></vue-google-table>
+                                <vue-google-table v-if="data.sites !== null" :sites="data.sites"></vue-google-table>
 
                             </div>
 
@@ -42,7 +42,7 @@
                             </div>
 
                             <div id="tab-3" class="tab-pane fade">
-                                <vue-queries :queries="data.queries"></vue-queries>
+                                <vue-queries v-if="data.queries !== null" :queries="data.queries"></vue-queries>
                             </div>
                         </div>
                     </div>
@@ -50,7 +50,6 @@
 
             </div>
         </div>
-
 
     </section>
 </template>
@@ -65,7 +64,8 @@
             return {
                 data: {
                     sites: null,
-                    domains: null
+                    domains: null,
+                    queries: null
                 },
                 pagination: {
                     'current_page': 1
@@ -77,6 +77,11 @@
         methods: {
             onSubmitForm(data) {
                 this.socket.emit('getGoogle', {sites: data.sites, size: data.size});
+                this.data = {
+                    sites: null,
+                    domains: null,
+                    queries: null
+                }
             }
         },
         mounted() {

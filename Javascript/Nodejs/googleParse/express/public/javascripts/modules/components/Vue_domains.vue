@@ -152,8 +152,17 @@
         computed: {
 
         },
-        mounted() {
-
+        watch: {
+            topSortRadio: function(val) {
+                console.log('watchDom',val)
+            }
+        },
+        mounted: function() {
+            console.log('mountedDom')
+        },
+        updated: function() {
+            this.filterDomain();
+            console.log('updatedDom')
         }
     }
 </script>

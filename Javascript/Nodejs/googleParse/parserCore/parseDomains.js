@@ -21,7 +21,11 @@ puppeteer.use(recaptchaPlugin);
 class Domains {
     parse(domain) {
         return new Promise(async (resolve, reject) => {
-            await this.parseUkraine(domain).then(info => resolve(info));
+            try {
+                await this.parseUkraine(domain).then(info => resolve(info));
+            } catch (err) {
+                resolve(false);
+            }
         });
     }
     async parseUkraine(domain) {
@@ -42,8 +46,6 @@ class Domains {
                     ]);
                 } catch (err) {
                     console.log(__dirname);
-
-
                     let element = await page.$("#domain_check_order_list");
                     let html = await page.evaluate(el => el.outerHTML, element);
 

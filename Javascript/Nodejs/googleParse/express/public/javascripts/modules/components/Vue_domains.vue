@@ -70,7 +70,7 @@
                     <span>Топ3: <strong :id="'top3_'+index">0</strong> </span>
                     <span>Топ5: <strong :id="'top5_'+index">0</strong> </span>
                     <span>Топ10: <strong :id="'top10_'+index">0</strong></span>
-                    <span>Доступен: <strong>{{domains[domain] ? domains[domain].status?"Можно купить":"Куплен" : "Ошибка"}}</strong></span>
+                    <span>Доступен: <strong>{{domains[domain] ? domains[domain].status ? "Можно купить" : "Куплен" : "Ошибка"}}</strong></span>
                     <span>Цена: <strong>{{domains[domain] ? domains[domain].price : ""}}</strong></span>
                 </div>
                 <div :class="{collapse:domain !== selected}" >

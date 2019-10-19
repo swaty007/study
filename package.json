@@ -10,7 +10,8 @@
     "buildWin": "webpack --mode development",
     "start": "node ./Javascript/Nodejs/googleParse/express/bin/www",
     "startAds": "node ./Javascript/Nodejs/googleParse/parserCore/parseAds.js",
-    "startDomains": "node ./Javascript/Nodejs/googleParse/parserCore/parseDomains.js"
+    "startDomains": "node ./Javascript/Nodejs/googleParse/parserCore/parseDomains.js",
+    "startBrute": "node ./Javascript/Nodejs/googleParse/parserCore/bruteWordpress.js"
   },
   "repository": {
     "type": "git",

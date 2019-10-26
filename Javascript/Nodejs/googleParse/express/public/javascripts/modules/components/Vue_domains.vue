@@ -212,19 +212,19 @@
         watch: {
             topSortRadio: function(val) {
                 this.filterDomain();
-                console.log('watchDom topSortRadio',val)
+                // console.log('watchDom topSortRadio',val)
             },
             topDomainRadio: function (val) {
                 this.filterDomain();
-                console.log('watchDom topDomainRadio',val)
+                // console.log('watchDom topDomainRadio',val)
             }
         },
         mounted: function() {
-            console.log('mountedDom')
+            // console.log('mountedDom')
         },
         updated: function() {
             this.filterDomain();
-            console.log('updatedDom')
+            // console.log('updatedDom')
         }
     }
 </script>

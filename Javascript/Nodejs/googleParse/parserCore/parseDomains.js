@@ -24,6 +24,7 @@ class Domains {
             try {
                 await this.parseUkraine(domain).then(info => resolve(info));
             } catch (err) {
+                console.log('parse err');
                 resolve(false);
             }
         });
@@ -31,41 +32,45 @@ class Domains {
     async parseUkraine(domain) {
         return new Promise(async (resolve, reject) => {
             this.browser = puppeteer.launch({args: ["--no-sandbox", '--disable-setuid-sandbox'], headless: true}).then(async browser => {
-                const page = this.page = await browser.newPage();
-                await page.setViewport({width: 1280, height: 800});
-                // await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36');
-
-                await page.goto('https://www.ukraine.com.ua/domains/');
-                await page.solveRecaptchas();
-                await page.$('input#domain_check_input_single');
-                await page.type('input#domain_check_input_single', domain, {delay: 20});
                 try {
-                    await Promise.all([
-                        page.waitForResponse('https://www.ukraine.com.ua/action/hosting/dns/check_results/',{timeout: 5000}),
-                        page.evaluate(() => domain_check())
-                    ]);
-                } catch (err) {
-                    console.log(__dirname);
+                    const page = this.page = await browser.newPage();
+                    await page.setViewport({width: 1280, height: 800});
+                    // await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.142 Safari/537.36');
+
+                    await page.goto('https://www.ukraine.com.ua/domains/');
+                    await page.solveRecaptchas();
+                    await page.$('input#domain_check_input_single');
+                    await page.type('input#domain_check_input_single', domain, {delay: 20});
+                    try {
+                        await Promise.all([
+                            page.waitForResponse('https://www.ukraine.com.ua/action/hosting/dns/check_results/',{timeout: 5000}),
+                            page.evaluate(() => domain_check())
+                        ]);
+                    } catch (err) {
+                        console.log(__dirname);
+                        let element = await page.$("#domain_check_order_list");
+                        let html = await page.evaluate(el => el.outerHTML, element);
+
+                        await element.screenshot({ path: path.join(__dirname, '../photos/'+domain+'.jpg')});
+                        fs.writeFileSync(path.join(__dirname, '../photos/'+domain+'.html'), html, 'utf8');
+                        await browser.close();
+                        resolve(false);
+                        return;
+                    }
+
+                    await page.waitFor(3500);
+
+                    await page.waitForSelector('#domain_check_order_list>tbody>tr>td img', { visible: true });
                     let element = await page.$("#domain_check_order_list");
                     let html = await page.evaluate(el => el.outerHTML, element);
-
-                    await element.screenshot({ path: path.join(__dirname, '../photos/'+domain+'.jpg')});
-                    fs.writeFileSync(path.join(__dirname, '../photos/'+domain+'.html'), html, 'utf8');
                     await browser.close();
+                    await this.parseHtmlUkraine(html).then(info => {
+                        resolve(info);
+                    });
+                } catch(err) {
+                    console.log('parse err IN');
                     resolve(false);
-                    return;
                 }
-
-                await page.waitFor(3500);
-
-                await page.waitForSelector('#domain_check_order_list>tbody>tr>td img', { visible: true });
-                let element = await page.$("#domain_check_order_list");
-                let html = await page.evaluate(el => el.outerHTML, element);
-                await browser.close();
-                await this.parseHtmlUkraine(html).then(info => {
-                    resolve(info);
-                });
-
             });
         });
     }

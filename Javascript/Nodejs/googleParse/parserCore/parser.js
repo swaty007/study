@@ -50,34 +50,16 @@ class Parser {
         this.socket = "";
         this.domainsParser = new Domains();
 
-        // io.sockets.on('connection', (socket) => {
-        //     this.socket = socket;
-        //     console.log('connect');
-        //     this.socket.on('getGoogle', (result) => {
-        //         console.log(result,'result getGoogle Back');
-        //         this.parseHtml(result.res.body, result.data, result.cb);
-        //     });
-        // });
     }
     setSocket (socket) {
         return new Promise( (resolve, reject) => {
-            // io.on('connection', (socket) => {
                 this.socket = socket;
                 this.socket.emit('console',["TEST CONNECT"]);
                 console.log('connect');
                 socket.on('disconnect', () => {
                     console.log('disconnect');
-                    // connection.end((err) => {
-                        // The connection is terminated now
-                    //     console.log("MySQL connect end ", err);
-                    // });
                 });
                 resolve();
-                // this.socket.on('getGoogle', (result) => {
-                    // console.log(result,'result getGoogle Back');
-                    // this.parseHtml(result.res.body, result.data, result.cb);
-                // });
-            // });
         });
     }
     initGoogle(data) {
@@ -190,7 +172,6 @@ class Parser {
                             }
                             return;
                         }
-                        // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.html', res.body, 'utf8');
                         this.parseHtml (res.body, data, callback);
                     });
 
@@ -215,7 +196,7 @@ class Parser {
                         return;
                     }
                 }
-                // this.socket.emit('getGoogle', { data: data, cb: callback });
+
                     needle.get(data.url, {},(err, res) => { // { agent: myAgent },
                         this.totalRequest.google += 1;
                         if (err) {
@@ -227,12 +208,7 @@ class Parser {
                             return;
                         }
 
-                        // fs.writeFile('./Javascript/Nodejs/googleParse/queries/'+data.query+data.n_start+'.html', res.body, 'utf8', (w_err, w_res) => {
-                        //     if (w_err) {
-                        //         this.socket.emit('console',[w_err,'w_err']);
-                        //         console.log(w_err,'w_err');
-                        //     }
-                        // });
+
 
                         this.parseHtml (res.body, data, callback);
                     });
@@ -391,7 +367,6 @@ class Parser {
                             this.sites[domain].push(sites);
                         }
 
-                        // this.sites[domain] = Object.assign(this.sites[domain], sites);
                         n++;
                         if (index === total) {
                             resolveA_Each();
@@ -403,10 +378,7 @@ class Parser {
                         data.n_start === 0) {
                         queries = {
                             title: link.text(),
-                            // name: link.text(),
                             href: href.indexOf("https://www.google.com") > -1 ? href : "https://www.google.com"+href,
-                            // parent: "null",
-                            // html: link.html()
                         };
                         result["queriesMore"].push(queries);
                         let copyResult = Object.assign({}, queries);
@@ -419,27 +391,13 @@ class Parser {
                             copyResult.parent = data.parent.name;
                             data.parent["children"].push(copyResult);
                         } else {
-                            // copyResult.parent = "1st Level";
                             copyResult.parent = data.query;
                             queriesParent.children.push(copyResult);
-                            // queriesParent.push(copyResult);
                         }
 
-
-                        // console.log('end1',n_inside);
-
-                        // await googleParseQueries();
                         n_inside++;
                         if (data.meta) {
                             await this.googleParseQueries(result,n_inside,copyResult).then(resolveQuery => { //тут передается родитель самая основа
-                               // JSON.parse(resolveQuery)["queriesMore"].forEach((element, key) => {
-                               //     // if (typeof result["queriesMore"][key]["children"] === 'undefined') {
-                               //     //     result["queriesMore"][key]["children"] = [];
-                               //     // }
-                               //     // result["queriesMore"][key]["children"].push(element);
-                               //     result["queriesMore"][key]["children"] = element;
-                               // });
-                               //  console.log("PARSE QUERIES N", n_inside);
                                    if (index === total) {
                                        resolveA_Each();
                                    }
@@ -461,21 +419,12 @@ class Parser {
                 });
             });
         }).then(async (resAeach) => {
-            // if (meta) {
                 await this.googleParseMeta(result); //init this.meta_q
-                // await this.googleParseQueries()
-                // console.log('meta_q END');
-                // this.queries = result["queriesMore"];
                 this.finishAndSaveSql(result, data, callback);
-                // this.finishAndSaveJson(result, data, callback);
-            // } else {
-            //     this.finishAndSaveJson(result, data, callback, meta);
-            // }
         });
     }
     googleParseQueries (result, n_inside, parent = undefined) {
         return new Promise(async (resolve, reject) => {
-            // await new Promise((resolveLink, rejectLink) => {
 
                 this.q.push({
                     url: encodeURI(result["queriesMore"][n_inside].href),
@@ -485,18 +434,8 @@ class Parser {
                     meta: false,
                     parent: parent
                 });
-                // resolveLink()
-                // this.requestGetSql({
-                //     url: encodeURI(result["queriesMore"][n_inside].href),
-                //     query: result["queriesMore"][n_inside].title,
-                //     n_start: 0,
-                //     meta: false,
-                //     parent: parent,
-                // }, resolveLink);
-            // }).then( resLink => {
-                // console.log("PARSE QUERIES N INSIDE", n_inside);
+
                 resolve();//resolve(resLink);
-            // });
         })
     }
     googleParseMeta (query_json) {
@@ -506,8 +445,6 @@ class Parser {
                     this.totalRequest.sites += 1;
                     if (errMeta) {
                         console.log(errMeta,'errMeta');
-                        // reject(errMeta);
-                        // this.socket.emit('console',[errMeta,'errMeta']);
                         callbackMeta();
                         return;
                     }
@@ -519,7 +456,6 @@ class Parser {
                         keywords: $("meta[name='keywords']").attr("content"),
                         h1: $('h1').text()
                     };
-                    // console.log("googleParseMeta END");
                     callbackMeta();
                 });
             },10);
@@ -532,7 +468,6 @@ class Parser {
                 }
             });
             meta_q.drain = () => {
-                // this.socket.emit('console',['Parsed Meta END => ', query_json["googleSearch"]]);
                 resolve();
             }
         })
@@ -627,10 +562,7 @@ class Parser {
                 if (mysql_save_error) {
                     console.log(mysql_save_error,'mysql_save_error');
                     this.socket.emit('console',[mysql_save_error,'mysql_save_error']);
-                    // throw mysql_save_error;
                 }
-                // console.log("resultsSave = ", results);
-                // console.log("fieldsSave = ", fields);
 
                 console.log(data.query,data.n_start, "SQL SAVE");
                 this.socket.emit('console',[data.query,data.n_start, "SQL SAVE"]);
@@ -665,8 +597,6 @@ class Parser {
                 if (w_err) {
                     this.socket.emit('console',[w_err,'w_err']);
                     console.log(w_err,'w_err');
-                    // return;
-                    // throw new w_err;
                 }
                 console.log(data.query,data.n_start, "JSON SAVE");
                 this.socket.emit('console',[data.query,data.n_start, "JSON SAVE"]);

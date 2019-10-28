@@ -86,8 +86,6 @@ $(document).ready(function () {
           <span>Топ3: <strong id="top3_${n}">0</strong> </span>
           <span>Топ5: <strong id="top5_${n}">0</strong> </span>
           <span>Топ10: <strong id="top10_${n}">0</strong></span>
-          <span>Доступен: <strong>${domains[domain] ? domains[domain].status?"Можно купить":"Куплен" : "Ошибка"}</strong></span>
-          <span>Цена: <strong>${domains[domain] ? domains[domain].price : ""}</strong></span>
     </div>
     <div id="collapse${n}" class="collapse" aria-labelledby="heading${n}" data-parent="#accordionDomain" style="">
         <div class="card-body" >

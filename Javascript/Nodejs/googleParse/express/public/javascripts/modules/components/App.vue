@@ -95,7 +95,7 @@
         mounted() {
             ConsoleLogHTML.connect(document.getElementById("myULContainer"));
 
-            this.socket = io.connect(location.hostname + ':8081/', {//8081
+            this.socket = io.connect(location.hostname + ':3038/', {//8081
                 // 'reconnectionDelay': 10 // defaults to 500
             });
             this.socket.on('getGoogle', (dataJson) => {

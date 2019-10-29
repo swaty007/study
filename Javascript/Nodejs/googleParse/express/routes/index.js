@@ -8,7 +8,7 @@ console.log(__dirname);
 const app = require('express')(),
     server = require('http').Server(app),
     io = require('socket.io')(server);
-server.listen(8082);//8082
+server.listen(3038);//8082
 
 
 /* GET home page. */

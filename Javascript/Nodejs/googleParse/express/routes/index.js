@@ -8,7 +8,7 @@ console.log(__dirname);
 const app = require('express')(),
     server = require('http').Server(app),
     io = require('socket.io')(server);
-server.listen(3038);//8082
+server.listen(8082);//8082
 
 
 /* GET home page. */
@@ -29,7 +29,6 @@ io.on('connection', (socket) => {
       parse.getGoogle(value).then( result => {
         console.timeEnd("Parser Work");
         console.log(result);
-        socket.emit('getGoogle', JSON.stringify(result));
         // response.json(result);
       });
     });

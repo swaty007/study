@@ -104,7 +104,10 @@ class Parser {
             this.q.drain = () => {
                 console.timeEnd("Google Work");
                 this.totalRequest.time = performance.now() - this.totalRequest.time;
-
+                this.socket.emit('getGoogle', JSON.stringify({
+                    sites: this.sites,
+                    queries: this.queries
+                }) );
                 resolve();
             }
         });
@@ -120,6 +123,9 @@ class Parser {
             this.d.drain = () => {
                 console.timeEnd("Domain Work");
                 this.totalRequest.timeDomain = performance.now() - this.totalRequest.timeDomain;
+                this.socket.emit('getDomains', JSON.stringify({
+                    domains: this.domains
+                }) );
                 resolve();
             }
         });
@@ -559,6 +565,11 @@ class Parser {
                     }
                     console.log(domain, "SQL DOMAIN LOAD");
                     this.socket.emit('console',[domain, "SQL DOMAIN LOAD"]);
+
+                    this.socket.emit('getDomain', JSON.stringify({
+                        [domain]: this.domains[domain]
+                    }) );
+
                     this.totalRequest.cached += 1;
                     if (this.d.length() <= this.threads) {
                         setTimeout(()=>{
@@ -575,6 +586,11 @@ class Parser {
                     await this.domainsParser.parse(domain).then(status => {
                         this.totalRequest.domains += 1;
                         this.domains[domain] = status;
+
+                        this.socket.emit('getDomain', JSON.stringify({
+                            [domain]: this.domains[domain]
+                        }) );
+
                         let sql = {};
                         if (status) {
                             sql = {domain: domain, available: status.available ? 1 : 0, price: status.price, timestamp: Date.now()};

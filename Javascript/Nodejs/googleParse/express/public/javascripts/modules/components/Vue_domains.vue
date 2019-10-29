@@ -66,8 +66,9 @@
                     <span>Топ3: <strong :id="'top3_'+index">{{site.top3}}</strong> </span>
                     <span>Топ5: <strong :id="'top5_'+index">{{site.top5}}</strong> </span>
                     <span>Топ10: <strong :id="'top10_'+index">{{site.top10}}</strong></span>
-                    <span>Доступен: <strong>{{domains[site.domain] ? domains[site.domain].status ? "Можно купить" : "Куплен" : "Ошибка"}}</strong></span>
-                    <span>Цена: <strong>{{domains[site.domain] ? domains[site.domain].price : ""}}</strong></span>
+                    <span v-if="domains[site.domain]">Доступен: <strong>{{domains[site.domain] ? domains[site.domain].status ? "Можно купить" : "Куплен" : "Ошибка"}}</strong></span>
+                    <span v-if="domains[site.domain]">Цена: <strong>{{domains[site.domain] ? domains[site.domain].price : ""}}</strong></span>
+                    <span v-if="domains[site.domain] === undefined" class="spinner-border text-success" role="status"><span class="sr-only">Loading...</span></span>
                 </div>
                 <div :class="{collapse:site.domain !== selected}" >
                     <div class="card-body" >
@@ -114,37 +115,6 @@
                 //     size: this.size,
                 // });
             },
-            filterDomain() {
-                return;
-                let data_sort = 'top';
-                let sortDirection = 1;
-
-                switch (this.topSortRadio) {
-                    case "desc":
-                        sortDirection = 1;
-                        break;
-                    case "asc":
-                        sortDirection = -1;
-                        break;
-                }
-                switch (this.topDomainRadio) {
-                    case 10:
-                        data_sort = 'top10';
-                        break;
-                    case 5:
-                        data_sort = 'top5';
-                        break;
-                    case 3:
-                        data_sort = 'top3';
-                        break;
-                    default:
-                        data_sort = 'top';
-                        break;
-                }
-                this.newSites.sort(function (a, b) {
-                    return (a[data_sort] - b[data_sort]) * sortDirection;
-                })
-            }
         },
         computed: {
             newSites: function () {
@@ -211,11 +181,9 @@
         },
         watch: {
             topSortRadio: function(val) {
-                this.filterDomain();
                 // console.log('watchDom topSortRadio',val)
             },
             topDomainRadio: function (val) {
-                this.filterDomain();
                 // console.log('watchDom topDomainRadio',val)
             }
         },
@@ -223,7 +191,6 @@
             // console.log('mountedDom')
         },
         updated: function() {
-            this.filterDomain();
             // console.log('updatedDom')
         }
     }

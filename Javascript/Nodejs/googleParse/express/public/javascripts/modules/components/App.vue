@@ -64,39 +64,61 @@
             return {
                 data: {
                     sites: null,
-                    domains: null,
+                    domains: {},
                     queries: null
                 },
                 pagination: {
                     'current_page': 1
                 },
                 stage: 1,
-                socket: null
+                socket: null,
+                blockGoogle: false,
+                blockDomains: false
             };
         },
         methods: {
             onSubmitForm(data) {
+                if (this.blockGoogle || this.blockDomains) {
+                    console.log('block');
+                    return;
+                }
                 this.socket.emit('getGoogle', {sites: data.sites, size: data.size});
                 this.data = {
                     sites: null,
-                    domains: null,
+                    domains: {},
                     queries: null
-                }
+                };
+                this.blockGoogle = true;
+                this.blockDomains = true;
             }
         },
         mounted() {
             ConsoleLogHTML.connect(document.getElementById("myULContainer"));
 
-            this.socket = io.connect(location.hostname + ':3038/', {//8081
+            this.socket = io.connect(location.hostname + ':8081/', {//8081
                 // 'reconnectionDelay': 10 // defaults to 500
             });
             this.socket.on('getGoogle', (dataJson) => {
                 let data = JSON.parse(dataJson);
-                this.data = data;
+                this.data.sites = data.sites;
+                this.data.queries = data.queries;
+                this.blockGoogle = false;
                 // queriesThree([...data.queries]);
                 // queriesTable([...data.queries]);
                 // googleTable(Object.assign({}, data.sites));
             });
+            this.socket.on('getDomains', (dataJson) => {
+            //     let data = JSON.parse(dataJson);
+            //     this.data.domains = data.domains;
+            //     this.blockDomains = false;
+                this.blockDomains = false;
+            });
+            this.socket.on('getDomain', (dataJson) => {
+                let data = JSON.parse(dataJson);
+                console.log(data);
+                this.data.domains = Object.assign({},this.data.domains, data);
+            });
+
             this.socket.on('console', (result) => {
                 if (typeof result === 'string') {
                     console.log(decodeURI(result), ' NodeJs');

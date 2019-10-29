@@ -51,8 +51,8 @@ class Domains {
                         let element = await page.$("#domain_check_order_list");
                         let html = await page.evaluate(el => el.outerHTML, element);
 
-                        await element.screenshot({ path: path.join(__dirname, '../photos/'+domain+'.jpg')});
-                        fs.writeFileSync(path.join(__dirname, '../photos/'+domain+'.html'), html, 'utf8');
+                        // await element.screenshot({ path: path.join(__dirname, '../photos/'+domain+'.jpg')});
+                        // fs.writeFileSync(path.join(__dirname, '../photos/'+domain+'.html'), html, 'utf8');
                         await browser.close();
                         resolve(false);
                         return;

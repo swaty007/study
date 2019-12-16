@@ -11,7 +11,8 @@
     "start": "node ./Javascript/Nodejs/googleParse/express/bin/www",
     "startAds": "node ./Javascript/Nodejs/googleParse/parserCore/parseAds.js",
     "startDomains": "node ./Javascript/Nodejs/googleParse/parserCore/parseDomains.js",
-    "startBrute": "node ./Javascript/Nodejs/googleParse/parserCore/bruteWordpress.js"
+    "startBrute": "node ./Javascript/Nodejs/googleParse/parserCore/bruteWordpress.js",
+    "startSpotify": "node ./Javascript/Nodejs/googleParse/parserCore/spotify.js"
   },
   "repository": {
     "type": "git",

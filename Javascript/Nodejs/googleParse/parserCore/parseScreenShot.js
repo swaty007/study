@@ -36,9 +36,11 @@ class ScreenShot {
     async init() {
 
 
-        do {
-             await Promise.all([this.getImg(this.generateLink(5)), this.getImg(this.generateLink(6))]);
-        } while (this.stop === false);
+        try {
+            this.pasrseImg()
+        } catch {
+            this.init()
+        }
 
 
 
@@ -61,6 +63,11 @@ class ScreenShot {
             }
 
         });
+    }
+   async pasrseImg() {
+        do {
+            await Promise.all([this.getImg(this.generateLink(5)), this.getImg(this.generateLink(6))]);
+        } while (this.stop === false);
     }
     async getImg (url) {
         return new Promise(async(resolve, reject) => {

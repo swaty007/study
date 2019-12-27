@@ -37,9 +37,7 @@ class ScreenShot {
 
 
         do {
-            let url = this.generateLink(5);
-            await this.getImg(url);
-            console.log(url);
+             await Promise.all([this.getImg(this.generateLink(5)), this.getImg(this.generateLink(6))]);
         } while (this.stop === false);
 
 
@@ -74,6 +72,7 @@ class ScreenShot {
                 }
 
                 // console.log(res.body);
+                console.log(url);
                 let $ = cheerio.load(res.body),
                     img = $("#screenshot-image").attr('src');
                 console.log(img);

@@ -64,7 +64,7 @@ class ScreenShot {
 
         });
     }
-   async pasrseImg() {
+    async pasrseImg() {
         do {
             await Promise.all([this.getImg(this.generateLink(5)), this.getImg(this.generateLink(6))]);
         } while (this.stop === false);
@@ -83,11 +83,11 @@ class ScreenShot {
                 let $ = cheerio.load(res.body),
                     img = $("#screenshot-image").attr('src');
                 console.log(img);
-               if (img === undefined) {
-                   resolve();
-                   return;
-               }
-                    let filename = img.split('/').pop();
+                if (img === undefined) {
+                    resolve();
+                    return;
+                }
+                let filename = img.split('/').pop();
 
 
                 fs.stat('./Javascript/Nodejs/googleParse/parsedimg/'+filename,(error_stats, stats) => {

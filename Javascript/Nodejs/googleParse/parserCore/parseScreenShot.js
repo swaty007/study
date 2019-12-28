@@ -3,7 +3,7 @@ const cheerio = require('cheerio'),
     tress = require('tress'),
     needle = require('needle'),
     fs = require('fs'),
-    axios = require('axios'),
+    // axios = require('axios'),
     request = require('request'),
     path = require('path');
 const puppeteer = require('puppeteer-extra');
@@ -64,7 +64,7 @@ class ScreenShot {
 
         });
     }
-   async pasrseImg() {
+    async pasrseImg() {
         do {
             await Promise.all([this.getImg(this.generateLink(5)), this.getImg(this.generateLink(6))]);
         } while (this.stop === false);
@@ -83,11 +83,11 @@ class ScreenShot {
                 let $ = cheerio.load(res.body),
                     img = $("#screenshot-image").attr('src');
                 console.log(img);
-               if (img === undefined) {
-                   resolve();
-                   return;
-               }
-                    let filename = img.split('/').pop();
+                if (img === undefined) {
+                    resolve();
+                    return;
+                }
+                let filename = img.split('/').pop();
 
 
                 fs.stat('./Javascript/Nodejs/googleParse/parsedimg/'+filename,(error_stats, stats) => {
@@ -99,16 +99,36 @@ class ScreenShot {
                             return;
                         }
                         // console.log('write file',filename);
-                        let stream = request(img);
-                        stream.pipe(fs.createWriteStream('./Javascript/Nodejs/googleParse/parsedimg/'+filename)
-                            .on('finish', () => {
+                        let imgUrl = "";
+                        if (img.indexOf('http') >= 0 ) {
+                            imgUrl = img;
+                        } else {
+                            imgUrl = img.replace("//",'https://');
+                        }
+                        if (
+                            imgUrl.indexOf('.png') !== -1 ||
+                            imgUrl.indexOf('.jpg') !== -1 ||
+                            imgUrl.indexOf('.jpeg') !== -1 ||
+                            imgUrl.indexOf('.svg') !== -1 ) {
+                            let stream = request(imgUrl);
+                            try {
+                                stream.pipe(fs.createWriteStream('./Javascript/Nodejs/googleParse/parsedimg/'+filename)
+                                    .on('finish', () => {
+                                        console.log(2);
+                                        resolve();
+                                    })
+                                    .on('error', () => {
+                                        console.log(1);
+                                        resolve();
+                                    })
+                                );
+                            } catch (e) {
                                 resolve();
-                            })
-                            .on('error', () => {
-                                resolve();
-                            })
-                        );
-                        return;
+                            }
+                            return;
+                        } else {
+                            resolve();
+                        }
                     }
                     resolve();
                 });

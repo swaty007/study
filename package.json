@@ -13,7 +13,7 @@
     "startDomains": "node ./Javascript/Nodejs/googleParse/parserCore/parseDomains.js",
     "startBrute": "node ./Javascript/Nodejs/googleParse/parserCore/bruteWordpress.js",
     "startSpotify": "node ./Javascript/Nodejs/googleParse/parserCore/spotify.js",
-    "startScreenShot": "node ./Javascript/Nodejs/googleParse/parserCore/parseScreenShot.js"
+    "startScreenShot": "node --experimental-worker ./Javascript/Nodejs/imgParse/parseScreenShot.js"
   },
   "repository": {
     "type": "git",

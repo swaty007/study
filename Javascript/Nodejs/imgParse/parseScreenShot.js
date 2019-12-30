@@ -35,8 +35,9 @@ class ScreenShot {
             site: 0,
             img: 0,
             time: 0,
+            old: 0,
         };
-        this.threads = 3;
+        this.threads = 5;
         this.totalRequest.time = performance.now();
         this.init();
     }
@@ -128,17 +129,36 @@ class ScreenShot {
                     return;
                 }
                 this.totalRequest.site += 1;
+                if (!isMainThread) {
+                    if (this.totalRequest.site >= 500) {
+                        parentPort.postMessage(this.totalRequest.site);
+                        // console.log('worker #',workerData,' requests=', this.totalRequest.site);
+                        this.totalRequest.site = 0;
+                    }
+                }
+                if (this.totalRequest.site - this.totalRequest.old >= 10000) {
+                    this.totalRequest.old = this.totalRequest.site;
+                    console.log(this.totalRequest.site);
+                    console.log(this.totalRequest.time = performance.now() - this.totalRequest.time);
+                    // 19397.40339899063 3thread(100)
+                    // 9886.00529909134 6thread(100)
+                    // 7442.8571009635925 10thread(100)
+                    // 5540.61200094223 5thread + 2 worker(100)
+                    // 4199.164801120758 5thread + 3 worker(100)
+                    // 38673.47180008888 5thread + 4 worker (10000)
+                }
                 // console.log('img =',this.totalRequest.img, ' site =',this.totalRequest.site);
                 if (res.statusCode === 403) {
                     this.stop[type] = true;
                     resolve();
                     return;
                 }
-                console.log(res.statusCode, this.totalRequest.site, url);
+                // console.log(res.statusCode, this.totalRequest.site, url);
                 if (res.statusCode === 404) {
                     resolve();
                     return;
                 }
+
                 // console.log(res.body);
                 // console.log(url);
                 let $ = cheerio.load(res.body),
@@ -164,7 +184,7 @@ class ScreenShot {
                     resolve();
                     return;
                 }
-                let filename = img.split('/').pop();
+                let filename = img.split('/').pop().split('?')[0];
 
 
                 fs.stat(`./Javascript/Nodejs/imgParse/parsedimg/${type}/${filename}`, (error_stats, stats) => {
@@ -194,7 +214,7 @@ class ScreenShot {
                                 }).pipe(fs.createWriteStream(`./Javascript/Nodejs/imgParse/parsedimg/${type}/${filename}`)
                                     .on('finish', () => {
                                         this.totalRequest.img += 1;
-                                        console.log('img =',this.totalRequest.img, ' site =',this.totalRequest.site);
+                                        console.log('img =',this.totalRequest.img, ' site =',this.totalRequest.site, 'type =', type);
                                         // if (this.totalRequest.img == 100) {
                                         // console.log(this.totalRequest.time = performance.now() - this.totalRequest.time);
                                         // 112530.05260109901
@@ -284,39 +304,46 @@ class ScreenShot {
 
 }
 
-// let testData = 0;
-// if(isMainThread) {
-//     testData += 1;
-//     console.log("this is the main thread", testData, workerData);
-//     for(let i = 0; i < 2; i++) {
-//         let w = new Worker(__filename, {workerData: testData});
-//         w.on('message', (msg) => { //Сообщение от воркера!
-//             console.log("Сообщение от воркера: ", msg);
-//         })
-//         w.on('error', (error) => {
-//             console.log("worker error", error);
-//         });
-//         w.on('exit', (code) => {
-//             if(code != 0)
-//                 console.error(new Error(`Worker stopped with exit code ${code}`))
-//         });
-//     }
-//
-//     try {
-//         // let screenShot = new ScreenShot();
-//     } catch (e) {
-//         console.log(e, 'errorMainScript');
-//     }
-//
-// } else {
-//     testData += 1;
-//     console.log("this isn't",testData, workerData);
-//     parentPort.postMessage(workerData);
-//     // console.log("this isn't2",testData[workerData]);
-// }
+
+if(isMainThread) {
+    let screenShot = new ScreenShot();
+
+
+    for(let i = 0; i < 4; i++) {
+        let w = new Worker(__filename, {workerData: i});
+        w.on('message', (msg) => { //Сообщение от воркера!
+            // console.log("Сообщение от воркера: ", msg);
+            screenShot.totalRequest.site += msg;
+        });
+        w.on('error', (error) => {
+            console.log("worker error", error);
+        });
+        w.on('exit', (code) => {
+            if(code != 0)
+                console.error(new Error(`Worker stopped with exit code ${code}`))
+        });
+    }
+
+    try {
+        // let screenShot = new ScreenShot();
+    } catch (e) {
+        console.log(e, 'errorMainScript');
+    }
+
+} else {
+    let screenShot = new ScreenShot();
+    // console.log("this isn't",testData, workerData);
+    // parentPort.postMessage(workerData);
+    // console.log("this isn't2",testData[workerData]);
+}
 (async function () {
     try {
-        let screenShot = new ScreenShot();
+        // let screenShot = new ScreenShot();
+
+        // screenShot.totalRequest.site = 0;
+
+        // console.log(this.totalRequest.time = performance.now() - this.totalRequest.time);
+
     } catch (e) {
         console.log(e);
     }

@@ -102,7 +102,7 @@ this.findedPath = "./Javascript/Nodejs/imgParse/parsedimg/scriptFinded";
 	return new Promise( (resolve, reject) => {
 
 			//console.log(text, fileName);
-			let parentDir = path.parse(path.parse(path.join(dirPath, fileName)).dir).base;
+			//let parentDir = path.parse(path.parse(path.join(dirPath, fileName)).dir).base;
 			if (fileName.slice(-4) === '.txt') {
 				let text = fs.readFileSync(filePath).toString('utf8').replace(/,|\n| |\s|;/g, '');
 				if ( text.search(/(pas[s]?word|пароль|login|логин)/) !== -1 ) {
@@ -168,6 +168,7 @@ this.findedPath = "./Javascript/Nodejs/imgParse/parsedimg/scriptFinded";
 							});
 							workerProcess.on('exit', (code) => {
 								console.log('Child process exited with exit code '+code);
+								this.checkFile(dirPath,filename);
 								resolve();
 							});
 							return;

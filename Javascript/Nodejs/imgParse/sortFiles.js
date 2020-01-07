@@ -11,10 +11,11 @@ class SortFiles {
 
 this.filesPath = "D:/parsedBigData/image";
 this.findedPath = "./Javascript/Nodejs/imgParse/parsedimg/scriptFinded";
-        this.threads = 10;
+        this.threads = 50;
         this.threadUsed = {
         	cdm: 0,
 			img: 0,
+			file: 0,
 		};
         this.init();
     }
@@ -100,35 +101,45 @@ this.findedPath = "./Javascript/Nodejs/imgParse/parsedimg/scriptFinded";
 			//console.log(text, fileName);
 			//let parentDir = path.parse(path.parse(path.join(dirPath, fileName)).dir).base;
 			if (fileName.slice(-4) === '.txt') {
-				let text = fs.readFileSync(filePath).toString('utf8').replace(/,|\n| |\s|;/g, '');
-				if ( text.search(/(pas[s]?word|пароль|login|логин)/) !== -1 ) {
-
-					this.threadUsed.img++;
-					Promise.all([
-						this.findImg( path.join(dirPath, fileName.replace('.txt','.jpg')) ),
-						this.findImg( path.join(dirPath, fileName.replace('.txt','.png')) ),
-						this.findImg( path.join(dirPath, fileName.replace('.txt','.jpeg')) ),
-					]).then((imgArr)=>{
-						//console.log(imgArr, imgArr.includes(true),fileName);
-						if(imgArr.includes(true)) {
-							//fs.renameSync(path.join(dirPath, fileName), path.join('D:/parsedBigData/image/',parentDir, fileName));
-							//console.log('from=',path.join(dirPath, fileName),'		to=',path.join('D:/parsedBigData/image/',parentDir, fileName));
-						} else {
-							//fs.unlinkSync(path.join(dirPath, fileName));
-							//console.log('unlinkFile',path.join(dirPath, fileName));
-							//fs.renameSync(path.join(dirPath, fileName), path.join('D:/OpenServer/OSPanel/domains/study/Javascript/Nodejs/imgParse/parsedimg/prnt/', fileName));
-							//console.log('from=',path.join(dirPath, fileName),'		to=',path.join('D:/OpenServer/OSPanel/domains/study/Javascript/Nodejs/imgParse/parsedimg/prnt/', fileName));
-						}
-						this.threadUsed.img--;
-						resolve();
-					});
-					if (this.threads <= this.threadUsed.img) {
-						resolve();
+				// let text = fs.readFileSync(filePath).toString('utf8').replace(/,|\n| |\s|;/g, '');
+				this.threadUsed.file++;
+				fs.readFile(filePath, (errFile, data) => {
+					if (errFile) {
+						console.log('errFile', errFile);
 					}
+					let text = data.toString('utf8').replace(/,|\n| |\s|;/g, '');
+					this.threadUsed.file--;
+					if ( text.search(/(pas[s]?word|пароль|login|логин)/) !== -1 ) {
+						this.threadUsed.img++;
+						Promise.all([
+							this.findImg( path.join(dirPath, fileName.replace('.txt','.jpg')) ),
+							this.findImg( path.join(dirPath, fileName.replace('.txt','.png')) ),
+							this.findImg( path.join(dirPath, fileName.replace('.txt','.jpeg')) ),
+						]).then((imgArr)=>{
+							//console.log(imgArr, imgArr.includes(true),fileName);
+							if(imgArr.includes(true)) {
+								//fs.renameSync(path.join(dirPath, fileName), path.join('D:/parsedBigData/image/',parentDir, fileName));
+								//console.log('from=',path.join(dirPath, fileName),'		to=',path.join('D:/parsedBigData/image/',parentDir, fileName));
+							} else {
+								//fs.unlinkSync(path.join(dirPath, fileName));
+								//console.log('unlinkFile',path.join(dirPath, fileName));
+								//fs.renameSync(path.join(dirPath, fileName), path.join('D:/OpenServer/OSPanel/domains/study/Javascript/Nodejs/imgParse/parsedimg/prnt/', fileName));
+								//console.log('from=',path.join(dirPath, fileName),'		to=',path.join('D:/OpenServer/OSPanel/domains/study/Javascript/Nodejs/imgParse/parsedimg/prnt/', fileName));
+							}
+							this.threadUsed.img--;
+							resolve();
+						});
+						if (this.threads <= this.threadUsed.img) {
+							resolve();
+						}
 
-				} else {
+					} else {
+						resolve();
+					};
+				});
+				if (this.threads <= this.threadUsed.file) {
 					resolve();
-				};
+				}
 
 
 			} else {
@@ -172,7 +183,7 @@ this.findedPath = "./Javascript/Nodejs/imgParse/parsedimg/scriptFinded";
 								this.threadUsed.cdm--;
 								resolve();
 							});
-							if (this.threads <= this.threadUsed.cdm) {
+							if (5 <= this.threadUsed.cdm) {//this.threads
 								resolve();
 							}
 							return;

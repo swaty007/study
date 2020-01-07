@@ -11,23 +11,14 @@ class SortFiles {
 
 this.filesPath = "D:/parsedBigData/image";
 this.findedPath = "./Javascript/Nodejs/imgParse/parsedimg/scriptFinded";
-        this.threads = 3;
-        //this.totalRequest.time = performance.now();
+        this.threads = 10;
+        this.threadUsed = {
+        	cdm: 0,
+			img: 0,
+		};
         this.init();
     }
 	async init() {
-		// try {
-		//     this.parsePrnt();
-		// } catch (e) {
-		//     console.log('Error init', e);
-		//     this.parsePrnt();
-		// }
-		// try {
-		//     this.parseJoxi();
-		// } catch (e) {
-		//     console.log('Error init', e);
-		//     this.parseJoxi();
-		// }
 		this.checkDir(this.filesPath);
 		return;
 		new Promise((resolve, reject) => {
@@ -75,9 +66,14 @@ this.findedPath = "./Javascript/Nodejs/imgParse/parsedimg/scriptFinded";
 						// if ( el.name.slice(-4) === '.txt') {
 							//console.log(path.join(dirPath,el.name), files.length);
 						//console.log(el,'file');
+						this.threadUsed.file++;
 							await this.checkFile(dirPath, el.name).then(() => {
+								this.threadUsed.file--;
 								resolve();
 							});
+						if (this.threads <= this.threadUsed.file) {
+							resolve();
+						}
 							
 							//await this.checkFile(path.join(dirPath,el.name));
 							//await console.log(fs.readFileSync(path.resolve(dirPath,el.name)));
@@ -107,7 +103,7 @@ this.findedPath = "./Javascript/Nodejs/imgParse/parsedimg/scriptFinded";
 				let text = fs.readFileSync(filePath).toString('utf8').replace(/,|\n| |\s|;/g, '');
 				if ( text.search(/(pas[s]?word|пароль|login|логин)/) !== -1 ) {
 
-
+					this.threadUsed.img++;
 					Promise.all([
 						this.findImg( path.join(dirPath, fileName.replace('.txt','.jpg')) ),
 						this.findImg( path.join(dirPath, fileName.replace('.txt','.png')) ),
@@ -123,9 +119,12 @@ this.findedPath = "./Javascript/Nodejs/imgParse/parsedimg/scriptFinded";
 							//fs.renameSync(path.join(dirPath, fileName), path.join('D:/OpenServer/OSPanel/domains/study/Javascript/Nodejs/imgParse/parsedimg/prnt/', fileName));
 							//console.log('from=',path.join(dirPath, fileName),'		to=',path.join('D:/OpenServer/OSPanel/domains/study/Javascript/Nodejs/imgParse/parsedimg/prnt/', fileName));
 						}
+						this.threadUsed.img--;
 						resolve();
 					});
-
+					if (this.threads <= this.threadUsed.img) {
+						resolve();
+					}
 
 				} else {
 					resolve();
@@ -148,6 +147,7 @@ this.findedPath = "./Javascript/Nodejs/imgParse/parsedimg/scriptFinded";
 								resolve(false);
 								return;
 							}
+							this.threadUsed.cdm++;
 							let parentDir = path.parse(path.parse(path.join(dirPath, filename)).dir).base;
 							let cmd = `D:\\neyro\\Tesseract-OCR\\tesseract "D:\\parsedBigData\\image\\${parentDir}\\${fileName}" "D:\\parsedBigData\\image\\${parentDir}\\${filename.replace('.txt','')}" -l eng+rus+script/Cyrillic`;
 							console.log(cmd,'cmd');
@@ -169,8 +169,12 @@ this.findedPath = "./Javascript/Nodejs/imgParse/parsedimg/scriptFinded";
 							workerProcess.on('exit', (code) => {
 								console.log('Child process exited with exit code '+code);
 								this.checkFile(dirPath,filename);
+								this.threadUsed.cdm--;
 								resolve();
 							});
+							if (this.threads <= this.threadUsed.cdm) {
+								resolve();
+							}
 							return;
 						}
 						resolve();

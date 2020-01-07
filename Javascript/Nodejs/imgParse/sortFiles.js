@@ -17,25 +17,24 @@ this.findedPath = "./Javascript/Nodejs/imgParse/parsedimg/scriptFinded";
 			img: 0,
 			file: 0,
 		};
-        this.init();
     }
 	async init() {
 		this.checkDir(this.filesPath);
-		return;
-		new Promise((resolve, reject) => {
-			console.time("Brute Work");
-			this.parse = tress((data, callback) => {
-				this.parsePrnt(data, callback);
-			}, this.threads);
-			this.parse.drain = () => {
-				console.timeEnd("Brute Work");
-				resolve();
-			};
-			for (let i = 0; i < this.threads; i++) {
-				this.parse.push({});
-			}
-
-		});
+		// return;
+		// new Promise((resolve, reject) => {
+		// 	console.time("Brute Work");
+		// 	this.parse = tress((data, callback) => {
+		// 		this.parsePrnt(data, callback);
+		// 	}, this.threads);
+		// 	this.parse.drain = () => {
+		// 		console.timeEnd("Brute Work");
+		// 		resolve();
+		// 	};
+		// 	for (let i = 0; i < this.threads; i++) {
+		// 		this.parse.push({});
+		// 	}
+		//
+		// });
 	}
  checkDir (dirPath) {
 	//fs.opendir(path, (errDirOpen, dir) => {
@@ -254,15 +253,15 @@ async findImg (imgPath) {
 
 
 
-(async function () {
-    try {
-        let sortFiles = new SortFiles();
-
-    } catch (e) {
-        console.log(e);
-    }
-
-})();
+// (async function () {
+//     try {
+//         let sortFiles = new SortFiles().init();
+//
+//     } catch (e) {
+//         console.log(e);
+//     }
+//
+// })();
 
 // export default Parser;
 module.exports = {

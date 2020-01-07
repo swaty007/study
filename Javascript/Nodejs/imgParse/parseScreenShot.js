@@ -6,13 +6,13 @@ const cheerio = require('cheerio'),
     // axios = require('axios'),
     request = require('request'),
     {performance} = require('perf_hooks'),
-    path = require('path');
+    path = require('path'),
+    {SortFiles} = require("./sortFiles");
 
 const child_process = require('child_process');
 require('events').EventEmitter.defaultMaxListeners = 0;
 // console.log(require('events').EventEmitter.defaultMaxListeners)
 // console.log(process)
-
 
 const {Worker, isMainThread, workerData, parentPort} = require('worker_threads');
 
@@ -42,6 +42,7 @@ class ScreenShot {
         this.filesPath = "D:/parsedBigData/image";
         this.threads = 3;
 		this.threadsInit = 0;
+		this.sortFiles = new SortFiles();
         this.totalRequest.time = performance.now();
         this.init();
     }
@@ -253,10 +254,12 @@ class ScreenShot {
 		 //throw new Error(error);
       }
       //console.log('stdout: ' + stdout);
-      console.log('stderr: ' + stderr, 'stderrEnd');
+      // console.log('stderr: ' + stderr, 'stderrEnd');
    });
    workerProcess.on('exit', (code) => {
-      console.log('Child process exited with exit code '+code);
+      // console.log('Child process exited with exit code '+code);
+       this.sortFiles.checkFile(path.join(this.filesPath, type),filename.replace(/[.]png|[.]svg|[.]jpg|[.]jpeg/,'.txt'));
+           // .then(()=>{console.log('file checked')});
 	  resolve();
    });
 										

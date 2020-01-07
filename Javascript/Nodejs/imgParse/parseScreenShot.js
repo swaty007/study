@@ -8,7 +8,7 @@ const cheerio = require('cheerio'),
     {performance} = require('perf_hooks'),
     path = require('path');
 
-
+const child_process = require('child_process');
 require('events').EventEmitter.defaultMaxListeners = 0;
 // console.log(require('events').EventEmitter.defaultMaxListeners)
 // console.log(process)
@@ -24,12 +24,14 @@ class ScreenShot {
             joxi: "joxi",
             screencapture: "screencapture",
             imgur: "imgur",
+            telegram: "telegram",
         };
         this.stop = {
             prnt: false,
             joxi: false,
             screencapture: false,
             imgur: false,
+            telegram: false,
         };
         this.totalRequest = {
             site: 0,
@@ -37,7 +39,9 @@ class ScreenShot {
             time: 0,
             old: 0,
         };
-        this.threads = 5;
+        this.filesPath = "D:/parsedBigData/image";
+        this.threads = 3;
+		this.threadsInit = 0;
         this.totalRequest.time = performance.now();
         this.init();
     }
@@ -59,10 +63,13 @@ class ScreenShot {
         new Promise((resolve, reject) => {
             console.time("Brute Work");
             this.parse = tress((data, callback) => {
+				if(isMainThread && this.threadsInit === 0) {
                 this.parsePrnt(data, callback);
+				}
                 this.parseJoxi(data, callback);
                 this.parseScreencapture(data, callback);
                 this.parseImgur(data, callback);
+				this.threadsInit += 1;
             }, this.threads);
             this.parse.drain = () => {
                 console.timeEnd("Brute Work");
@@ -77,10 +84,18 @@ class ScreenShot {
 
     async parsePrnt() {
         do {
-            await Promise.all([
+			try {
+				await Promise.all([
                 this.getImg(this.generateLink(5), this.types.prnt),
                 this.getImg(this.generateLink(6), this.types.prnt),
             ]);
+			} catch (e) {
+				await Promise.all([
+                this.getImg(this.generateLink(5), this.types.prnt),
+                this.getImg(this.generateLink(6), this.types.prnt),
+            ]);
+			}
+            
         } while (this.stop.prnt === false);
         console.log('Prnt Stop');
     }
@@ -103,6 +118,13 @@ class ScreenShot {
         } while (this.stop.imgur === false);
         console.log('Imgur Stop');
     }
+    async parseTelegram() {
+        do {
+            await this.getImg("6856db55-cf1a-477c-9db1-cf77f51b0a4d", this.types.telegram);
+            // await this.getImg(this.generateLink(7), this.types.telegram);
+        } while (this.stop.telegram === false);
+        console.log('Telegram Stop');
+    }
 
     async getImg(url, type) {
         return new Promise(async (resolve, reject) => {
@@ -118,6 +140,9 @@ class ScreenShot {
                     break;
                 case this.types.imgur:
                     url = "https://imgur.com/"+url;
+                    break;
+                case this.types.telegram:
+                    url = "blob:https://web.telegram.org/"+url;
                     break;
                 default:
                     throw new Error('Bad type');
@@ -187,7 +212,7 @@ class ScreenShot {
                 let filename = img.split('/').pop().split('?')[0];
 
 
-                fs.stat(`./Javascript/Nodejs/imgParse/parsedimg/${type}/${filename}`, (error_stats, stats) => {
+                fs.stat(path.join(this.filesPath, type, filename), (error_stats, stats) => {
                     if (error_stats != null) {
                         // console.log('error_stats', error_stats.path, error_stats.code);
                         if (error_stats.code == "ENAMETOOLONG") {
@@ -211,16 +236,39 @@ class ScreenShot {
                                 stream.on('error', (e) => {
                                     console.log('error1', e, 'img=', imgUrl);
                                     resolve();
-                                }).pipe(fs.createWriteStream(`./Javascript/Nodejs/imgParse/parsedimg/${type}/${filename}`)
+                                }).pipe(fs.createWriteStream(path.join(this.filesPath, type, filename))
                                     .on('finish', () => {
                                         this.totalRequest.img += 1;
                                         console.log('img =',this.totalRequest.img, ' site =',this.totalRequest.site, 'type =', type);
+										
+										
+										let cmd = `D:\\neyro\\Tesseract-OCR\\tesseract "D:\\parsedBigData\\image\\${type}\\${filename}" "D:\\parsedBigData\\image\\${type}\\${filename.replace(/[.]png|[.]svg|[.]jpg|[.]jpeg/,'')}" -l eng+rus+script/Cyrillic`;
+										//console.log('cmd',cmd);
+										  let workerProcess = child_process.exec(cmd, (error, stdout, stderr) => {
+      if (error) {
+         console.log(error.stack);
+         console.log('Error code: '+error.code);
+         console.log('Signal received: '+error.signal);
+		 resolve();
+		 //throw new Error(error);
+      }
+      //console.log('stdout: ' + stdout);
+      console.log('stderr: ' + stderr, 'stderrEnd');
+   });
+   workerProcess.on('exit', (code) => {
+      console.log('Child process exited with exit code '+code);
+	  resolve();
+   });
+										
+										
+										
+										
                                         // if (this.totalRequest.img == 100) {
                                         // console.log(this.totalRequest.time = performance.now() - this.totalRequest.time);
                                         // 112530.05260109901
                                         // 46761.85130095482 5 threads and + ban
                                         // }
-                                        resolve();
+                                        //resolve();
                                     })
                                     .on('error', (e) => {
                                         console.log('error2', e, 'img=', imgUrl);
@@ -309,7 +357,7 @@ if(isMainThread) {
     let screenShot = new ScreenShot();
 
 
-    for(let i = 0; i < 4; i++) {
+    for(let i = 1; i < 8; i++) {
         let w = new Worker(__filename, {workerData: i});
         w.on('message', (msg) => { //Сообщение от воркера!
             // console.log("Сообщение от воркера: ", msg);

@@ -1,3 +1,5 @@
+https://www.youtube.com/watch?v=abdgy72csaA&list=PLEP02SwupyxdD2gfUT1XDoUtmCOlKvaoR
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
